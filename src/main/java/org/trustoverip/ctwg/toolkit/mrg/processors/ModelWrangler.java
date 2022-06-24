@@ -34,8 +34,8 @@ class ModelWrangler {
   private static final int REPO_PART_INDEX = 2;
   private static final String MULTIPLE_USE_FIELDS = "multiple-use fields";
   private static final String GENERIC_FRONT_MATTER = "generic front-matter";
-  private YamlWrangler yamlWrangler;
-  private MRGConnector connector;
+  private final YamlWrangler yamlWrangler;
+  private final MRGConnector connector;
 
   @Setter(AccessLevel.NONE) // as we derive this from what type of connector has been passed
   private boolean local;
@@ -50,8 +50,7 @@ class ModelWrangler {
 
   SAFModel getSaf(String scopedir, String safFilename) throws MRGGenerationException {
     String safAsString = this.getSafAsString(scopedir, safFilename);
-    SAFModel safModel = yamlWrangler.parseSaf(safAsString);
-    return safModel;
+    return yamlWrangler.parseSaf(safAsString);
   }
 
   String getSafAsString(String scopedir, String safFilename) throws MRGGenerationException {
@@ -105,8 +104,8 @@ class ModelWrangler {
     if (!directoryContent.isEmpty()) {
       terms =
           directoryContent.stream()
-              .map(dirty -> this.cleanTermFile(dirty))
-              .map(clean -> toYaml(clean))
+              .map(this::cleanTermFile)
+              .map(this::toYaml)
               .filter(term -> term.getScope().equals(termFilter))
               .toList();
     }
@@ -193,13 +192,13 @@ class ModelWrangler {
       if (treeIndex == -1) { // no tree found => root dir is /
         return "/";
       }
-      treeIndex = treeIndex + +TREE.length() + 1; // step past "tree" itself
+      treeIndex = treeIndex + TREE.length() + 1; // step past "tree" itself
       String branchDir = scopedir.substring(treeIndex);
       String[] branchDirParts = branchDir.split("/");
       String[] dirParts = Arrays.copyOfRange(branchDirParts, 1, branchDirParts.length);
       StringBuilder path = new StringBuilder();
-      for (int i = 0; i < dirParts.length; i++) {
-        path.append(dirParts[i]).append("/");
+      for (String dirPart : dirParts) {
+        path.append(dirPart).append("/");
       }
       rootPath = path.deleteCharAt(path.length() - 1).toString();
     }

@@ -31,8 +31,7 @@ public class MRGlossaryGenerator {
   public static final String DEFAULT_MRG_FILENAME = "mrg";
   public static final String DEFAULT_SAF_FILENAME = "saf.yaml";
 
-  private boolean local;
-  private ModelWrangler wrangler;
+  private final ModelWrangler wrangler;
 
   @Setter(AccessLevel.PRIVATE)
   private Map<String, GeneratorContext> contextMap;
@@ -42,7 +41,6 @@ public class MRGlossaryGenerator {
   }
 
   public MRGlossaryGenerator(boolean runLocal) {
-    local = runLocal;
     MRGConnector connector;
     if (runLocal) {
       connector = new LocalFSConnector();

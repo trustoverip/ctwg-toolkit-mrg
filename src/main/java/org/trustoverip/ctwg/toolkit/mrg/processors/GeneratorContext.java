@@ -7,13 +7,13 @@ import lombok.Getter;
  */
 @Getter
 public final class GeneratorContext {
-  private String ownerRepo;
-  private String rootDirPath;
-  private String safFilepath;
+  private final String ownerRepo;
+  private final String rootDirPath;
+  private final String safFilepath;
 
-  private String curatedDir;
+  private final String curatedDir;
 
-  private String versionTag;
+  private final String versionTag;
 
   public GeneratorContext(
       String ownerRepo, String rootDirPath, String versionTag, String curatedDir) {

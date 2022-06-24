@@ -45,7 +45,7 @@ class ModelWranglerTest {
   private static final String SCOPETAG = "tev2";
   private static final String CURATED_DIR_PATH = String.join("/", ROOT_DIR, CURATED_DIR_NAME);
   @Mock private GithubReader mockReader;
-  private YamlWrangler yamlWrangler = new YamlWrangler();
+  private static final YamlWrangler YAML_WRANGLER = new YamlWrangler();
   private ModelWrangler wrangler;
   private String invalidSafContent;
   private String validSafContent;
@@ -54,7 +54,7 @@ class ModelWranglerTest {
 
   @BeforeEach
   void set_up() throws Exception {
-    wrangler = new ModelWrangler(yamlWrangler, mockReader);
+    wrangler = new ModelWrangler(YAML_WRANGLER, mockReader);
     invalidSafContent = new String(Files.readAllBytes(INVALID_SAF));
     validSafContent = new String(Files.readAllBytes(VALID_SAF));
     termStringTerm =
@@ -76,7 +76,7 @@ class ModelWranglerTest {
   }
 
   @Test
-  void given_valid_saf_when_get_saf_should_populate_key_fields() throws Exception {
+  void given_valid_saf_when_get_saf_should_populate_key_fields() {
     when(mockReader.getContent(OWNER_REPO, VALID_SAF_TRIGGER)).thenReturn(validSafContent);
     SAFModel saf = wrangler.getSaf(REPO, VALID_SAF_NAME);
     String expectedScopetag = "tev2";
@@ -89,7 +89,7 @@ class ModelWranglerTest {
   }
 
   @Test
-  void given_valid_saf_when_build_context_map_then_return_populated_map() throws Exception {
+  void given_valid_saf_when_build_context_map_then_return_populated_map() {
     when(mockReader.getContent(OWNER_REPO, VALID_SAF_TRIGGER)).thenReturn(validSafContent);
     String expectedScopetag = "tev2";
     SAFModel saf = wrangler.getSaf(REPO, VALID_SAF_NAME);
@@ -124,7 +124,7 @@ class ModelWranglerTest {
 
   @DisplayName("Given valid terms in the directory when fetch terms then return the right terms")
   @Test
-  void testFetchTermsValid() throws Exception {
+  void testFetchTermsValid() {
     int expectedSize = 2;
     when(mockReader.getDirectoryContent(OWNER_REPO, CURATED_DIR_PATH))
         .thenReturn(List.of(termStringTerm, termStringScope));

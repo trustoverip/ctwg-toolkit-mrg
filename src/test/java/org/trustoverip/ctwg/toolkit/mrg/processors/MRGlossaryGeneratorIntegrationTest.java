@@ -25,7 +25,7 @@ class MRGlossaryGeneratorIntegrationTest {
 
   @Test
   @DisplayName("Should generate an MRG from the essif-lab/framework sample")
-  void testGenerateTev2() throws Exception {
+  void testGenerateTev2() {
     MRGModel model =
         generator.generate(SCOPEDIR, MRGlossaryGenerator.DEFAULT_SAF_FILENAME, VERSION_TAG);
     assertThat(model).isNotNull();
