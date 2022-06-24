@@ -2,7 +2,7 @@
 
 ## Overview
 
-### Build status
+### Status
 
 ![build.yaml](https://github.com/trustoverip/ctwg-mrg-gen/actions/workflows/build.yaml/badge.svg)
 
