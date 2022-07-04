@@ -117,4 +117,49 @@ public class MRGlossaryGenerator {
   private List<MRGEntry> constructRemoteEntries(SAFModel saf, Version localVersion) {
     return new ArrayList<>();
   }
+
+  private static final int LOCAL_PARAMS_EXPECTED = 2;
+  private static final int REMOTE_PARAMS_EXPECTED = 4;
+  private static final int SCOPEDIR_INDEX = 0;
+  private static final int VERSIONTAG_INDEX = 1;
+  private static final int GITHUB_USER_INDEX = 1;
+  private static final int GITHUB_TOKEN_INDEX = 1;
+  private static final String INVALID_INPUT = """
+      Invalid input: Some of the fields required to run the generator are missing. There should be
+      either 2 or 4 inputs depending on whether running from a local scope administration file (SAF),
+      or connecting to a github repository to read the SAF file from there.
+       
+      To run locally: mrg-generator <scopedir> <version tag>
+        e.g. mrg-generator ./workspace/tev2 mrgtest
+        
+      To run remotely: mrg-generator <scopedir> <version tag> -DGH_NAME=<github username> -DGH_TOKEN=<github access token>
+        e.g. mrg-generator https://github.com/essif-lab/framework/tree/master/docs/tev2 mrgtest foo abc123
+      
+      """;
+  private static final String UNEXPECTED_ERROR = """
+      There was an unexpected error when generating the Glossary.
+      It'd be appreciated if you could cut and paste the output below to the CTWG Toolkit development
+      team so we can fix the bug. You can find us at Slack (https://trustoverip.slack.com/archives/C03LGMGNZGX)
+      or alternatively you can raise an Issue on Github (https://github.com/trustoverip/ctwg-mrg-gen/issues/new/choose)
+      
+      %s
+      """;
+
+  public static void main(String[] args) {
+    if (args.length != LOCAL_PARAMS_EXPECTED && args.length != REMOTE_PARAMS_EXPECTED) {
+      System.out.println(INVALID_INPUT);
+    }
+    boolean local = args.length == LOCAL_PARAMS_EXPECTED;
+    String scopedir = args[SCOPEDIR_INDEX];
+    String versionTag = args[VERSIONTAG_INDEX];
+    MRGlossaryGenerator generator = new MRGlossaryGenerator(local);
+    try {
+      generator.generate(scopedir, DEFAULT_SAF_FILENAME, versionTag);
+    } catch (MRGGenerationException mrge) {
+      System.out.println(mrge.getMessage());
+    } catch (Exception e) {
+      System.out.println(String.format(UNEXPECTED_ERROR, e.getMessage()));
+    }
+
+  }
 }
