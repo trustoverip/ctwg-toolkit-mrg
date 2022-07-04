@@ -20,6 +20,9 @@ import org.trustoverip.ctwg.toolkit.mrg.model.ScopeRef;
 import org.trustoverip.ctwg.toolkit.mrg.model.Term;
 
 /**
+ * This class works with scope files and turns them in to a Java object model for easier
+ * manipulation.
+ *
  * @author sih
  */
 @Slf4j
@@ -66,13 +69,12 @@ class ModelWrangler {
     }
   }
 
-  Map<String, GeneratorContext> buildContextMap(SAFModel saf, String versionTag) {
+  Map<String, GeneratorContext> buildContextMap(String scopedir, SAFModel saf, String versionTag) {
     Map<String, GeneratorContext> contextMap = new HashMap<>();
     // do local scope
     String localScope = saf.getScope().getScopetag();
     GeneratorContext localContext =
-        createSkeletonContext(
-            saf.getScope().getScopedir(), saf.getScope().getCuratedir(), versionTag);
+        createSkeletonContext(scopedir, saf.getScope().getCuratedir(), versionTag);
     contextMap.put(localScope, localContext);
     // create skeleton external scopes
     List<ScopeRef> externalScopes = saf.getScopes();

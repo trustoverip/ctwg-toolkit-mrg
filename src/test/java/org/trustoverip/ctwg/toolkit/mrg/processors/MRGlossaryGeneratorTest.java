@@ -33,6 +33,9 @@ import org.trustoverip.ctwg.toolkit.mrg.model.Terminology;
  */
 @ExtendWith(MockitoExtension.class)
 class MRGlossaryGeneratorTest {
+
+  private static final String SCOPEDIR =
+      "https://github.com/essif-lab/framework/tree/master/docs/tev2";
   private static final String OWNER_REPO = "essif-lab/framework";
   private static final String ROOT_DIR_PATH = "docs";
   private static final String CURATED_DIR = "terms";
@@ -95,7 +98,7 @@ class MRGlossaryGeneratorTest {
   @DisplayName("Given valid input generate should create MRG")
   void given_valid_input_generate_should_create_mrg() {
     when(mockWrangler.getSaf(scopedir, safFilename)).thenReturn(validSaf);
-    when(mockWrangler.buildContextMap(validSaf, VERSION_TAG))
+    when(mockWrangler.buildContextMap(SCOPEDIR, validSaf, VERSION_TAG))
         .thenReturn(Map.of(validSaf.getScope().getScopetag(), context));
     when(mockWrangler.fetchTerms(context, FILTER_TERM)).thenReturn(matchingTerms);
     MRGModel generatedMrg = generator.generate(scopedir, safFilename, VERSION_TAG);

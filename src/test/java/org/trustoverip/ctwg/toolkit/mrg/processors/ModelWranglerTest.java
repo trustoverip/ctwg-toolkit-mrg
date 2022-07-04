@@ -34,7 +34,8 @@ class ModelWranglerTest {
   private static final String MRGTEST_VERSION = "mrgtest";
   private static final Path INVALID_SAF = Paths.get("./src/test/resources/invalid-saf.yaml");
   private static final Path VALID_SAF = Paths.get("./src/test/resources/saf-sample-1.yaml");
-  private static final String REPO = "https://github.com/essif-lab/framework/tree/master/docs/tev2";
+  private static final String SCOPEDIR =
+      "https://github.com/essif-lab/framework/tree/master/docs/tev2";
   private static final String OWNER_REPO = "essif-lab/framework";
   private static final String VALID_SAF_NAME = "valid.saf";
   private static final String INVALID_SAF_NAME = "invalid.saf";
@@ -71,14 +72,14 @@ class ModelWranglerTest {
   void given_invalid_saf_when_get_saf_should_throw_exception() {
     when(mockReader.getContent(OWNER_REPO, INVALID_SAF_TRIGGER)).thenReturn(invalidSafContent);
     assertThatExceptionOfType(MRGGenerationException.class)
-        .isThrownBy(() -> wrangler.getSaf(REPO, INVALID_SAF_NAME))
+        .isThrownBy(() -> wrangler.getSaf(SCOPEDIR, INVALID_SAF_NAME))
         .withMessage(UNABLE_TO_PARSE_SAF);
   }
 
   @Test
   void given_valid_saf_when_get_saf_should_populate_key_fields() {
     when(mockReader.getContent(OWNER_REPO, VALID_SAF_TRIGGER)).thenReturn(validSafContent);
-    SAFModel saf = wrangler.getSaf(REPO, VALID_SAF_NAME);
+    SAFModel saf = wrangler.getSaf(SCOPEDIR, VALID_SAF_NAME);
     String expectedScopetag = "tev2";
     int expectedScopesCount = 2;
     int expectedVersionsCount = 3;
@@ -92,8 +93,9 @@ class ModelWranglerTest {
   void given_valid_saf_when_build_context_map_then_return_populated_map() {
     when(mockReader.getContent(OWNER_REPO, VALID_SAF_TRIGGER)).thenReturn(validSafContent);
     String expectedScopetag = "tev2";
-    SAFModel saf = wrangler.getSaf(REPO, VALID_SAF_NAME);
-    Map<String, GeneratorContext> contextMap = wrangler.buildContextMap(saf, MRGTEST_VERSION);
+    SAFModel saf = wrangler.getSaf(SCOPEDIR, VALID_SAF_NAME);
+    Map<String, GeneratorContext> contextMap =
+        wrangler.buildContextMap(SCOPEDIR, saf, MRGTEST_VERSION);
     Assertions.assertThat(contextMap).isNotEmpty();
     // check local context
     Assertions.assertThat(contextMap).containsKey(expectedScopetag);

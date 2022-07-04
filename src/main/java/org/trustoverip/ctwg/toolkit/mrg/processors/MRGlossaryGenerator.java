@@ -57,7 +57,7 @@ public class MRGlossaryGenerator {
   public MRGModel generate(final String scopedir, final String safFilename, final String versionTag)
       throws MRGGenerationException {
     SAFModel saf = wrangler.getSaf(scopedir, safFilename);
-    this.setContextMap(wrangler.buildContextMap(saf, versionTag));
+    this.setContextMap(wrangler.buildContextMap(scopedir, saf, versionTag));
     String glossaryDir = saf.getScope().getGlossarydir();
     if (StringUtils.isEmpty(glossaryDir)) {
       throw new MRGGenerationException(NO_GLOSSARY_DIR);
