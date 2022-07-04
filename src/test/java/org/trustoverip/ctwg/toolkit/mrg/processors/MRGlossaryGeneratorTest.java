@@ -62,7 +62,7 @@ class MRGlossaryGeneratorTest {
   @BeforeEach
   void set_up() throws Exception {
     YamlWrangler parser = new YamlWrangler();
-    scopedir = "scopedir";
+    scopedir = "https://github.com/essif-lab/framework/tree/master/docs/tev2";
     safFilename = "saf.yaml";
     version = "version";
     generator = new MRGlossaryGenerator(mockWrangler);
