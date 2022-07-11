@@ -54,29 +54,26 @@ public class MRGlossaryGenerator {
     this.wrangler = wrangler;
   }
 
-  public MRGModel generate(final String scopedir, final String safFilename, final String versionTag)
-      throws MRGGenerationException {
-    SAFModel saf = wrangler.getSaf(scopedir, safFilename);
-    this.setContextMap(wrangler.buildContextMap(scopedir, saf, versionTag));
-    String glossaryDir = saf.getScope().getGlossarydir();
-    if (StringUtils.isEmpty(glossaryDir)) {
-      throw new MRGGenerationException(NO_GLOSSARY_DIR);
+  public static void main(String[] args) {
+    if (args.length != LOCAL_PARAMS_EXPECTED && args.length != REMOTE_PARAMS_EXPECTED) {
+      log.error(INVALID_INPUT);
+      System.exit(1);
     }
-    Version localVersion = getVersion(saf, versionTag);
-    String mrgFilename = constructFilename(localVersion);
-    log.debug(String.format("MRG filename to be generated is: %s", mrgFilename));
-    // construct the parts of the MRG Model
-    Terminology terminology =
-        new Terminology(saf.getScope().getScopetag(), saf.getScope().getScopedir());
-    List<ScopeRef> scopes = new ArrayList<>(saf.getScopes());
-    List<MRGEntry> entries =
-        constructLocalEntries(contextMap.get(saf.getScope().getScopetag()), localVersion);
-    // TODO
-    //    entries.addAll(constructRemoteEntries(saf, localVersion));
-    MRGModel mrg = new MRGModel(terminology, scopes, entries);
-    wrangler.writeMrgToFile(mrg, mrgFilename);
+    boolean local = args.length == LOCAL_PARAMS_EXPECTED;
+    String scopedir = args[SCOPEDIR_INDEX];
+    String versionTag = args[VERSIONTAG_INDEX];
+    MRGlossaryGenerator generator = new MRGlossaryGenerator(local);
+    log.info("***** Starting generation *****");
+    log.info("Creating an MRG from scopedir {} and version tag {}", scopedir, versionTag);
+    try {
+      generator.generate(scopedir, DEFAULT_SAF_FILENAME, versionTag);
+      log.info("***** Completed: Successfully generated MRG *****");
+    } catch (MRGGenerationException mrge) {
+      log.error(mrge.getMessage());
+    } catch (Exception e) {
+      log.error(UNEXPECTED_ERROR, e.getMessage());
+    }
 
-    return mrg;
   }
 
   private Version getVersion(SAFModel saf, String versionTag) throws MRGGenerationException {
@@ -145,21 +142,33 @@ public class MRGlossaryGenerator {
       %s
       """;
 
-  public static void main(String[] args) {
-    if (args.length != LOCAL_PARAMS_EXPECTED && args.length != REMOTE_PARAMS_EXPECTED) {
-      System.out.println(INVALID_INPUT);
+  public MRGModel generate(final String scopedir, final String safFilename, final String versionTag)
+      throws MRGGenerationException {
+    log.info("Step 1/5: Parsing Scope Administration File (SAF) from location {}", safFilename);
+    SAFModel saf = wrangler.getSaf(scopedir, safFilename);
+    log.info("Step 2/5: Resolving local and remote scopes defined in the SAF", safFilename);
+    this.setContextMap(wrangler.buildContextMap(scopedir, saf, versionTag));
+    String glossaryDir = saf.getScope().getGlossarydir();
+    if (StringUtils.isEmpty(glossaryDir)) {
+      throw new MRGGenerationException(NO_GLOSSARY_DIR);
     }
-    boolean local = args.length == LOCAL_PARAMS_EXPECTED;
-    String scopedir = args[SCOPEDIR_INDEX];
-    String versionTag = args[VERSIONTAG_INDEX];
-    MRGlossaryGenerator generator = new MRGlossaryGenerator(local);
-    try {
-      generator.generate(scopedir, DEFAULT_SAF_FILENAME, versionTag);
-    } catch (MRGGenerationException mrge) {
-      System.out.println(mrge.getMessage());
-    } catch (Exception e) {
-      System.out.println(String.format(UNEXPECTED_ERROR, e.getMessage()));
-    }
+    Version localVersion = getVersion(saf, versionTag);
+    String mrgFilename = constructFilename(localVersion);
+    log.debug(String.format("MRG filename to be generated is: %s", mrgFilename));
+    // construct the parts of the MRG Model
+    log.info("Step 3/5: Creating the <terminology> section of the MRG", safFilename);
+    Terminology terminology =
+        new Terminology(saf.getScope().getScopetag(), saf.getScope().getScopedir());
+    List<ScopeRef> scopes = new ArrayList<>(saf.getScopes());
+    log.info("Step 4/5: Parsing local terms (terms in this scopedir) to create MRG entries:", safFilename);
+    List<MRGEntry> entries =
+        constructLocalEntries(contextMap.get(saf.getScope().getScopetag()), localVersion);
+    // TODO
+    //    entries.addAll(constructRemoteEntries(saf, localVersion));
+    MRGModel mrg = new MRGModel(terminology, scopes, entries);
+    log.info("Step 5/5: Writing generated MRG to file: {}", mrgFilename);
+    wrangler.writeMrgToFile(mrg, mrgFilename);
 
+    return mrg;
   }
 }
