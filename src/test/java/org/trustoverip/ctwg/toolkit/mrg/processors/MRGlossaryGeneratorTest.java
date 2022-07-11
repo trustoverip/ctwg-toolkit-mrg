@@ -26,12 +26,16 @@ import org.trustoverip.ctwg.toolkit.mrg.model.Terminology;
 
 /**
  * Many of the requirements are taken from
- * https://essif-lab.github.io/framework/docs/tev2/tev2-toolbox#creating-an-mrg
  *
+ * @link <a
+ *     href="https://essif-lab.github.io/framework/docs/tev2/tev2-toolbox#creating-an-mrg">...</a>
  * @author sih
  */
 @ExtendWith(MockitoExtension.class)
 class MRGlossaryGeneratorTest {
+
+  private static final String SCOPEDIR =
+      "https://github.com/essif-lab/framework/tree/master/docs/tev2";
   private static final String OWNER_REPO = "essif-lab/framework";
   private static final String ROOT_DIR_PATH = "docs";
   private static final String CURATED_DIR = "terms";
@@ -52,14 +56,13 @@ class MRGlossaryGeneratorTest {
 
   private List<Term> matchingTerms;
 
-  private Term termTerm;
   private Term termScope;
-  private ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
+  private final ObjectMapper yamlMapper = new ObjectMapper(new YAMLFactory());
 
   @BeforeEach
   void set_up() throws Exception {
     YamlWrangler parser = new YamlWrangler();
-    scopedir = "scopedir";
+    scopedir = "https://github.com/essif-lab/framework/tree/master/docs/tev2";
     safFilename = "saf.yaml";
     version = "version";
     generator = new MRGlossaryGenerator(mockWrangler);
@@ -67,13 +70,13 @@ class MRGlossaryGeneratorTest {
     noGlossarySaf = parser.parseSaf(new String(Files.readAllBytes(NO_GLOSSARY_SAF_PATH)));
     context = new GeneratorContext(OWNER_REPO, ROOT_DIR_PATH, VERSION_TAG, CURATED_DIR);
     String termStringTerm = new String(Files.readAllBytes(BASIC_TERM_FILE));
-    termTerm = yamlMapper.readValue(termStringTerm, Term.class);
+    Term termTerm = yamlMapper.readValue(termStringTerm, Term.class);
     matchingTerms = List.of(termTerm);
   }
 
   @Test
   @DisplayName("Should throw an exception when no glossary dir")
-  void given_saf_with_no_glossary_dir_when_generate_then_throw_MRGException() throws Exception {
+  void given_saf_with_no_glossary_dir_when_generate_then_throw_MRGException() {
     when(mockWrangler.getSaf(scopedir, safFilename)).thenReturn(noGlossarySaf);
     assertThatExceptionOfType(MRGGenerationException.class)
         .isThrownBy(() -> generator.generate(scopedir, safFilename, version))
@@ -82,7 +85,7 @@ class MRGlossaryGeneratorTest {
 
   @Test
   @DisplayName("Should throw an exception when no glossary dir")
-  void given_saf_with_no_such_version_tag_when_generate_then_throw_MRGException() throws Exception {
+  void given_saf_with_no_such_version_tag_when_generate_then_throw_MRGException() {
     when(mockWrangler.getSaf(scopedir, safFilename)).thenReturn(validSaf);
     String badVersion = "moo";
     String expectedNoVersionMessage = String.format(NO_SUCH_VERSION, badVersion);
@@ -95,7 +98,7 @@ class MRGlossaryGeneratorTest {
   @DisplayName("Given valid input generate should create MRG")
   void given_valid_input_generate_should_create_mrg() {
     when(mockWrangler.getSaf(scopedir, safFilename)).thenReturn(validSaf);
-    when(mockWrangler.buildContextMap(validSaf, VERSION_TAG))
+    when(mockWrangler.buildContextMap(SCOPEDIR, validSaf, VERSION_TAG))
         .thenReturn(Map.of(validSaf.getScope().getScopetag(), context));
     when(mockWrangler.fetchTerms(context, FILTER_TERM)).thenReturn(matchingTerms);
     MRGModel generatedMrg = generator.generate(scopedir, safFilename, VERSION_TAG);

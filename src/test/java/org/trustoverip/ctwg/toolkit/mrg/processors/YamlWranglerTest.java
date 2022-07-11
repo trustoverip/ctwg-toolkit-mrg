@@ -28,8 +28,8 @@ class YamlWranglerTest {
   private static final Path SAF_SAMPLE_1_FILE = Paths.get("./src/test/resources/saf-sample-1.yaml");
   private static final Path INVALID_YAML_FILE = Paths.get("./src/test/resources/invalid-saf.yaml");
   private static final Path SAMPLE_MRG = Paths.get("./src/test/resources/sample-mrg.yaml");
-  ;
-  private static ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+
+  private static final ObjectMapper MAPPER = new ObjectMapper(new YAMLFactory());
   private YamlWrangler yamlWrangler;
   private String safAsString;
   private String invalidYamlSaf;

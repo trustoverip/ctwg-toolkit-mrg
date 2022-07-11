@@ -46,8 +46,7 @@ final class YamlWrangler {
     try (OutputStream fos = Files.newOutputStream(location)) {
       yamlMapper.writeValue(fos, mrg);
     } catch (IOException ioException) {
-      throw new MRGGenerationException(
-          String.format(CANNOT_WRITE_MRG, location.toAbsolutePath().toString()));
+      throw new MRGGenerationException(String.format(CANNOT_WRITE_MRG, location.toAbsolutePath()));
     }
   }
 }

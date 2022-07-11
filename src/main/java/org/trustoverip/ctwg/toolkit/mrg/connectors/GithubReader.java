@@ -20,7 +20,7 @@ public class GithubReader implements MRGConnector {
   private static final String GH_NAME = "GH_NAME";
 
   private static final String GH_TOKEN = "GH_TOKEN";
-  private GitHub gh;
+  private final GitHub gh;
 
   public GithubReader() {
     try {
@@ -32,7 +32,7 @@ public class GithubReader implements MRGConnector {
 
   @Override
   public String getContent(final String repository, final String contentName) {
-    GHRepository repo = null;
+    GHRepository repo;
     try {
       repo = gh.getRepository(repository);
       GHContent content = repo.getFileContent(contentName);
@@ -70,8 +70,7 @@ public class GithubReader implements MRGConnector {
   }
 
   private String contentAsString(GHContent content) {
-    try {
-      InputStream is = content.read();
+    try (InputStream is = content.read()) {
       return new String(is.readAllBytes(), StandardCharsets.US_ASCII);
     } catch (IOException e) {
       throw new RuntimeException(e);

@@ -5,6 +5,7 @@ import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -18,7 +19,7 @@ public class LocalFSConnector implements MRGConnector {
   @Override
   public String getContent(String repository, String contentName) {
     String content;
-    Path contentPath = Path.of(repository, contentName);
+    Path contentPath = Paths.get(contentName); // repository isn't really relevant
     try {
       content = new String(Files.readAllBytes(contentPath));
     } catch (IOException e) {
@@ -42,7 +43,7 @@ public class LocalFSConnector implements MRGConnector {
   @Override
   public List<FileContent> getDirectoryContent(String repository, String directoryName) {
     List<FileContent> contents;
-    Path directoryPath = Path.of(repository, directoryName);
+    Path directoryPath = Paths.get(directoryName);
     try (Stream<Path> contentsAsPath = Files.walk(directoryPath)) {
       contents =
           contentsAsPath

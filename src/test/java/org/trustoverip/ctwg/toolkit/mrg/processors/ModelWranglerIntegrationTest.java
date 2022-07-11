@@ -18,10 +18,10 @@ class ModelWranglerIntegrationTest {
   private static final String PRIVATE_SCOPEDIR = "https://github.com/sih/scratch";
   private static final String SAF_FILENAME = "saf.yaml";
   private static final String MRGTEST_VERSION = "mrgtest";
-  private String expectedOwnerRepo = "essif-lab/framework";
-  private String expectedRootDirPath = "docs/tev2";
-  private String expectedScopetag = "tev2";
-  private String expectedSafFilepath = "docs/tev2/saf.yaml";
+  private static final String EXPECTED_OWNER_REPO = "essif-lab/framework";
+  private static final String EXPECTED_ROOT_DIR_PATH = "docs/tev2";
+  private static final String EXPECTED_SCOPETAG = "tev2";
+  private static final String EXPECTED_SAF_FILEPATH = "docs/tev2/saf.yaml";
 
   private ModelWrangler wrangler;
 
@@ -31,7 +31,7 @@ class ModelWranglerIntegrationTest {
   }
 
   @Test
-  void given_private_scopedir_when_get_saf_as_string_then_return_saf_exception() throws Exception {
+  void given_private_scopedir_when_get_saf_as_string_then_return_saf_exception() {
     assertThatExceptionOfType(MRGGenerationException.class)
         .isThrownBy(() -> wrangler.getSafAsString(PRIVATE_SCOPEDIR, SAF_FILENAME))
         .withMessage(
@@ -41,7 +41,7 @@ class ModelWranglerIntegrationTest {
   }
 
   @Test
-  void given_non_existent_saf_when_get_saf_as_string_then_return_saf_exception() throws Exception {
+  void given_non_existent_saf_when_get_saf_as_string_then_return_saf_exception() {
     assertThatExceptionOfType(MRGGenerationException.class)
         .isThrownBy(() -> wrangler.getSafAsString(TEV2_SCOPEDIR, "foo"))
         .withMessage(
@@ -50,7 +50,7 @@ class ModelWranglerIntegrationTest {
   }
 
   @Test
-  void given_saf_that_exists_when_get_saf_as_string_then_return_valid_content() throws Exception {
+  void given_saf_that_exists_when_get_saf_as_string_then_return_valid_content() {
     String safString = wrangler.getSafAsString(TEV2_SCOPEDIR, SAF_FILENAME);
     assertThat(safString).isNotNull();
   }
