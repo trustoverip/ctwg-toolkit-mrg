@@ -138,9 +138,9 @@ class ModelWrangler {
       t = yamlWrangler.parseTerm(fileContent.content());
       t.setFilename(fileContent.filename());
       t.setHeadings(fileContent.headings());
-      log.info("Created term with id {}", t.getId());
+      log.info("... Creating entry from term with id = {} ...", t.getId());
     } catch (Exception e) {
-      log.error("Got exception for file {}", fileContent.filename());
+      log.error("Couldn't read or parse the following term file: {}", fileContent.filename());
     }
     return t;
   }
