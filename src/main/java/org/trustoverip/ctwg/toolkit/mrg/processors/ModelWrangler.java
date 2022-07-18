@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -110,34 +111,51 @@ class ModelWrangler {
      2. Then create a map by scopetag with Pair of: <List of terms, vsnTag>
      3. Then for each scopetag in the context map add the terms of interest and the vsn tag
     */
-    Map<String, Pair<List<String>, String>> termsByScopetag = new HashMap<>();
-    // 0
+    Map<String, Pair<List<String>, String>> termsAndVersionByScopetag =
+        getTermsAndVersionOfInterestByScopetag(saf, versionTag);
+    // 3. add terms and versions of interest to context
+    for (Entry<String, Pair<List<String>, String>> entry : termsAndVersionByScopetag.entrySet()) {
+      GeneratorContext context = contextMap.get(entry.getKey());
+      Pair<List<String>, String> termsAndVersion = entry.getValue();
+      List<String> termsOfInterest = termsAndVersion.getLeft();
+      String vsnTag = termsAndVersion.getRight();
+      context.setTermsOfInterest(termsOfInterest);
+      context.setVersionTag(vsnTag);
+    }
+
+    return contextMap;
+  }
+
+  /*
+     0. Find the version of interest (i.e. the input version) in the version elements list
+     1. Extract term directives from SAF string as a Triple of <grouptag, scopetag, vsnTag>
+     2. Then create a map by scopetag with Pair of: <List of terms, vsnTag>
+  */
+  private Map<String, Pair<List<String>, String>> getTermsAndVersionOfInterestByScopetag(
+      SAFModel saf, String versionTag) {
+    Map<String, Pair<List<String>, String>> termsAndVersionByScopetag = new HashMap<>();
+    // 0 Find the version of interest in the SAF
     Optional<Version> maybeVersion =
         saf.getVersions().stream().filter(v -> v.getVsntag().equals(versionTag)).findFirst();
     if (maybeVersion.isPresent()) {
       List<String> termDirectives = maybeVersion.get().getTerms();
       for (String td : termDirectives) {
-        // 1
+        // 1 Extract terms each term and the version from the input string, e.g. [tev2](@tev2:0.1.7)
         Triple<String, String, String> termDirective = parse(td);
-        // 2
+        String term = termDirective.getLeft();
+        String grouptag = termDirective.getMiddle();
+        String vsntag = termDirective.getRight();
+        // 2 Create a map keyed by scopetag with a Pair of terms of interest(L) and version (R) as
+        // the value
         Pair<List<String>, String> termsAndVersion =
-            termsByScopetag.getOrDefault(
-                termDirective.getMiddle(), Pair.of(new ArrayList<>(), StringUtils.EMPTY));
+            termsAndVersionByScopetag.getOrDefault(
+                grouptag, Pair.of(new ArrayList<>(), StringUtils.EMPTY));
         List<String> terms = termsAndVersion.getLeft();
-        String vsnTag = termDirective.getRight();
-        terms.add(termDirective.getLeft()); // add the term to the list
-        termsByScopetag.put(termDirective.getMiddle(), Pair.of(terms, vsnTag));
+        terms.add(term); // add the term to the list
+        termsAndVersionByScopetag.put(grouptag, Pair.of(terms, vsntag));
       }
     }
-    // 3. add terms and versions of interest to context
-    for (Entry<String, Pair<List<String>, String>> entry : termsByScopetag.entrySet()) {
-      GeneratorContext context = contextMap.get(entry.getKey());
-      Pair<List<String>, String> termsAndVersion = entry.getValue();
-      context.setTermsOfInterest(termsAndVersion.getLeft());
-      context.setVersionTag(termsAndVersion.getRight());
-    }
-
-    return contextMap;
+    return termsAndVersionByScopetag;
   }
 
   /*
@@ -158,6 +176,8 @@ class ModelWrangler {
     return directive;
   }
 
+
+
   void writeMrgToFile(MRGModel mrg, String glossaryDir, String mrgFilename)
       throws MRGGenerationException {
     Path glossaryPath = Paths.get(glossaryDir);
@@ -171,7 +191,6 @@ class ModelWrangler {
     yamlWrangler.writeMrg(mrgFilepath, mrg);
   }
 
-  // TODO accept multiple term filters
   List<Term> fetchTerms(GeneratorContext localContext, String termFilter) {
     List<Term> terms = new ArrayList<>();
     String curatedPath =
@@ -184,7 +203,7 @@ class ModelWrangler {
               .map(this::cleanTermFile)
               .map(this::toYaml)
               .filter(term -> term.getScope().equals(termFilter))
-              .toList();
+              .collect(Collectors.toList());
     }
     return terms;
   }

@@ -1,12 +1,33 @@
 package org.trustoverip.ctwg.toolkit.mrg.processors;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Predicate;
+import org.apache.commons.lang3.StringUtils;
 import org.trustoverip.ctwg.toolkit.mrg.model.Term;
 
 /**
  * @author sih
  */
 public class TermsFilter implements Predicate<Term> {
+
+  private static final String ALL_TAGS = "*";
+  private static final String SEPARATOR = ",";
+  private final boolean matchAllTags;
+  private final String grouptag;
+
+  private TermsFilter(String grouptag) {
+    this.grouptag = grouptag;
+    matchAllTags = ALL_TAGS.equals(grouptag);
+  }
+
+  public static TermsFilter of(String grouptag) {
+    return new TermsFilter(grouptag);
+  }
+
+  public static TermsFilter all() {
+    return new TermsFilter(ALL_TAGS);
+  }
 
   /**
    * Evaluates this predicate on the given argument.
@@ -16,7 +37,14 @@ public class TermsFilter implements Predicate<Term> {
    */
   @Override
   public boolean test(Term term) {
-    return false;
+    if (matchAllTags) {
+      return true;
+    } else if (StringUtils.isEmpty(term.getGrouptags())) {
+      return false;
+    } else {
+      List<String> grouptags = Arrays.asList(term.getGrouptags().split(SEPARATOR));
+      return grouptags.stream().map(StringUtils::trim).toList().contains(grouptag);
+    }
   }
 
   /**

@@ -69,6 +69,11 @@
       <version>${commons-lang3.version}</version>
     </dependency>
     <dependency>
+      <artifactId>commons-collections</artifactId>
+      <groupId>commons-collections</groupId>
+      <version>${commons-collection.version}</version>
+    </dependency>
+    <dependency>
       <artifactId>jackson-dataformat-yaml</artifactId>
       <groupId>com.fasterxml.jackson.dataformat</groupId>
       <version>${jackson.version}</version>
@@ -121,6 +126,7 @@
   <properties>
     <assertj.version>3.18.1</assertj.version>
     <commons-lang3.version>3.11</commons-lang3.version>
+    <commons-collection.version>3.2.2</commons-collection.version>
     <github-api.version>1.306</github-api.version>
     <jackson.version>2.13.0</jackson.version>
     <java.version>17</java.version>
