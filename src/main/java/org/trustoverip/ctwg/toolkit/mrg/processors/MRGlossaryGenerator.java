@@ -179,7 +179,7 @@ public class MRGlossaryGenerator {
     }
     MRGModel mrg = new MRGModel(terminology, scopes, entries);
     log.info("Step 6/6: Writing generated MRG to file: {}", mrgFilename);
-    wrangler.writeMrgToFile(mrg, mrgFilename);
+    wrangler.writeMrgToFile(mrg, saf.getScope().getGlossarydir(), mrgFilename);
 
 
     return mrg;

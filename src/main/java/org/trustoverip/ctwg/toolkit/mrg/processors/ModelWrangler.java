@@ -1,6 +1,11 @@
 package org.trustoverip.ctwg.toolkit.mrg.processors;
 
+import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException.CANNOT_CREATE_GLOSSARY_DIR;
+
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -153,8 +158,16 @@ class ModelWrangler {
     return directive;
   }
 
-  void writeMrgToFile(MRGModel mrg, String mrgFilename) throws MRGGenerationException {
-    Path mrgFilepath = Path.of(mrgFilename);
+  void writeMrgToFile(MRGModel mrg, String glossaryDir, String mrgFilename)
+      throws MRGGenerationException {
+    Path glossaryPath = Paths.get(glossaryDir);
+    try {
+      Files.createDirectories(glossaryPath);
+    } catch (IOException ioe) {
+      throw new MRGGenerationException(
+          String.format(CANNOT_CREATE_GLOSSARY_DIR, glossaryPath.toAbsolutePath()));
+    }
+    Path mrgFilepath = Path.of(glossaryDir, mrgFilename);
     yamlWrangler.writeMrg(mrgFilepath, mrg);
   }
 
