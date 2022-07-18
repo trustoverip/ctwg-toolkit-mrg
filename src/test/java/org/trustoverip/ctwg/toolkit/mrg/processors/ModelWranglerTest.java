@@ -124,6 +124,39 @@ class ModelWranglerTest {
     assertThat(toipCtwgContext.getRootDirPath()).isEqualTo("/");
   }
 
+
+  @DisplayName("""
+        Given valid SAF and multiple terms of interest and versions from multiple scopes
+        When build context map
+        Then capture all terms of interest and their appropriate versions
+      """)
+  @Test
+  void testMulitpleTermsOfInterest() {
+    // uses the 0x921456 version in the test SAF file (see ./src/test/resources/saf.yaml)
+    when(mockReader.getContent(OWNER_REPO, VALID_SAF_TRIGGER)).thenReturn(validSafContent);
+    SAFModel saf = wrangler.getSaf(SCOPEDIR, VALID_SAF_NAME);
+    Map<String, GeneratorContext> contextMap =
+        wrangler.buildContextMap(SCOPEDIR, saf, "0x921456");
+    Assertions.assertThat(contextMap)
+        .containsOnlyKeys("tev2", "essiflab", "essif-lab", "ctwg", "toip-ctwg");
+    // essiflab scopetag
+    GeneratorContext essiflabContext = contextMap.get("essiflab");
+    assertThat(essiflabContext.getTermsOfInterest()).isEmpty();
+    assertThat(essiflabContext.getVersionTag()).isEmpty();
+    // essif-lab scopetag
+    GeneratorContext essifLabContext = contextMap.get("essif-lab");
+    assertThat(essifLabContext.getTermsOfInterest()).containsExactlyInAnyOrder("party", "management", "community");
+    assertThat(essifLabContext.getVersionTag()).isEqualTo("0.9.4");
+    // ctwg scopetag
+    GeneratorContext ctwg = contextMap.get("ctwg");
+    assertThat(ctwg.getTermsOfInterest()).isEmpty();
+    assertThat(ctwg.getVersionTag()).isEmpty();
+    // toip scopetag
+    GeneratorContext toipCtwg = contextMap.get("toip-ctwg");
+    assertThat(toipCtwg.getTermsOfInterest()).isEmpty();
+    assertThat(toipCtwg.getVersionTag()).isEmpty();
+  }
+
   @DisplayName("Given valid terms in the directory when fetch terms then return the right terms")
   @Test
   void testFetchTermsValid() {

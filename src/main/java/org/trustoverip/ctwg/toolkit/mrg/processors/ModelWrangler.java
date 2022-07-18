@@ -7,10 +7,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.FileContent;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.LocalFSConnector;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.MRGConnector;
@@ -18,6 +24,7 @@ import org.trustoverip.ctwg.toolkit.mrg.model.MRGModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.SAFModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.ScopeRef;
 import org.trustoverip.ctwg.toolkit.mrg.model.Term;
+import org.trustoverip.ctwg.toolkit.mrg.model.Version;
 
 /**
  * This class works with scope files and turns them in to a Java object model for easier
@@ -37,6 +44,9 @@ class ModelWrangler {
   private static final int REPO_PART_INDEX = 2;
   private static final String MULTIPLE_USE_FIELDS = "multiple-use fields";
   private static final String GENERIC_FRONT_MATTER = "generic front-matter";
+
+  private static final Pattern TERM_DIRECTIVE_PATTERN =
+      Pattern.compile("\\[(\\w+)]\\(?@(\\w+-?\\w*):?([A-Za-z0-9.-_]+)?\\)?");
   private final YamlWrangler yamlWrangler;
   private final MRGConnector connector;
 
@@ -71,7 +81,7 @@ class ModelWrangler {
 
   Map<String, GeneratorContext> buildContextMap(String scopedir, SAFModel saf, String versionTag) {
     Map<String, GeneratorContext> contextMap = new HashMap<>();
-    // do local scope
+    // create context for local scope
     String localScope = saf.getScope().getScopetag();
     GeneratorContext localContext =
         createSkeletonContext(scopedir, saf.getScope().getCuratedir(), versionTag);
@@ -79,16 +89,68 @@ class ModelWrangler {
     // create skeleton external scopes
     List<ScopeRef> externalScopes = saf.getScopes();
     for (ScopeRef externalScope : externalScopes) {
-      GeneratorContext generatorContext =
-          createSkeletonContext(
-              externalScope.getScopedir(), saf.getScope().getCuratedir(), versionTag);
       List<String> scopetags = externalScope.getScopetags();
       for (String scopetag : scopetags) {
+        // note that will set the version below
+        GeneratorContext generatorContext =
+            createSkeletonContext(
+                externalScope.getScopedir(), saf.getScope().getCuratedir(), StringUtils.EMPTY);
         contextMap.put(scopetag, generatorContext);
       }
     }
 
+    /*
+     0. Find the version of interest (i.e. the input version) in the version elements list
+     1. Extract term directives from SAF string as a Triple of <grouptag, scopetag, vsnTag>
+     2. Then create a map by scopetag with Pair of: <List of terms, vsnTag>
+     3. Then for each scopetag in the context map add the terms of interest and the vsn tag
+    */
+    Map<String, Pair<List<String>, String>> termsByScopetag = new HashMap<>();
+    // 0
+    Optional<Version> maybeVersion =
+        saf.getVersions().stream().filter(v -> v.getVsntag().equals(versionTag)).findFirst();
+    if (maybeVersion.isPresent()) {
+      List<String> termDirectives = maybeVersion.get().getTerms();
+      for (String td : termDirectives) {
+        // 1
+        Triple<String, String, String> termDirective = parse(td);
+        // 2
+        Pair<List<String>, String> termsAndVersion =
+            termsByScopetag.getOrDefault(
+                termDirective.getMiddle(), Pair.of(new ArrayList<>(), StringUtils.EMPTY));
+        List<String> terms = termsAndVersion.getLeft();
+        String vsnTag = termDirective.getRight();
+        terms.add(termDirective.getLeft()); // add the term to the list
+        termsByScopetag.put(termDirective.getMiddle(), Pair.of(terms, vsnTag));
+      }
+    }
+    // 3. add terms and versions of interest to context
+    for (Entry<String, Pair<List<String>, String>> entry : termsByScopetag.entrySet()) {
+      GeneratorContext context = contextMap.get(entry.getKey());
+      Pair<List<String>, String> termsAndVersion = entry.getValue();
+      context.setTermsOfInterest(termsAndVersion.getLeft());
+      context.setVersionTag(termsAndVersion.getRight());
+    }
+
     return contextMap;
+  }
+
+  /*
+   Grouptag and scopetag are mandatory but version is optional
+   [grouptag]@scopetag:version
+  */
+  private Triple<String, String, String> parse(String td) {
+    Triple<String, String, String> directive;
+    Matcher m = TERM_DIRECTIVE_PATTERN.matcher(td);
+    if (m.matches()) {
+      String grouptag = m.group(1);
+      String scopetag = m.group(2);
+      String vsntag = (m.groupCount() == 3) ? m.group(3) : StringUtils.EMPTY;
+      directive = Triple.of(grouptag, scopetag, vsntag);
+    } else {
+      directive = Triple.of(StringUtils.EMPTY, StringUtils.EMPTY, StringUtils.EMPTY);
+    }
+    return directive;
   }
 
   void writeMrgToFile(MRGModel mrg, String mrgFilename) throws MRGGenerationException {

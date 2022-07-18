@@ -1,6 +1,9 @@
 package org.trustoverip.ctwg.toolkit.mrg.processors;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author sih
@@ -13,7 +16,9 @@ public final class GeneratorContext {
 
   private final String curatedDir;
 
-  private final String versionTag;
+  @Setter private String versionTag;
+
+  @Setter private List<String> termsOfInterest;
 
   public GeneratorContext(
       String ownerRepo, String rootDirPath, String versionTag, String curatedDir) {
@@ -22,5 +27,6 @@ public final class GeneratorContext {
     this.curatedDir = curatedDir;
     this.versionTag = versionTag;
     this.safFilepath = String.join("/", rootDirPath, MRGlossaryGenerator.DEFAULT_SAF_FILENAME);
+    this.termsOfInterest = new ArrayList<>();
   }
 }
