@@ -3,6 +3,7 @@ package org.trustoverip.ctwg.toolkit.mrg.processors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -125,6 +126,20 @@ class TermsFilterTest {
     List<Term> all = List.of(foo, bar, foobar, noo);
     List<Term> mustHaveBoth = all.stream().filter(TermsFilter.of("foo").negate()).collect(Collectors.toList());
     assertThat(mustHaveBoth).containsExactlyInAnyOrder( bar, noo);
+  }
+
+  @Test
+  @DisplayName("""
+      Given a list of tags
+      When converting to predicates and reducing using or
+      Then can apply resulting predicate to filter a list to the correct terms
+      """)
+  void testFromTagList() {
+    List<Term> all = List.of(foo, bar, foobar, noo);
+    List<String> tagsOfInterest = List.of("foo", "bar");
+    Predicate<Term> predicate = tagsOfInterest.stream().map(tag -> (Predicate<Term>)TermsFilter.of(tag)).reduce(Predicate::or).get();
+    List<Term> filtered = all.stream().filter(predicate).collect(Collectors.toList());
+    assertThat(filtered).containsExactlyInAnyOrder(foo, bar, foobar);
   }
 
 }
