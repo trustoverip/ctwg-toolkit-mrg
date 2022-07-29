@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.trustoverip.ctwg.toolkit.mrg.model.Term;
+import org.trustoverip.ctwg.toolkit.mrg.processors.TermsFilter.TermFilterType;
 
 /**
  * @author sih
@@ -23,12 +24,16 @@ class TermsFilterTest {
   @BeforeEach
   void setUp() {
     foo = new Term();
+    foo.setTermid("foo");
     foo.setGrouptags("foo");
     bar = new Term();
+    bar.setTermid("bar");
     bar.setGrouptags("bar");
     foobar = new Term();
+    foobar.setTermid("foobar");
     foobar.setGrouptags("foo, bar");
     noo = new Term();
+    noo.setTermid("noo");
     noo.setGrouptags(null);
   }
 
@@ -53,30 +58,56 @@ class TermsFilterTest {
       When filter
       Then should return true where grouptags match
       """)
-  void testFilter() {
-    TermsFilter fooFilter = TermsFilter.of("foo");
+  void testFilterTags() {
+    TermsFilter fooFilter = TermsFilter.of(TermFilterType.GROUPTAG, "foo");
     assertThat(fooFilter.test(foo)).isTrue();
     assertThat(fooFilter.test(bar)).isFalse();
     assertThat(fooFilter.test(foobar)).isTrue();
     assertThat(fooFilter.test(noo)).isFalse();
 
-    TermsFilter barFilter = TermsFilter.of("bar");
+    TermsFilter barFilter = TermsFilter.of(TermFilterType.GROUPTAG, "bar");
     assertThat(barFilter.test(foo)).isFalse();
     assertThat(barFilter.test(bar)).isTrue();
     assertThat(barFilter.test(foobar)).isTrue();
     assertThat(barFilter.test(noo)).isFalse();
 
-    TermsFilter emptyFilter = TermsFilter.of("");
+    TermsFilter emptyFilter = TermsFilter.of(TermFilterType.GROUPTAG, "");
     assertThat(emptyFilter.test(foo)).isFalse();
     assertThat(emptyFilter.test(bar)).isFalse();
     assertThat(emptyFilter.test(foobar)).isFalse();
     assertThat(emptyFilter.test(noo)).isFalse();
 
-    TermsFilter nonMatchingFilter = TermsFilter.of("moo");
+    TermsFilter nonMatchingFilter = TermsFilter.of(TermFilterType.GROUPTAG, "moo");
     assertThat(nonMatchingFilter.test(foo)).isFalse();
     assertThat(nonMatchingFilter.test(bar)).isFalse();
     assertThat(nonMatchingFilter.test(foobar)).isFalse();
     assertThat(nonMatchingFilter.test(noo)).isFalse();
+  }
+
+  @Test
+  @DisplayName("""
+      Given a filter value that is not all
+      When filter
+      Then should return true where termids match
+      """)
+  void testFilterTerms() {
+    TermsFilter fooFilter = TermsFilter.of(TermFilterType.TERM, "foo");
+    assertThat(fooFilter.test(foo)).isTrue();
+    assertThat(fooFilter.test(bar)).isFalse();
+    assertThat(fooFilter.test(foobar)).isFalse();
+    assertThat(fooFilter.test(noo)).isFalse();
+
+    TermsFilter nonMatchingFilter = TermsFilter.of(TermFilterType.TERM, "moo");
+    assertThat(nonMatchingFilter.test(foo)).isFalse();
+    assertThat(nonMatchingFilter.test(bar)).isFalse();
+    assertThat(nonMatchingFilter.test(foobar)).isFalse();
+    assertThat(nonMatchingFilter.test(noo)).isFalse();
+
+    TermsFilter multiMatchFilter = TermsFilter.of(TermFilterType.TERM, "foo, bar");
+    assertThat(multiMatchFilter.test(foo)).isTrue();
+    assertThat(multiMatchFilter.test(bar)).isTrue();
+    assertThat(multiMatchFilter.test(foobar)).isFalse();
+    assertThat(multiMatchFilter.test(noo)).isFalse();
   }
 
   @DisplayName("""
@@ -85,10 +116,13 @@ class TermsFilterTest {
       Then should filter to leave appropriate items
       """)
   @Test
-  void testLists() {
+  void testListTags() {
     List<Term> all = List.of(foo, bar, foobar, noo);
-    List<Term> onlyFoos = all.stream().filter(TermsFilter.of("foo")).collect(Collectors.toList());
+    List<Term> onlyFoos = all.stream().filter(TermsFilter.of(TermFilterType.GROUPTAG, "foo")).collect(Collectors.toList());
     assertThat(onlyFoos).containsExactlyInAnyOrder(foo, foobar);
+    List<Term> allMatches = all.stream().filter(TermsFilter.of(TermFilterType.GROUPTAG, "foo, bar ")).collect(
+        Collectors.toList());
+    assertThat(allMatches).containsExactlyInAnyOrder(foo, bar, foobar);
   }
 
   @DisplayName("""
@@ -99,7 +133,7 @@ class TermsFilterTest {
   @Test
   void testListAnd() {
     List<Term> all = List.of(foo, bar, foobar, noo);
-    List<Term> mustHaveBoth = all.stream().filter(TermsFilter.of("foo").and(TermsFilter.of("bar"))).collect(Collectors.toList());
+    List<Term> mustHaveBoth = all.stream().filter(TermsFilter.of(TermFilterType.GROUPTAG, "foo").and(TermsFilter.of(TermFilterType.GROUPTAG, "bar"))).collect(Collectors.toList());
     assertThat(mustHaveBoth).containsExactly(foobar);
   }
 
@@ -111,7 +145,7 @@ class TermsFilterTest {
   @Test
   void testListOr() {
     List<Term> all = List.of(foo, bar, foobar, noo);
-    List<Term> mustHaveBoth = all.stream().filter(TermsFilter.of("foo").or(TermsFilter.of("bar"))).collect(Collectors.toList());
+    List<Term> mustHaveBoth = all.stream().filter(TermsFilter.of(TermFilterType.GROUPTAG, "foo").or(TermsFilter.of(TermFilterType.GROUPTAG, "bar"))).collect(Collectors.toList());
     assertThat(mustHaveBoth).containsExactlyInAnyOrder(foo, bar, foobar);
   }
 
@@ -124,8 +158,15 @@ class TermsFilterTest {
   @Test
   void testListNegate() {
     List<Term> all = List.of(foo, bar, foobar, noo);
-    List<Term> mustHaveNeither = all.stream().filter(TermsFilter.of("foo").negate()).collect(Collectors.toList());
+    List<Term> mustHaveNeither = all.stream().filter(TermsFilter.of(TermFilterType.GROUPTAG, "foo").negate()).collect(Collectors.toList());
     assertThat(mustHaveNeither).containsExactlyInAnyOrder(bar, noo);
+    mustHaveNeither = all.stream().filter(TermsFilter.of(TermFilterType.GROUPTAG, "bar, foo").negate()).collect(Collectors.toList());
+    assertThat(mustHaveNeither).containsExactlyInAnyOrder(noo);
+    // now test with terms
+    mustHaveNeither = all.stream().filter(TermsFilter.of(TermFilterType.TERM, "bar, foo").negate()).collect(Collectors.toList());
+    assertThat(mustHaveNeither).containsExactlyInAnyOrder(noo, foobar);
+    mustHaveNeither = all.stream().filter(TermsFilter.of(TermFilterType.TERM, "bar, foo, foobar , noo").negate()).collect(Collectors.toList());
+    assertThat(mustHaveNeither).isEmpty();
   }
 
   @Test
@@ -137,7 +178,7 @@ class TermsFilterTest {
   void testFromTagList() {
     List<Term> all = List.of(foo, bar, foobar, noo);
     List<String> tagsOfInterest = List.of("foo", "bar");
-    Predicate<Term> predicate = tagsOfInterest.stream().map(tag -> (Predicate<Term>)TermsFilter.of(tag)).reduce(Predicate::or).get();
+    Predicate<Term> predicate = tagsOfInterest.stream().map(tag -> (Predicate<Term>)TermsFilter.of(TermFilterType.GROUPTAG, tag)).reduce(Predicate::or).get();
     List<Term> filtered = all.stream().filter(predicate).collect(Collectors.toList());
     assertThat(filtered).containsExactlyInAnyOrder(foo, bar, foobar);
   }
