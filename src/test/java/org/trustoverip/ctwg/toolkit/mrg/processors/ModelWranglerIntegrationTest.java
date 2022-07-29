@@ -6,7 +6,7 @@ import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGlossaryGenerator.DE
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.trustoverip.ctwg.toolkit.mrg.connectors.GithubReader;
+import org.trustoverip.ctwg.toolkit.mrg.connectors.GithubConnector;
 
 /**
  * @author sih
@@ -27,7 +27,7 @@ class ModelWranglerIntegrationTest {
 
   @BeforeEach
   void set_up() {
-    wrangler = new ModelWrangler(new YamlWrangler(), new GithubReader());
+    wrangler = new ModelWrangler(new YamlWrangler(), new GithubConnector());
   }
 
   @Test

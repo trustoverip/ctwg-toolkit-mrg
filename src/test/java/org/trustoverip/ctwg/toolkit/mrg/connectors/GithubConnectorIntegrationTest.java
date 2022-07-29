@@ -10,19 +10,19 @@ import org.junit.jupiter.api.Test;
 /**
  * @author sih
  */
-class GithubReaderIntegrationTest {
+class GithubConnectorIntegrationTest {
 
   private String repo;
   private String curatedDir;
   private String nonExistentDir;
-  private GithubReader reader;
+  private GithubConnector reader;
 
   @BeforeEach
   void setUp() {
     repo = "essif-lab/framework";
     curatedDir = "docs/tev2/terms";
     nonExistentDir = "foo";
-    reader = new GithubReader();
+    reader = new GithubConnector();
   }
 
   @Test

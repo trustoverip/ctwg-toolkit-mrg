@@ -191,12 +191,12 @@ class ModelWrangler {
     yamlWrangler.writeMrg(mrgFilepath, mrg);
   }
 
-  List<Term> fetchTerms(GeneratorContext localContext, String termFilter) {
+  List<Term> fetchTerms(GeneratorContext currentContext, String termFilter) {
     List<Term> terms = new ArrayList<>();
     String curatedPath =
-        String.join("/", localContext.getRootDirPath(), localContext.getCuratedDir());
+        String.join("/", currentContext.getRootDirPath(), currentContext.getCuratedDir());
     List<FileContent> directoryContent =
-        connector.getDirectoryContent(localContext.getOwnerRepo(), curatedPath);
+        connector.getDirectoryContent(currentContext.getOwnerRepo(), curatedPath);
     if (!directoryContent.isEmpty()) {
       terms =
           directoryContent.stream()

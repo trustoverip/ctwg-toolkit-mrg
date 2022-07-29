@@ -19,7 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.FileContent;
-import org.trustoverip.ctwg.toolkit.mrg.connectors.GithubReader;
+import org.trustoverip.ctwg.toolkit.mrg.connectors.GithubConnector;
 import org.trustoverip.ctwg.toolkit.mrg.model.SAFModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.Term;
 
@@ -45,7 +45,7 @@ class ModelWranglerTest {
   private static final String CURATED_DIR_NAME = "terms";
   private static final String SCOPETAG = "tev2";
   private static final String CURATED_DIR_PATH = String.join("/", ROOT_DIR, CURATED_DIR_NAME);
-  @Mock private GithubReader mockReader;
+  @Mock private GithubConnector mockReader;
   private static final YamlWrangler YAML_WRANGLER = new YamlWrangler();
   private ModelWrangler wrangler;
   private String invalidSafContent;

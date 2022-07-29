@@ -14,7 +14,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.trustoverip.ctwg.toolkit.mrg.connectors.GithubReader;
+import org.trustoverip.ctwg.toolkit.mrg.connectors.GithubConnector;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.LocalFSConnector;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.MRGConnector;
 import org.trustoverip.ctwg.toolkit.mrg.model.MRGEntry;
@@ -36,7 +36,7 @@ public class MRGlossaryGenerator {
 
   private final ModelWrangler wrangler;
 
-  private static final int LOCAL_PARAMS_EXPECTED = 2;
+  private static final int PARAMS_EXPECTED = 2;
 
   @Setter(AccessLevel.PRIVATE)
   private Map<String, GeneratorContext> contextMap;
@@ -44,29 +44,13 @@ public class MRGlossaryGenerator {
   public MRGlossaryGenerator() {
     this(true);
   }
-  private static final int REMOTE_PARAMS_EXPECTED = 4;
+  private static final int LOCAL_PARAMS_EXPECTED = 3;
   private static final int SCOPEDIR_INDEX = 0;
 
-  public static void main(String[] args) {
-    if (args.length != LOCAL_PARAMS_EXPECTED && args.length != REMOTE_PARAMS_EXPECTED) {
-      log.error(INVALID_INPUT);
-      System.exit(1);
-    }
-    boolean local = args.length == LOCAL_PARAMS_EXPECTED;
-    String scopedir = args[SCOPEDIR_INDEX];
-    String versionTag = args[VERSIONTAG_INDEX];
-    MRGlossaryGenerator generator = new MRGlossaryGenerator(local);
-    log.info("***** Starting generation *****");
-    log.info("Creating an MRG from scopedir {} and version tag {}", scopedir, versionTag);
-    try {
-      generator.generate(scopedir, DEFAULT_SAF_FILENAME, versionTag);
-      log.info("***** Completed: Successfully generated MRG *****");
-    } catch (MRGGenerationException mrge) {
-      log.error(mrge.getMessage());
-    } catch (Exception e) {
-      log.error(String.format(UNEXPECTED_ERROR, e.getMessage()));
-    }
-
+  public MRGlossaryGenerator(boolean runLocal) {
+    MRGConnector connector = runLocal ? new LocalFSConnector() : new GithubConnector();
+    wrangler = new ModelWrangler(new YamlWrangler(), connector);
+    remoteErrorCollector = new ArrayList<>();
   }
 
   private Version getVersion(SAFModel saf, String versionTag) throws MRGGenerationException {
@@ -108,15 +92,27 @@ public class MRGlossaryGenerator {
       %s
       """;
   private final List<String> remoteErrorCollector; // collect errors rather than fail fast
-  public MRGlossaryGenerator(boolean runLocal) {
-    MRGConnector connector;
-    if (runLocal) {
-      connector = new LocalFSConnector();
-    } else {
-      connector = new GithubReader();
+
+  public static void main(String[] args) {
+    if (args.length != PARAMS_EXPECTED && args.length != LOCAL_PARAMS_EXPECTED) {
+      log.error(INVALID_INPUT);
+      System.exit(1);
     }
-    wrangler = new ModelWrangler(new YamlWrangler(), connector);
-    remoteErrorCollector = new ArrayList<>();
+    boolean local = (args.length == LOCAL_PARAMS_EXPECTED && args[LOCAL_PARAMS_EXPECTED-1].equalsIgnoreCase("local"));
+    String scopedir = args[SCOPEDIR_INDEX];
+    String versionTag = args[VERSIONTAG_INDEX];
+    MRGlossaryGenerator generator = new MRGlossaryGenerator(local);
+    log.info("***** Starting generation *****");
+    log.info("Creating an MRG from scopedir {} and version tag {}", scopedir, versionTag);
+    try {
+      generator.generate(scopedir, DEFAULT_SAF_FILENAME, versionTag);
+      log.info("***** Completed: Successfully generated MRG *****");
+    } catch (MRGGenerationException mrge) {
+      log.error(mrge.getMessage());
+    } catch (Exception e) {
+      log.error(String.format(UNEXPECTED_ERROR, e.getMessage()));
+    }
+
   }
   public MRGlossaryGenerator(ModelWrangler wrangler) {
     this.wrangler = wrangler;
@@ -126,13 +122,13 @@ public class MRGlossaryGenerator {
   /*
    Local entries are selected from the curatedDir
   */
-  private List<MRGEntry> localTerms(GeneratorContext generatorContext, Version localVersion) {
+  private List<MRGEntry> currentTerms(GeneratorContext generatorContext, Version currentVersion) {
     // e.g. [tev2]@tev2"
     // TODO use regex instead
-    String unfilteredFilter = localVersion.getTerms().get(0).replace("[", "").replace("]", "");
+    String unfilteredFilter = currentVersion.getTerms().get(0).replace("[", "").replace("]", "");
     String filterTerm = unfilteredFilter.split("@")[0];
-    List<Term> localTerms = wrangler.fetchTerms(generatorContext, filterTerm);
-    return localTerms.stream().map(MRGEntry::new).toList();
+    List<Term> currentTerms = wrangler.fetchTerms(generatorContext, filterTerm);
+    return currentTerms.stream().map(MRGEntry::new).toList();
   }
 
   /*
@@ -182,7 +178,7 @@ public class MRGlossaryGenerator {
     List<ScopeRef> scopes = new ArrayList<>(saf.getScopes());
     log.info("Step 4/6: Parsing local terms (terms in this scopedir) to create MRG entries:");
     List<MRGEntry> entries =
-        localTerms(contextMap.get(saf.getScope().getScopetag()), localVersion);
+        currentTerms(contextMap.get(saf.getScope().getScopetag()), localVersion);
     log.info("Step 5/6: Parsing remote terms (terms from the scopedirs in the scopes section) to create MRG entries:");
     Set<Entry<String, GeneratorContext>> contextsByScopetag = this.contextMap.entrySet();
     for (Entry<String, GeneratorContext> e : contextsByScopetag ) {

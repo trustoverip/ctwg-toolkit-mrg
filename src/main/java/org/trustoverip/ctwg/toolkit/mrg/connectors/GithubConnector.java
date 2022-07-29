@@ -15,14 +15,14 @@ import org.kohsuke.github.GitHub;
  * @author sih
  */
 @Slf4j
-public class GithubReader implements MRGConnector {
+public class GithubConnector implements MRGConnector {
 
   private static final String GH_NAME = "GH_NAME";
 
   private static final String GH_TOKEN = "GH_TOKEN";
   private final GitHub gh;
 
-  public GithubReader() {
+  public GithubConnector() {
     try {
       gh = GitHub.connect(System.getenv(GH_NAME), System.getenv(GH_TOKEN));
     } catch (IOException ioe) {
@@ -56,6 +56,7 @@ public class GithubReader implements MRGConnector {
       if (gitContents != null && !gitContents.isEmpty()) {
         contents =
             gitContents.stream()
+                .filter(GHContent::isFile)
                 .map(
                     gc ->
                         new FileContent(gc.getName(), this.contentAsString(gc), new ArrayList<>()))

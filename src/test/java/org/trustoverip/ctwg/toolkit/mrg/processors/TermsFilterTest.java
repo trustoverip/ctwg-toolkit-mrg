@@ -124,8 +124,8 @@ class TermsFilterTest {
   @Test
   void testListNegate() {
     List<Term> all = List.of(foo, bar, foobar, noo);
-    List<Term> mustHaveBoth = all.stream().filter(TermsFilter.of("foo").negate()).collect(Collectors.toList());
-    assertThat(mustHaveBoth).containsExactlyInAnyOrder( bar, noo);
+    List<Term> mustHaveNeither = all.stream().filter(TermsFilter.of("foo").negate()).collect(Collectors.toList());
+    assertThat(mustHaveNeither).containsExactlyInAnyOrder(bar, noo);
   }
 
   @Test
