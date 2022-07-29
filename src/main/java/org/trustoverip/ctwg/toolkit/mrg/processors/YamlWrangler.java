@@ -2,6 +2,7 @@ package org.trustoverip.ctwg.toolkit.mrg.processors;
 
 import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException.CANNOT_PARSE_TERM;
 import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException.CANNOT_WRITE_MRG;
+import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException.UNABLE_TO_PARSE_MRG;
 import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException.UNABLE_TO_PARSE_SAF;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,7 +39,15 @@ final class YamlWrangler {
     try {
       return yamlMapper.readValue(termString, Term.class);
     } catch (Exception e) {
-      throw new MRGGenerationException(String.format(CANNOT_PARSE_TERM, termString));
+      throw new MRGGenerationException(CANNOT_PARSE_TERM);
+    }
+  }
+
+  MRGModel parseMrg(String mrgAsString) throws MRGGenerationException {
+    try {
+      return yamlMapper.readValue(mrgAsString, MRGModel.class);
+    } catch (Exception e) {
+      throw new MRGGenerationException(String.format(UNABLE_TO_PARSE_MRG, mrgAsString));
     }
   }
 

@@ -1,5 +1,7 @@
 package org.trustoverip.ctwg.toolkit.mrg.connectors;
 
+import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException.GITHUB_LOGON_ERROR;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -10,6 +12,7 @@ import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHFileNotFoundException;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
+import org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException;
 
 /**
  * @author sih
@@ -23,10 +26,12 @@ public class GithubConnector implements MRGConnector {
   private final GitHub gh;
 
   public GithubConnector() {
+    String user = null;
     try {
-      gh = GitHub.connect(System.getenv(GH_NAME), System.getenv(GH_TOKEN));
+      user = System.getenv(GH_NAME);
+      gh = GitHub.connect(user, System.getenv(GH_TOKEN));
     } catch (IOException ioe) {
-      throw new RuntimeException(ioe.getMessage());
+      throw new MRGGenerationException(String.format(GITHUB_LOGON_ERROR, user));
     }
   }
 

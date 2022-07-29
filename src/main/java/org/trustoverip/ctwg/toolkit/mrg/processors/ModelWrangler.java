@@ -1,6 +1,7 @@
 package org.trustoverip.ctwg.toolkit.mrg.processors;
 
 import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException.CANNOT_CREATE_GLOSSARY_DIR;
+import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGlossaryGenerator.DEFAULT_MRG_FILENAME;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,6 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -54,7 +56,7 @@ class ModelWrangler {
   private static final Pattern TERM_DIRECTIVE_PATTERN =
       Pattern.compile("\\[(\\w+)]\\(?@(\\w+-?\\w*):?([A-Za-z0-9.-_]+)?\\)?");
   private final YamlWrangler yamlWrangler;
-  private final MRGConnector connector;
+  @Getter @Setter private MRGConnector connector;
 
   @Setter(AccessLevel.NONE) // as we derive this from what type of connector has been passed
   private boolean local;
@@ -64,8 +66,6 @@ class ModelWrangler {
     this.connector = connector;
     local = (connector instanceof LocalFSConnector);
   }
-
-  // TODO getAllTerms and create a filter for the terms
 
   SAFModel getSaf(String scopedir, String safFilename) throws MRGGenerationException {
     String safAsString = this.getSafAsString(scopedir, safFilename);
@@ -106,6 +106,15 @@ class ModelWrangler {
     }
 
     /*
+     1. get version of interest
+     2. get term expressions (use version.getTerms)
+     3. for each term expression
+       a) turn in to Entry<scopetag, TermFilter>
+       b) add to map
+    */
+
+    /*
+    SUPERSEDED
      0. Find the version of interest (i.e. the input version) in the version elements list
      1. Extract term directives from SAF string as a Triple of <grouptag, scopetag, vsnTag>
      2. Then create a map by scopetag with Pair of: <List of terms, vsnTag>
@@ -176,10 +185,17 @@ class ModelWrangler {
     return directive;
   }
 
+  MRGModel getMrg(GeneratorContext context, String glossaryDir) {
+    String mrgFilename = constructFilename(context.getVersionTag());
+    String mrgPath = String.join("/", glossaryDir, mrgFilename);
+    String mrgAsYaml = connector.getContent(context.getRootDirPath(), mrgPath);
+    return (null == mrgAsYaml) ? null : yamlWrangler.parseMrg(mrgAsYaml);
+  }
 
-
-  void writeMrgToFile(MRGModel mrg, String glossaryDir, String mrgFilename)
+  String writeMrgToFile(MRGModel mrg, String glossaryDir, String versionTag)
       throws MRGGenerationException {
+    String mrgFilename = constructFilename(versionTag);
+    log.debug(String.format("MRG filename to be generated is: %s", mrgFilename));
     Path glossaryPath = Paths.get(glossaryDir);
     try {
       Files.createDirectories(glossaryPath);
@@ -189,9 +205,10 @@ class ModelWrangler {
     }
     Path mrgFilepath = Path.of(glossaryDir, mrgFilename);
     yamlWrangler.writeMrg(mrgFilepath, mrg);
+    return mrgFilepath.toString();
   }
 
-  List<Term> fetchTerms(GeneratorContext currentContext, String termFilter) {
+  List<Term> fetchTerms(GeneratorContext currentContext, String filterExpression) {
     List<Term> terms = new ArrayList<>();
     String curatedPath =
         String.join("/", currentContext.getRootDirPath(), currentContext.getCuratedDir());
@@ -202,7 +219,7 @@ class ModelWrangler {
           directoryContent.stream()
               .map(this::cleanTermFile)
               .map(this::toYaml)
-              .filter(term -> term.getScope().equals(termFilter))
+              .filter(term -> term.getScope().equals(filterExpression))
               .collect(Collectors.toList());
     }
     return terms;
@@ -299,5 +316,10 @@ class ModelWrangler {
       rootPath = path.deleteCharAt(path.length() - 1).toString();
     }
     return rootPath;
+  }
+
+  private String constructFilename(String versionTag) {
+    String vsntag = (null == versionTag) ? StringUtils.EMPTY : versionTag;
+    return String.join(".", DEFAULT_MRG_FILENAME, vsntag, "yaml");
   }
 }

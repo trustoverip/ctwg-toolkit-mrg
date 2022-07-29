@@ -66,10 +66,6 @@ public class MRGlossaryGenerator {
         () -> new MRGGenerationException(String.format(NO_SUCH_VERSION, versionTag)));
   }
 
-  private String constructFilename(Version localVersion) {
-    // mrg.<versionTag>.yaml
-    return String.join(".", DEFAULT_MRG_FILENAME, localVersion.getVsntag(), "yaml");
-  }
   private static final int VERSIONTAG_INDEX = 1;
   private static final String INVALID_INPUT = """
       Invalid input: Some of the fields required to run the generator are missing. There should be
@@ -98,10 +94,10 @@ public class MRGlossaryGenerator {
       log.error(INVALID_INPUT);
       System.exit(1);
     }
-    boolean local = (args.length == LOCAL_PARAMS_EXPECTED && args[LOCAL_PARAMS_EXPECTED-1].equalsIgnoreCase("local"));
+    boolean isLocal = (args.length == LOCAL_PARAMS_EXPECTED && args[LOCAL_PARAMS_EXPECTED-1].equalsIgnoreCase("local"));
     String scopedir = args[SCOPEDIR_INDEX];
     String versionTag = args[VERSIONTAG_INDEX];
-    MRGlossaryGenerator generator = new MRGlossaryGenerator(local);
+    MRGlossaryGenerator generator = new MRGlossaryGenerator(isLocal);
     log.info("***** Starting generation *****");
     log.info("Creating an MRG from scopedir {} and version tag {}", scopedir, versionTag);
     try {
@@ -147,10 +143,20 @@ public class MRGlossaryGenerator {
       5. Match terms
       - WARN if no matches found in remote MRG
      */
+    // remote SAFs are always remote - i.e. obtained via GitHub
+    if (wrangler.getConnector() instanceof LocalFSConnector) {
+      wrangler.setConnector(new GithubConnector());
+    }
     // 1. Get remote SAF
     SAFModel remoteSaf = wrangler.getSaf(remoteContext.getRootDirPath(), DEFAULT_SAF_FILENAME);
     if (remoteSaf != null) {
-      String mrgDir = remoteSaf.getScope().getGlossarydir();
+      String glossaryDir = remoteSaf.getScope().getGlossarydir();
+      MRGModel remoteMrg = wrangler.getMrg(remoteContext, remoteSaf.getScope().getGlossarydir());
+      if (remoteMrg != null) {
+        List<MRGEntry> mrgEntries = remoteMrg.entries();
+      } else {
+        log.warn("No MRG {} found in glossary directory {} of remote dir {}",remoteContext.getRootDirPath(), glossaryDir);
+      }
 
     } else {
       this.remoteErrorCollector.add(String.format("There was an error with remote scopetag %s. Could not find the %s at %s", scopetag, DEFAULT_SAF_FILENAME, remoteContext.getRootDirPath()));
@@ -169,8 +175,6 @@ public class MRGlossaryGenerator {
       throw new MRGGenerationException(NO_GLOSSARY_DIR);
     }
     Version localVersion = getVersion(saf, versionTag);
-    String mrgFilename = constructFilename(localVersion);
-    log.debug(String.format("MRG filename to be generated is: %s", mrgFilename));
     // construct the parts of the MRG Model
     log.info("Step 3/6: Creating the <terminology> section of the MRG");
     Terminology terminology =
@@ -185,9 +189,8 @@ public class MRGlossaryGenerator {
       ListUtils.union(entries, remoteTerms(e.getKey(), e.getValue()));
     }
     MRGModel mrg = new MRGModel(terminology, scopes, entries);
-    log.info("Step 6/6: Writing generated MRG to file: {}", mrgFilename);
-    wrangler.writeMrgToFile(mrg, saf.getScope().getGlossarydir(), mrgFilename);
-
+    String mrgFilename = wrangler.writeMrgToFile(mrg, saf.getScope().getGlossarydir(), versionTag);
+    log.info("Step 6/6: Written generated MRG to file: {}", mrgFilename);
 
     return mrg;
   }

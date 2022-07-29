@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.trustoverip.ctwg.toolkit.mrg.model.MRGEntry;
 import org.trustoverip.ctwg.toolkit.mrg.model.Term;
 import org.trustoverip.ctwg.toolkit.mrg.processors.TermsFilter.TermFilterType;
 
@@ -21,6 +22,10 @@ class TermsFilterTest {
   private Term foobar;
   private Term noo;
 
+  private MRGEntry mrgFoo;
+
+  private MRGEntry mrgBar;
+  private MRGEntry mrgFoobar;
   @BeforeEach
   void setUp() {
     foo = new Term();
@@ -35,6 +40,9 @@ class TermsFilterTest {
     noo = new Term();
     noo.setTermid("noo");
     noo.setGrouptags(null);
+    mrgFoo = new MRGEntry(foo);
+    mrgBar = new MRGEntry(bar);
+    mrgFoobar = new MRGEntry(foobar);
   }
 
   @Test
@@ -84,6 +92,20 @@ class TermsFilterTest {
     assertThat(nonMatchingFilter.test(noo)).isFalse();
   }
 
+
+  @Test
+  @DisplayName("""
+      Given a filter value that is not all
+      When filter on mrg entries
+      Then should return true where grouptags match
+      """)
+  void testFilterTagsMrg() {
+    TermsFilter fooFilter = TermsFilter.of(TermFilterType.GROUPTAG, "foo");
+    assertThat(fooFilter.test(mrgFoo)).isTrue();
+    assertThat(fooFilter.test(mrgBar)).isFalse();
+    assertThat(fooFilter.test(mrgFoobar)).isTrue();
+  }
+
   @Test
   @DisplayName("""
       Given a filter value that is not all
@@ -108,6 +130,19 @@ class TermsFilterTest {
     assertThat(multiMatchFilter.test(bar)).isTrue();
     assertThat(multiMatchFilter.test(foobar)).isFalse();
     assertThat(multiMatchFilter.test(noo)).isFalse();
+  }
+
+  @Test
+  @DisplayName("""
+      Given a filter value that is not all
+      When filter on mrg entries
+      Then should return true where termids match
+      """)
+  void testFilterTermsMrg() {
+    TermsFilter fooFilter = TermsFilter.of(TermFilterType.TERM, "foo");
+    assertThat(fooFilter.test(mrgFoo)).isTrue();
+    assertThat(fooFilter.test(mrgBar)).isFalse();
+    assertThat(fooFilter.test(mrgFoobar)).isFalse();
   }
 
   @DisplayName("""
