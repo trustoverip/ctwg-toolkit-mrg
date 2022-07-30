@@ -119,11 +119,7 @@ public class MRGlossaryGenerator {
    Local entries are selected from the curatedDir
   */
   private List<MRGEntry> currentTerms(GeneratorContext generatorContext, Version currentVersion) {
-    // e.g. [tev2]@tev2"
-    // TODO use regex instead
-    String unfilteredFilter = currentVersion.getTerms().get(0).replace("[", "").replace("]", "");
-    String filterTerm = unfilteredFilter.split("@")[0];
-    List<Term> currentTerms = wrangler.fetchTerms(generatorContext, filterTerm);
+    List<Term> currentTerms = wrangler.fetchTerms(generatorContext, generatorContext.getFilters());
     return currentTerms.stream().map(MRGEntry::new).toList();
   }
 
@@ -155,7 +151,7 @@ public class MRGlossaryGenerator {
       if (remoteMrg != null) {
         List<MRGEntry> mrgEntries = remoteMrg.entries();
       } else {
-        log.warn("No MRG {} found in glossary directory {} of remote dir {}",remoteContext.getRootDirPath(), glossaryDir);
+        log.warn("No MRG found in glossary directory {} of remote dir {}",remoteContext.getRootDirPath(), glossaryDir);
       }
 
     } else {

@@ -114,29 +114,18 @@ class YamlWranglerTest {
     int expectedNumberOfVersions = 3;
     assertThat(versions).hasSize(expectedNumberOfVersions);
     Version expectedFirstVersion =
-        new Version("mrgtest", null, List.of("[tev2]@tev2"), null, null, null);
+        new Version("mrgtest", null, List.of("*@tev2"), null, null, null);
     Version expectedSecondVersion =
         new Version(
             "0x921456",
             List.of("latest", "v0.9.4"),
             List.of(
-                "[management]@essif-lab",
-                "[party](@essif-lab:0.9.4)",
-                "[community](@essif-lab:0.9.4)",
-                "[tev2]@tev2"),
+                "tags[management]@essif-lab",
+                "terms[party]@essif-lab:0.9.4",
+                "tags[community]@essif-lab:0.9.4",
+                "*@tev2"),
             "proposed",
             "20220312",
-            null);
-    Version expectedThirdVersion =
-        new Version(
-            "0x654129",
-            List.of("v0.9.0"),
-            List.of(
-                "[management]@essif-lab",
-                "[party](@essif-lab:0.9.4)",
-                "[community](@essif-lab:0.9.4)"),
-            null,
-            null,
             null);
 
     Version[] actualVersions = versions.toArray(new Version[0]);
@@ -172,7 +161,7 @@ class YamlWranglerTest {
     assertThat(actualVersion.getVsntag()).isEqualTo(expectedVersion.getVsntag());
     assertThat(actualVersion.getAltvsntags()).isEqualTo(expectedVersion.getAltvsntags());
     assertThat(actualVersion.getTerms())
-        .containsExactly(expectedVersion.getTerms().toArray(new String[0]));
+        .containsExactlyInAnyOrder(expectedVersion.getTerms().toArray(new String[0]));
     assertThat(actualVersion.getStatus()).isEqualTo(expectedVersion.getStatus());
     assertThat(actualVersion.getFrom()).isEqualTo(expectedVersion.getFrom());
     assertThat(actualVersion.getTo()).isEqualTo(expectedVersion.getTo());

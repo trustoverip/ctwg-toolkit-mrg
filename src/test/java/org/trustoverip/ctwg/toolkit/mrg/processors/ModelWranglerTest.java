@@ -22,6 +22,7 @@ import org.trustoverip.ctwg.toolkit.mrg.connectors.FileContent;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.GithubConnector;
 import org.trustoverip.ctwg.toolkit.mrg.model.SAFModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.Term;
+import org.trustoverip.ctwg.toolkit.mrg.processors.TermsFilter.TermsFilterType;
 
 /**
  * @author sih
@@ -141,19 +142,22 @@ class ModelWranglerTest {
         .containsOnlyKeys("tev2", "essiflab", "essif-lab", "ctwg", "toip-ctwg");
     // essiflab scopetag
     GeneratorContext essiflabContext = contextMap.get("essiflab");
-    assertThat(essiflabContext.getTermsOfInterest()).isEmpty();
+    assertThat(essiflabContext.getFilters()).isEmpty();
     assertThat(essiflabContext.getVersionTag()).isEmpty();
     // essif-lab scopetag
     GeneratorContext essifLabContext = contextMap.get("essif-lab");
-    assertThat(essifLabContext.getTermsOfInterest()).containsExactlyInAnyOrder("party", "management", "community");
+    TermsFilter expectedPartyFilter = TermsFilter.of(TermsFilterType.terms, "party");
+    TermsFilter expectedManagementFilter = TermsFilter.of(TermsFilterType.tags, "management");
+    TermsFilter expectedCommunityFilter = TermsFilter.of(TermsFilterType.tags, "community");
+    assertThat(essifLabContext.getFilters()).containsExactlyInAnyOrder(expectedCommunityFilter, expectedManagementFilter, expectedPartyFilter);
     assertThat(essifLabContext.getVersionTag()).isEqualTo("0.9.4");
     // ctwg scopetag
     GeneratorContext ctwg = contextMap.get("ctwg");
-    assertThat(ctwg.getTermsOfInterest()).isEmpty();
+    assertThat(ctwg.getFilters()).isEmpty();
     assertThat(ctwg.getVersionTag()).isEmpty();
     // toip scopetag
     GeneratorContext toipCtwg = contextMap.get("toip-ctwg");
-    assertThat(toipCtwg.getTermsOfInterest()).isEmpty();
+    assertThat(toipCtwg.getFilters()).isEmpty();
     assertThat(toipCtwg.getVersionTag()).isEmpty();
   }
 
@@ -165,7 +169,14 @@ class ModelWranglerTest {
         .thenReturn(List.of(termStringTerm, termStringScope));
     GeneratorContext context =
         new GeneratorContext(OWNER_REPO, ROOT_DIR, MRGTEST_VERSION, CURATED_DIR_NAME);
-    List<Term> terms = wrangler.fetchTerms(context, SCOPETAG);
+    List<Term> terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term"), TermsFilter.of(TermsFilterType.terms, "scope")));
+    assertThat(terms).hasSize(expectedSize);
+    // specify both terms as a comma seprated list in a single filter
+    terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term, scope")));
+    assertThat(terms).hasSize(expectedSize);
+    // now only ask for the term term
+    expectedSize = 1;
+    terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term")));
     assertThat(terms).hasSize(expectedSize);
   }
 }

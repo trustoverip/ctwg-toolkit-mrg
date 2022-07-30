@@ -5,23 +5,27 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Predicate;
+import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 import org.trustoverip.ctwg.toolkit.mrg.model.Term;
 
 /**
  * @author sih
  */
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class TermsFilter implements Predicate<Term> {
 
   public static final String ALL_TAGS = "*";
   private static final String DELIMITER = ",";
 
+  @EqualsAndHashCode.Include
   private final List<String> normalisedValues;
 
-  private final TermFilterType filterType;
+  @EqualsAndHashCode.Include
+  private final TermsFilterType filterType;
 
 
-  private TermsFilter(TermFilterType filterType, String delimitedValues) {
+  private TermsFilter(TermsFilterType filterType, String delimitedValues) {
     this.filterType = filterType;
     if (delimitedValues != null) {
       normalisedValues = splitAndNormalise(delimitedValues);
@@ -30,12 +34,12 @@ public class TermsFilter implements Predicate<Term> {
     }
   }
 
-  public static TermsFilter of(TermFilterType filterType, String delimitedValues) {
+  public static TermsFilter of(TermsFilterType filterType, String delimitedValues) {
     return new TermsFilter(filterType, delimitedValues);
   }
 
   public static TermsFilter all() {
-    return new TermsFilter(TermFilterType.ALL, null);
+    return new TermsFilter(TermsFilterType.all, null);
   }
 
   /**
@@ -47,12 +51,12 @@ public class TermsFilter implements Predicate<Term> {
   @Override
   public boolean test(Term term) {
     return switch (this.filterType) {
-      case ALL -> true;
-      case TERM -> {
+      case all -> true;
+      case terms -> {
         String normalisedTermid = StringUtils.trim(term.getTermid()).toLowerCase(Locale.ROOT);
         yield normalisedValues.contains(normalisedTermid);
       }
-      case GROUPTAG -> {
+      case tags -> {
         List<String> normalisedGrouptags = splitAndNormalise(term.getGrouptags());
         if (normalisedGrouptags.isEmpty()) { yield false;}
         else {yield normalisedGrouptags.stream().anyMatch(normalisedValues::contains);}
@@ -70,9 +74,11 @@ public class TermsFilter implements Predicate<Term> {
     };
  }
 
-  enum TermFilterType {
-    GROUPTAG,
-    TERM,
-    ALL
+
+
+  enum TermsFilterType {
+    tags,
+    terms,
+    all
   }
 }

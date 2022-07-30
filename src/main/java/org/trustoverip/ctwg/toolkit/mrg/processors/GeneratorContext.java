@@ -2,8 +2,10 @@ package org.trustoverip.ctwg.toolkit.mrg.processors;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import lombok.Getter;
 import lombok.Setter;
+import org.trustoverip.ctwg.toolkit.mrg.model.Term;
 
 /**
  * @author sih
@@ -18,7 +20,7 @@ public final class GeneratorContext {
 
   @Setter private String versionTag;
 
-  @Setter private List<String> termsOfInterest;
+  @Setter private List<Predicate<Term>> filters;
 
   public GeneratorContext(
       String ownerRepo, String rootDirPath, String versionTag, String curatedDir) {
@@ -27,6 +29,6 @@ public final class GeneratorContext {
     this.curatedDir = curatedDir;
     this.versionTag = versionTag;
     this.safFilepath = String.join("/", rootDirPath, MRGlossaryGenerator.DEFAULT_SAF_FILENAME);
-    this.termsOfInterest = new ArrayList<>();
+    this.filters = new ArrayList<>();
   }
 }
