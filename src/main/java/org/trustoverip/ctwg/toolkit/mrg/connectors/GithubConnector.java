@@ -1,5 +1,7 @@
 package org.trustoverip.ctwg.toolkit.mrg.connectors;
 
+import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException.GITHUB_LOGON_ERROR;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -10,23 +12,26 @@ import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHFileNotFoundException;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
+import org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException;
 
 /**
  * @author sih
  */
 @Slf4j
-public class GithubReader implements MRGConnector {
+public class GithubConnector implements MRGConnector {
 
   private static final String GH_NAME = "GH_NAME";
 
   private static final String GH_TOKEN = "GH_TOKEN";
   private final GitHub gh;
 
-  public GithubReader() {
+  public GithubConnector() {
+    String user = null;
     try {
-      gh = GitHub.connect(System.getenv(GH_NAME), System.getenv(GH_TOKEN));
+      user = System.getenv(GH_NAME);
+      gh = GitHub.connect(user, System.getenv(GH_TOKEN));
     } catch (IOException ioe) {
-      throw new RuntimeException(ioe.getMessage());
+      throw new MRGGenerationException(String.format(GITHUB_LOGON_ERROR, user));
     }
   }
 
@@ -56,6 +61,7 @@ public class GithubReader implements MRGConnector {
       if (gitContents != null && !gitContents.isEmpty()) {
         contents =
             gitContents.stream()
+                .filter(GHContent::isFile)
                 .map(
                     gc ->
                         new FileContent(gc.getName(), this.contentAsString(gc), new ArrayList<>()))

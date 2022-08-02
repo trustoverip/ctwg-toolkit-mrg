@@ -6,12 +6,16 @@ import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.trustoverip.ctwg.toolkit.mrg.connectors.GithubReader;
+import org.trustoverip.ctwg.toolkit.mrg.connectors.GithubConnector;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.LocalFSConnector;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.MRGConnector;
 import org.trustoverip.ctwg.toolkit.mrg.model.MRGEntry;
@@ -33,47 +37,21 @@ public class MRGlossaryGenerator {
 
   private final ModelWrangler wrangler;
 
+  private static final int PARAMS_EXPECTED = 2;
+
   @Setter(AccessLevel.PRIVATE)
   private Map<String, GeneratorContext> contextMap;
 
   public MRGlossaryGenerator() {
     this(true);
   }
+  private static final int LOCAL_PARAMS_EXPECTED = 3;
+  private static final int SCOPEDIR_INDEX = 0;
 
   public MRGlossaryGenerator(boolean runLocal) {
-    MRGConnector connector;
-    if (runLocal) {
-      connector = new LocalFSConnector();
-    } else {
-      connector = new GithubReader();
-    }
+    MRGConnector connector = runLocal ? new LocalFSConnector() : new GithubConnector();
     wrangler = new ModelWrangler(new YamlWrangler(), connector);
-  }
-
-  public MRGlossaryGenerator(ModelWrangler wrangler) {
-    this.wrangler = wrangler;
-  }
-
-  public static void main(String[] args) {
-    if (args.length != LOCAL_PARAMS_EXPECTED && args.length != REMOTE_PARAMS_EXPECTED) {
-      log.error(INVALID_INPUT);
-      System.exit(1);
-    }
-    boolean local = args.length == LOCAL_PARAMS_EXPECTED;
-    String scopedir = args[SCOPEDIR_INDEX];
-    String versionTag = args[VERSIONTAG_INDEX];
-    MRGlossaryGenerator generator = new MRGlossaryGenerator(local);
-    log.info("***** Starting generation *****");
-    log.info("Creating an MRG from scopedir {} and version tag {}", scopedir, versionTag);
-    try {
-      generator.generate(scopedir, DEFAULT_SAF_FILENAME, versionTag);
-      log.info("***** Completed: Successfully generated MRG *****");
-    } catch (MRGGenerationException mrge) {
-      log.error(mrge.getMessage());
-    } catch (Exception e) {
-      log.error(UNEXPECTED_ERROR, e.getMessage());
-    }
-
+    remoteErrorCollector = new ArrayList<>();
   }
 
   private Version getVersion(SAFModel saf, String versionTag) throws MRGGenerationException {
@@ -89,38 +67,7 @@ public class MRGlossaryGenerator {
         () -> new MRGGenerationException(String.format(NO_SUCH_VERSION, versionTag)));
   }
 
-  private String constructFilename(Version localVersion) {
-    // mrg.<versionTag>.yaml
-    return String.join(".", DEFAULT_MRG_FILENAME, localVersion.getVsntag(), "yaml");
-  }
-
-  /*
-   Local entries are selected from the curatedDir
-  */
-  private List<MRGEntry> constructLocalEntries(
-      GeneratorContext localContext, Version localVersion) {
-    // TODO don't just get the first
-    // e.g. [tev2]@tev2"
-    // TODO use regex instead
-    String unfilteredFilter = localVersion.getTerms().get(0).replace("[", "").replace("]", "");
-    String filterTerm = unfilteredFilter.split("@")[0];
-    List<Term> localTerms = wrangler.fetchTerms(localContext, filterTerm);
-    return localTerms.stream().map(MRGEntry::new).toList();
-  }
-
-  /*
-   Remote entries are selected from the mrg
-  */
-  private List<MRGEntry> constructRemoteEntries(SAFModel saf, Version localVersion) {
-    return new ArrayList<>();
-  }
-
-  private static final int LOCAL_PARAMS_EXPECTED = 2;
-  private static final int REMOTE_PARAMS_EXPECTED = 4;
-  private static final int SCOPEDIR_INDEX = 0;
   private static final int VERSIONTAG_INDEX = 1;
-  private static final int GITHUB_USER_INDEX = 1;
-  private static final int GITHUB_TOKEN_INDEX = 1;
   private static final String INVALID_INPUT = """
       Invalid input: Some of the fields required to run the generator are missing. There should be
       either 2 or 4 inputs depending on whether running from a local scope administration file (SAF),
@@ -141,33 +88,114 @@ public class MRGlossaryGenerator {
       
       %s
       """;
+  private final List<String> remoteErrorCollector; // collect errors rather than fail fast
+
+  public static void main(String[] args) {
+    if (args.length != PARAMS_EXPECTED && args.length != LOCAL_PARAMS_EXPECTED) {
+      log.error(INVALID_INPUT);
+      System.exit(1);
+    }
+    boolean isLocal = (args.length == LOCAL_PARAMS_EXPECTED && args[LOCAL_PARAMS_EXPECTED-1].equalsIgnoreCase("local"));
+    String scopedir = args[SCOPEDIR_INDEX];
+    String versionTag = args[VERSIONTAG_INDEX];
+    MRGlossaryGenerator generator = new MRGlossaryGenerator(isLocal);
+    log.info("***** Starting generation *****");
+    log.info("Creating an MRG from scopedir {} and version tag {}", scopedir, versionTag);
+    try {
+      generator.generate(scopedir, DEFAULT_SAF_FILENAME, versionTag);
+      log.info("***** Completed: Successfully generated MRG *****");
+    } catch (MRGGenerationException mrge) {
+      log.error(mrge.getMessage());
+    } catch (Exception e) {
+      log.error(String.format(UNEXPECTED_ERROR, e.getMessage()));
+    }
+
+  }
+  public MRGlossaryGenerator(ModelWrangler wrangler) {
+    this.wrangler = wrangler;
+    remoteErrorCollector = new ArrayList<>();
+  }
+
+  /*
+   Local entries are selected from the curatedDir
+  */
+  private List<MRGEntry> currentTerms(GeneratorContext generatorContext, Version currentVersion) {
+    List<Term> currentTerms = wrangler.fetchTerms(generatorContext, generatorContext.getFilters());
+    return currentTerms.stream().map(MRGEntry::new).toList();
+  }
+
+  /*
+   Remote entries are selected from the mrg
+  */
+  private List<MRGEntry> remoteTerms(String scopetag, GeneratorContext remoteContext) {
+    log.info("... Fetching terms for scopetag {} from scopedir {} with version {}", scopetag, remoteContext.getSafDirectory(), remoteContext.getVersionTag());
+    List<MRGEntry> remoteEntries = new ArrayList<>();
+    /*
+      1. Get and parse remote SAF
+      - Fail WARN if no SAF exists
+      2. Find MRG dir from SAF
+      3. Construct mrg.<remoteContext.getVersionTag()>.mrg
+      4. Get remote content
+      - Fail WARN if cannot get content
+      5. Match terms
+      - WARN if no matches found in remote MRG
+     */
+    // remote SAFs are always remote - i.e. obtained via GitHub
+    if (wrangler.getConnector() instanceof LocalFSConnector) {
+      wrangler.setConnector(new GithubConnector());
+    }
+    // 1. Get remote SAF
+    SAFModel remoteSaf = wrangler.getSaf(remoteContext.getAbsoluteRepo(), DEFAULT_SAF_FILENAME);
+    if (remoteSaf != null) {
+      String glossaryDir = remoteSaf.getScope().getGlossarydir();
+      MRGModel remoteMrg = wrangler.getMrg(remoteContext, remoteSaf.getScope().getGlossarydir());
+      if (remoteMrg != null) {
+        List<MRGEntry> mrgEntries = remoteMrg.entries();
+        List<Predicate<Term>> filters = remoteContext.getFilters();
+        Predicate<Term> consolidatedFilter = filters.stream().reduce(Predicate::or).orElse(TermsFilter.all());
+        remoteEntries = mrgEntries.stream().filter(consolidatedFilter).toList();
+        for (MRGEntry e: remoteEntries) {
+          log.info("... Copying remote entry from with id = {} ...", e.getTermid());
+        }
+      } else {
+        log.warn("No MRG found in glossary directory {} of remote dir {}",remoteContext.getSafDirectory(), glossaryDir);
+      }
+
+    } else {
+      this.remoteErrorCollector.add(String.format("There was an error with remote scopetag %s. Could not find the %s at %s", scopetag, DEFAULT_SAF_FILENAME, remoteContext.getSafDirectory()));
+    }
+    return remoteEntries;
+  }
 
   public MRGModel generate(final String scopedir, final String safFilename, final String versionTag)
       throws MRGGenerationException {
-    log.info("Step 1/5: Parsing Scope Administration File (SAF) from location {}", safFilename);
+    log.info("Step 1/6: Parsing Scope Administration File (SAF) from location {}", safFilename);
     SAFModel saf = wrangler.getSaf(scopedir, safFilename);
-    log.info("Step 2/5: Resolving local and remote scopes defined in the SAF", safFilename);
+    log.info("Step 2/6: Resolving local and remote scopes defined in the SAF");
     this.setContextMap(wrangler.buildContextMap(scopedir, saf, versionTag));
     String glossaryDir = saf.getScope().getGlossarydir();
     if (StringUtils.isEmpty(glossaryDir)) {
       throw new MRGGenerationException(NO_GLOSSARY_DIR);
     }
     Version localVersion = getVersion(saf, versionTag);
-    String mrgFilename = constructFilename(localVersion);
-    log.debug(String.format("MRG filename to be generated is: %s", mrgFilename));
     // construct the parts of the MRG Model
-    log.info("Step 3/5: Creating the <terminology> section of the MRG", safFilename);
+    log.info("Step 3/6: Creating the <terminology> section of the MRG");
     Terminology terminology =
         new Terminology(saf.getScope().getScopetag(), saf.getScope().getScopedir());
     List<ScopeRef> scopes = new ArrayList<>(saf.getScopes());
-    log.info("Step 4/5: Parsing local terms (terms in this scopedir) to create MRG entries:", safFilename);
+    log.info("Step 4/6: Parsing local terms (terms in this scopedir) to create MRG entries:");
     List<MRGEntry> entries =
-        constructLocalEntries(contextMap.get(saf.getScope().getScopetag()), localVersion);
-    // TODO
-    //    entries.addAll(constructRemoteEntries(saf, localVersion));
+        currentTerms(contextMap.get(saf.getScope().getScopetag()), localVersion);
+    log.info("Step 5/6: Parsing remote terms (terms from the scopedirs in the scopes section) to create MRG entries:");
+    Set<Entry<String, GeneratorContext>> contextsByScopetag = this.contextMap.entrySet();
+    for (Entry<String, GeneratorContext> e : contextsByScopetag ) {
+      if (! e.getValue().getFilters().isEmpty()) {
+        entries = ListUtils.union(entries, remoteTerms(e.getKey(), e.getValue()));
+      }
+    }
     MRGModel mrg = new MRGModel(terminology, scopes, entries);
-    log.info("Step 5/5: Writing generated MRG to file: {}", mrgFilename);
-    wrangler.writeMrgToFile(mrg, mrgFilename);
+    String mrgFilename = wrangler.writeMrgToFile(mrg, saf.getScope().getGlossarydir(), versionTag);
+    log.info("Step 6/6: Written generated MRG to file: {}", mrgFilename);
 
     return mrg;
   }

@@ -43,13 +43,13 @@ scopes: #
 #
 versions:
   - vsntag: mrgtest # this version MUST only be used for testing the MRG generator
-    terms:
+    termselcrit:
       - "[tev2]@tev2" # import all tev2 terms.
   - vsntag: 0x921456 # a versiontag that identifies this version from all other versions in the SAF
     altvsntags: # alternative verstiontags
       - latest
       - v0.9.4
-    terms:
+    termselcrit:
       - "[management]@essif-lab" # import all terms from the mrg of `essif-lab:latest` that have grouptag `management`.
       - "[party](@essif-lab:0.9.4)" # import the term `party` from the mrg of `essif-lab:0.9.4`.
       - "[community](@essif-lab:0.9.4)" # import the term `community` from the mrg of `essif-lab:0.9.4`.
@@ -60,7 +60,7 @@ versions:
   - vsntag: 0x654129 # a versiontag that identifies this version from all other versions in the SAF
     altvsntags: # alternative verstiontags
       - v0.9.0
-    terms:
+    termselcrit:
       - "[management]@essif-lab" # import all essif-lab terms with grouptag `management`.
       - "[party@essif-lab]" # import the term `party` from the mrg of `essif-lab:latest`.
       - "[community@essif-lab]" # import the term `community` from the mrg of `essif-lab:latest`.

@@ -33,7 +33,7 @@ class LocalFSConnectorTest {
     String osSeparator = FileSystems.getDefault().getSeparator();
     // will use the SAF file in the ./src/test/resources directory so set this dir as the scopedir
     String scopedir = "./src/test/resources";
-    context = new GeneratorContext(scopedir, scopedir, "mrgtest", "terms");
+    context = new GeneratorContext(scopedir, scopedir, scopedir, "mrgtest", "terms");
     connector = new LocalFSConnector();
     termAsString = new String(Files.readAllBytes(Paths.get("./src/test/resources/terms/term.md")));
     scopeAsString =

@@ -1,13 +1,26 @@
 package org.trustoverip.ctwg.toolkit.mrg.processors;
 
+import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException.CANNOT_CREATE_GLOSSARY_DIR;
+import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGlossaryGenerator.DEFAULT_MRG_FILENAME;
+import static org.trustoverip.ctwg.toolkit.mrg.processors.TermsFilter.ALL_TAGS;
+
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +31,8 @@ import org.trustoverip.ctwg.toolkit.mrg.model.MRGModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.SAFModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.ScopeRef;
 import org.trustoverip.ctwg.toolkit.mrg.model.Term;
+import org.trustoverip.ctwg.toolkit.mrg.model.Version;
+import org.trustoverip.ctwg.toolkit.mrg.processors.TermsFilter.TermsFilterType;
 
 /**
  * This class works with scope files and turns them in to a Java object model for easier
@@ -32,13 +47,19 @@ class ModelWrangler {
   private static final String MARKDOWN_HEADING = "#";
   private static final String HTTPS = "https://";
   private static final String TREE = "tree";
-  private static final String MRG_FILE_EXTENSION = "yaml";
   private static final int OWNER_PART_INDEX = 1;
   private static final int REPO_PART_INDEX = 2;
   private static final String MULTIPLE_USE_FIELDS = "multiple-use fields";
   private static final String GENERIC_FRONT_MATTER = "generic front-matter";
+
+  private static final Pattern TERM_EXPRESSION_MATCHER =
+      Pattern.compile("(tags|termids|\\*)\\[?([\\w, ]*)]?@?(\\w+-?\\w*)?:?([A-Za-z0-9.-_]+)?");
+  private static final int MATCH_FILTER_TYPE_GROUP = 1;
+  private static final int MATCH_VALS_GROUP = 2;
+  private static final int MATCH_SCOPETAG_GROUP = 3;
+  private static final int MATCH_VERSION_GROUP = 4;
   private final YamlWrangler yamlWrangler;
-  private final MRGConnector connector;
+  @Getter @Setter private MRGConnector connector;
 
   @Setter(AccessLevel.NONE) // as we derive this from what type of connector has been passed
   private boolean local;
@@ -48,8 +69,6 @@ class ModelWrangler {
     this.connector = connector;
     local = (connector instanceof LocalFSConnector);
   }
-
-  // TODO getAllTerms and create a filter for the terms
 
   SAFModel getSaf(String scopedir, String safFilename) throws MRGGenerationException {
     String safAsString = this.getSafAsString(scopedir, safFilename);
@@ -71,45 +90,112 @@ class ModelWrangler {
 
   Map<String, GeneratorContext> buildContextMap(String scopedir, SAFModel saf, String versionTag) {
     Map<String, GeneratorContext> contextMap = new HashMap<>();
-    // do local scope
+    // create context for local scope
     String localScope = saf.getScope().getScopetag();
     GeneratorContext localContext =
         createSkeletonContext(scopedir, saf.getScope().getCuratedir(), versionTag);
     contextMap.put(localScope, localContext);
-    // create skeleton external scopes
+    // get local version we are building MRG for
+    Optional<Version> optionalVersion =
+        saf.getVersions().stream().filter(v -> v.getVsntag().equals(versionTag)).findFirst();
+    Map<String, String> versionsByScopetag = new HashMap<>();
+    Map<String, List<Predicate<Term>>> filtersByScopetag = new HashMap<>();
+    if (optionalVersion.isPresent()) {
+      Version versionOfInterest = optionalVersion.get();
+      List<String> termExpressions = versionOfInterest.getTermselcrit();
+      for (String expression : termExpressions) {
+        Matcher m = TERM_EXPRESSION_MATCHER.matcher(expression);
+        if (m.matches()) {
+          String scopetag = m.group(MATCH_SCOPETAG_GROUP);
+          versionsByScopetag.put(scopetag, m.group(MATCH_VERSION_GROUP));
+          filtersByScopetag
+              .computeIfAbsent(scopetag, k -> new ArrayList<>())
+              .add(termsFilter(m.group(MATCH_FILTER_TYPE_GROUP), m.group(MATCH_VALS_GROUP)));
+        } else {
+          log.warn(
+              "The  expression: {} in the version.termselcrit element could not be parsed",
+              expression);
+        }
+      }
+    }
+    // create external scopes
     List<ScopeRef> externalScopes = saf.getScopes();
     for (ScopeRef externalScope : externalScopes) {
-      GeneratorContext generatorContext =
-          createSkeletonContext(
-              externalScope.getScopedir(), saf.getScope().getCuratedir(), versionTag);
       List<String> scopetags = externalScope.getScopetags();
       for (String scopetag : scopetags) {
+        GeneratorContext generatorContext =
+            createSkeletonContext(
+                externalScope.getScopedir(),
+                StringUtils.EMPTY,
+                StringUtils.EMPTY); // will find dirs later
+        generatorContext.setVersionTag(
+            versionsByScopetag.getOrDefault(scopetag, StringUtils.EMPTY));
+        generatorContext.setFilters(filtersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
         contextMap.put(scopetag, generatorContext);
       }
     }
 
+
     return contextMap;
   }
 
-  void writeMrgToFile(MRGModel mrg, String mrgFilename) throws MRGGenerationException {
-    Path mrgFilepath = Path.of(mrgFilename);
-    yamlWrangler.writeMrg(mrgFilepath, mrg);
+  private TermsFilter termsFilter(String typeString, String vals) {
+    TermsFilterType type;
+    if (typeString.equals(ALL_TAGS)) {
+      type = TermsFilterType.all;
+    } else {
+      type = TermsFilterType.valueOf(typeString);
+    }
+    return TermsFilter.of(type, vals);
   }
 
-  // TODO accept multiple term filters
-  List<Term> fetchTerms(GeneratorContext localContext, String termFilter) {
+  /*
+   Grouptag and scopetag are mandatory but version is optional
+   [grouptag]@scopetag:version
+  */
+
+  MRGModel getMrg(GeneratorContext context, String glossaryDir) {
+    String mrgFilename = constructFilename(context.getVersionTag());
+    String mrgPath = String.join("/", glossaryDir, mrgFilename);
+    String mrgAsYaml = connector.getContent(context.getOwnerRepo(), mrgPath);
+    return (null == mrgAsYaml) ? null : yamlWrangler.parseMrg(mrgAsYaml);
+  }
+
+  String writeMrgToFile(MRGModel mrg, String glossaryDir, String versionTag)
+      throws MRGGenerationException {
+    String mrgFilename = constructFilename(versionTag);
+    log.debug(String.format("MRG filename to be generated is: %s", mrgFilename));
+    Path glossaryPath = Paths.get(glossaryDir);
+    try {
+      Files.createDirectories(glossaryPath);
+    } catch (IOException ioe) {
+      throw new MRGGenerationException(
+          String.format(CANNOT_CREATE_GLOSSARY_DIR, glossaryPath.toAbsolutePath()));
+    }
+    Path mrgFilepath = Path.of(glossaryDir, mrgFilename);
+    yamlWrangler.writeMrg(mrgFilepath, mrg);
+    return mrgFilepath.toString();
+  }
+
+  List<Term> fetchTerms(GeneratorContext currentContext, List<Predicate<Term>> filters) {
+    Predicate<Term> consolidatedFilter;
+    if (null == filters || filters.isEmpty()) {
+      consolidatedFilter = TermsFilter.all();
+    } else {
+      consolidatedFilter = filters.stream().reduce(Predicate::or).get();
+    }
     List<Term> terms = new ArrayList<>();
     String curatedPath =
-        String.join("/", localContext.getRootDirPath(), localContext.getCuratedDir());
+        String.join("/", currentContext.getSafDirectory(), currentContext.getCuratedDir());
     List<FileContent> directoryContent =
-        connector.getDirectoryContent(localContext.getOwnerRepo(), curatedPath);
+        connector.getDirectoryContent(currentContext.getOwnerRepo(), curatedPath);
     if (!directoryContent.isEmpty()) {
       terms =
           directoryContent.stream()
               .map(this::cleanTermFile)
               .map(this::toYaml)
-              .filter(term -> term.getScope().equals(termFilter))
-              .toList();
+              .filter(consolidatedFilter)
+              .collect(Collectors.toList());
     }
     return terms;
   }
@@ -138,7 +224,7 @@ class ModelWrangler {
       t = yamlWrangler.parseTerm(fileContent.content());
       t.setFilename(fileContent.filename());
       t.setHeadings(fileContent.headings());
-      log.info("... Creating entry from term with id = {} ...", t.getId());
+      log.info("... Creating entry from term with id = {} ...", t.getTermid());
     } catch (Exception e) {
       log.error("Couldn't read or parse the following term file: {}", fileContent.filename());
     }
@@ -168,7 +254,7 @@ class ModelWrangler {
       String scopedir, String curatedDir, String versionTag) {
     String ownerRepo = getOwnerRepo(scopedir);
     String rootPath = getRootPath(scopedir);
-    return new GeneratorContext(ownerRepo, rootPath, versionTag, curatedDir);
+    return new GeneratorContext(ownerRepo, scopedir, rootPath, versionTag, curatedDir);
   }
 
   private String getOwnerRepo(String scopedir) {
@@ -178,7 +264,6 @@ class ModelWrangler {
           scopedir; // no real concept of ownerRepo when it's local so just make it the scopedir
     } else {
       int httpIndex = scopedir.indexOf(HTTPS) + HTTPS.length();
-      int treeIndex = scopedir.indexOf(TREE) + TREE.length();
       String[] parts = scopedir.substring(httpIndex).split("/");
       ownerRepo = String.join("/", parts[OWNER_PART_INDEX], parts[REPO_PART_INDEX]);
     }
@@ -191,8 +276,8 @@ class ModelWrangler {
       rootPath = scopedir; // for local the rootPath and scopedir are identical
     } else {
       int treeIndex = scopedir.indexOf(TREE);
-      if (treeIndex == -1) { // no tree found => root dir is /
-        return "/";
+      if (treeIndex == -1) { // no tree found => root dir is empty
+        return StringUtils.EMPTY;
       }
       treeIndex = treeIndex + TREE.length() + 1; // step past "tree" itself
       String branchDir = scopedir.substring(treeIndex);
@@ -205,5 +290,13 @@ class ModelWrangler {
       rootPath = path.deleteCharAt(path.length() - 1).toString();
     }
     return rootPath;
+  }
+
+  private String constructFilename(String versionTag) {
+    if (StringUtils.isEmpty(versionTag)) {
+      return String.join(".", DEFAULT_MRG_FILENAME, "yaml");
+    } else {
+      return String.join(".", DEFAULT_MRG_FILENAME, versionTag, "yaml");
+    }
   }
 }

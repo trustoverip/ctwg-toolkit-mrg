@@ -13,16 +13,25 @@ public class MRGGenerationException extends RuntimeException {
 
   public static final String COULD_NOT_READ_LOCAL_CONTENT =
       "Could not read local content from path: %s";
-  static final String NOT_FOUND =
+  public static final String NOT_FOUND =
       "%s: There is no such resource or anonymous access to this repository is not allowed.";
-  static final String UNABLE_TO_PARSE_SAF =
+  public static final String UNABLE_TO_PARSE_SAF =
       "Generation failed: Unable to parse SAF. Check that it is valid YAML";
-  static final String NO_GLOSSARY_DIR =
+
+  public static final String UNABLE_TO_PARSE_MRG =
+      "Generation failed: Unable to parse remote MRG. Check that it is valid YAML";
+  public static final String NO_GLOSSARY_DIR =
       "Generation failed: The glossarydir attribute in the SAF scope is empty so no location to save MRG.";
-  static final String NO_SUCH_VERSION =
+  public static final String NO_SUCH_VERSION =
       "Generation failed: No version with version tag (vsntag) of %s found in SAF";
-  static final String CANNOT_WRITE_MRG = "Generation failed: Unable to write MRG to location %s";
-  static final String CANNOT_PARSE_TERM = "Could not create term from input string of:\n%s";
+  public static final String CANNOT_WRITE_MRG =
+      "Generation failed: Unable to write MRG to location %s";
+  public static final String CANNOT_PARSE_TERM = "Could not create term from input string of:\n%s";
+
+  public static final String CANNOT_CREATE_GLOSSARY_DIR = "Could not create glossary dir at %s";
+
+  public static final String GITHUB_LOGON_ERROR =
+      "Could not log on to GitHub for user %s. Check you are running with valid credentials. You will need a personal access token";
 
   /**
    * Constructs a new exception with {@code null} as its detail message. The cause is not
