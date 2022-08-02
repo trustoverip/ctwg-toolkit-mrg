@@ -47,7 +47,6 @@ class ModelWrangler {
   private static final String MARKDOWN_HEADING = "#";
   private static final String HTTPS = "https://";
   private static final String TREE = "tree";
-  private static final String MRG_FILE_EXTENSION = "yaml";
   private static final int OWNER_PART_INDEX = 1;
   private static final int REPO_PART_INDEX = 2;
   private static final String MULTIPLE_USE_FIELDS = "multiple-use fields";
@@ -59,7 +58,6 @@ class ModelWrangler {
   private static final int MATCH_VALS_GROUP = 2;
   private static final int MATCH_SCOPETAG_GROUP = 3;
   private static final int MATCH_VERSION_GROUP = 4;
-  public static final String DEFAULT_BRANCH = "master";
   private final YamlWrangler yamlWrangler;
   @Getter @Setter private MRGConnector connector;
 
@@ -159,7 +157,7 @@ class ModelWrangler {
   MRGModel getMrg(GeneratorContext context, String glossaryDir) {
     String mrgFilename = constructFilename(context.getVersionTag());
     String mrgPath = String.join("/", glossaryDir, mrgFilename);
-    String mrgAsYaml = connector.getContent(context.getRootDirPath(), mrgPath);
+    String mrgAsYaml = connector.getContent(context.getOwnerRepo(), mrgPath);
     return (null == mrgAsYaml) ? null : yamlWrangler.parseMrg(mrgAsYaml);
   }
 
@@ -188,7 +186,7 @@ class ModelWrangler {
     }
     List<Term> terms = new ArrayList<>();
     String curatedPath =
-        String.join("/", currentContext.getRootDirPath(), currentContext.getCuratedDir());
+        String.join("/", currentContext.getSafDirectory(), currentContext.getCuratedDir());
     List<FileContent> directoryContent =
         connector.getDirectoryContent(currentContext.getOwnerRepo(), curatedPath);
     if (!directoryContent.isEmpty()) {
@@ -226,7 +224,7 @@ class ModelWrangler {
       t = yamlWrangler.parseTerm(fileContent.content());
       t.setFilename(fileContent.filename());
       t.setHeadings(fileContent.headings());
-      log.info("... Creating entry from term with id = {} ...", t.getId());
+      log.info("... Creating entry from term with id = {} ...", t.getTermid());
     } catch (Exception e) {
       log.error("Couldn't read or parse the following term file: {}", fileContent.filename());
     }
@@ -278,8 +276,8 @@ class ModelWrangler {
       rootPath = scopedir; // for local the rootPath and scopedir are identical
     } else {
       int treeIndex = scopedir.indexOf(TREE);
-      if (treeIndex == -1) { // no tree found => root dir is /
-        return String.join("/", TREE, DEFAULT_BRANCH); // TODO get this from github
+      if (treeIndex == -1) { // no tree found => root dir is empty
+        return StringUtils.EMPTY;
       }
       treeIndex = treeIndex + TREE.length() + 1; // step past "tree" itself
       String branchDir = scopedir.substring(treeIndex);
@@ -295,7 +293,10 @@ class ModelWrangler {
   }
 
   private String constructFilename(String versionTag) {
-    String vsntag = (null == versionTag) ? StringUtils.EMPTY : versionTag;
-    return String.join(".", DEFAULT_MRG_FILENAME, vsntag, "yaml");
+    if (StringUtils.isEmpty(versionTag)) {
+      return String.join(".", DEFAULT_MRG_FILENAME, "yaml");
+    } else {
+      return String.join(".", DEFAULT_MRG_FILENAME, versionTag, "yaml");
+    }
   }
 }

@@ -128,7 +128,7 @@ public class MRGlossaryGenerator {
    Remote entries are selected from the mrg
   */
   private List<MRGEntry> remoteTerms(String scopetag, GeneratorContext remoteContext) {
-    log.info("... Fetching terms for scopetag {} from scopedir {} with version {}", scopetag, remoteContext.getRootDirPath(), remoteContext.getVersionTag());
+    log.info("... Fetching terms for scopetag {} from scopedir {} with version {}", scopetag, remoteContext.getSafDirectory(), remoteContext.getVersionTag());
     List<MRGEntry> remoteEntries = new ArrayList<>();
     /*
       1. Get and parse remote SAF
@@ -154,12 +154,15 @@ public class MRGlossaryGenerator {
         List<Predicate<Term>> filters = remoteContext.getFilters();
         Predicate<Term> consolidatedFilter = filters.stream().reduce(Predicate::or).orElse(TermsFilter.all());
         remoteEntries = mrgEntries.stream().filter(consolidatedFilter).toList();
+        for (MRGEntry e: remoteEntries) {
+          log.info("... Copying remote entry from with id = {} ...", e.getTermid());
+        }
       } else {
-        log.warn("No MRG found in glossary directory {} of remote dir {}",remoteContext.getRootDirPath(), glossaryDir);
+        log.warn("No MRG found in glossary directory {} of remote dir {}",remoteContext.getSafDirectory(), glossaryDir);
       }
 
     } else {
-      this.remoteErrorCollector.add(String.format("There was an error with remote scopetag %s. Could not find the %s at %s", scopetag, DEFAULT_SAF_FILENAME, remoteContext.getRootDirPath()));
+      this.remoteErrorCollector.add(String.format("There was an error with remote scopetag %s. Could not find the %s at %s", scopetag, DEFAULT_SAF_FILENAME, remoteContext.getSafDirectory()));
     }
     return remoteEntries;
   }
@@ -187,7 +190,7 @@ public class MRGlossaryGenerator {
     Set<Entry<String, GeneratorContext>> contextsByScopetag = this.contextMap.entrySet();
     for (Entry<String, GeneratorContext> e : contextsByScopetag ) {
       if (! e.getValue().getFilters().isEmpty()) {
-        ListUtils.union(entries, remoteTerms(e.getKey(), e.getValue()));
+        entries = ListUtils.union(entries, remoteTerms(e.getKey(), e.getValue()));
       }
     }
     MRGModel mrg = new MRGModel(terminology, scopes, entries);

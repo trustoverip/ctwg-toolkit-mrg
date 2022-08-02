@@ -14,7 +14,7 @@ import org.trustoverip.ctwg.toolkit.mrg.model.Term;
 public final class GeneratorContext {
   private final String ownerRepo;
   private final String absoluteRepo;
-  private final String rootDirPath;
+  private final String safDirectory;
   private final String safFilepath;
 
   private final String curatedDir;
@@ -26,15 +26,15 @@ public final class GeneratorContext {
   public GeneratorContext(
       String ownerRepo,
       String absoluteRepo,
-      String rootDirPath,
+      String safDirectory,
       String versionTag,
       String curatedDir) {
     this.ownerRepo = ownerRepo;
     this.absoluteRepo = absoluteRepo;
-    this.rootDirPath = rootDirPath;
+    this.safDirectory = safDirectory;
     this.curatedDir = curatedDir;
     this.versionTag = versionTag;
-    this.safFilepath = String.join("/", rootDirPath, MRGlossaryGenerator.DEFAULT_SAF_FILENAME);
+    this.safFilepath = String.join("/", safDirectory, MRGlossaryGenerator.DEFAULT_SAF_FILENAME);
     this.filters = new ArrayList<>();
   }
 }
