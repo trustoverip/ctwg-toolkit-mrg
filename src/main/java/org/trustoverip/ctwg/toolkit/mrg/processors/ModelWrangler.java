@@ -88,6 +88,15 @@ class ModelWrangler {
     }
   }
 
+  /**
+   * @param scopedir The scopedir of the (local) scope we are building the MRG for
+   * @param saf The SAF model of the local scope
+   * @param versionTag The version of the local scope we want to use
+   * @return A structure containing all the local and remote directories and filters we need to
+   *     construct the MRG. This structure is a proxy for and summarized version of the SAF. It is a
+   *     Map (dictionary) keyed by the scopetag of each local and remote scope in the SAF with a
+   *     value holding the key directory locations and filters for each of the scopes
+   */
   Map<String, GeneratorContext> buildContextMap(String scopedir, SAFModel saf, String versionTag) {
     Map<String, GeneratorContext> contextMap = new HashMap<>();
     // create context for local scope
@@ -98,7 +107,9 @@ class ModelWrangler {
     // get local version we are building MRG for
     Optional<Version> optionalVersion =
         saf.getVersions().stream().filter(v -> v.getVsntag().equals(versionTag)).findFirst();
+    // will contain the versions for each of the remote scopes
     Map<String, String> versionsByScopetag = new HashMap<>();
+    // will contain the filters (term selection criteria) for each of the remote scopes
     Map<String, List<Predicate<Term>>> filtersByScopetag = new HashMap<>();
     if (optionalVersion.isPresent()) {
       Version versionOfInterest = optionalVersion.get();
@@ -154,17 +165,25 @@ class ModelWrangler {
    [grouptag]@scopetag:version
   */
 
-  MRGModel getMrg(GeneratorContext context, String glossaryDir) {
-    String mrgFilename = constructFilename(context.getVersionTag());
-    String mrgPath = String.join("/", glossaryDir, mrgFilename);
+  MRGModel getMrg(
+      GeneratorContext context, String glossaryDir, List<String> alternativeVersionTags) {
+    String mrgPath = constructMrgFilepath(glossaryDir, context.getVersionTag());
     String mrgAsYaml = connector.getContent(context.getOwnerRepo(), mrgPath);
+    int indexToAlts = 0;
+    // if no match and alternative version tags exist then try them
+    if (null == mrgAsYaml) {
+      for (String nextAlternative : alternativeVersionTags) {
+        mrgPath = constructMrgFilepath(glossaryDir, nextAlternative);
+        mrgAsYaml = connector.getContent(context.getOwnerRepo(), mrgPath);
+      }
+    }
     return (null == mrgAsYaml) ? null : yamlWrangler.parseMrg(mrgAsYaml);
   }
 
   String writeMrgToFile(MRGModel mrg, String glossaryDir, String versionTag)
       throws MRGGenerationException {
-    String mrgFilename = constructFilename(versionTag);
-    log.debug(String.format("MRG filename to be generated is: %s", mrgFilename));
+    String pathStr = constructMrgFilepath(glossaryDir, versionTag);
+    log.debug(String.format("MRG filename to be generated is: %s", pathStr));
     Path glossaryPath = Paths.get(glossaryDir);
     try {
       Files.createDirectories(glossaryPath);
@@ -172,7 +191,7 @@ class ModelWrangler {
       throw new MRGGenerationException(
           String.format(CANNOT_CREATE_GLOSSARY_DIR, glossaryPath.toAbsolutePath()));
     }
-    Path mrgFilepath = Path.of(glossaryDir, mrgFilename);
+    Path mrgFilepath = Path.of(pathStr);
     yamlWrangler.writeMrg(mrgFilepath, mrg);
     return mrgFilepath.toString();
   }
@@ -292,11 +311,11 @@ class ModelWrangler {
     return rootPath;
   }
 
-  private String constructFilename(String versionTag) {
-    if (StringUtils.isEmpty(versionTag)) {
-      return String.join(".", DEFAULT_MRG_FILENAME, "yaml");
-    } else {
-      return String.join(".", DEFAULT_MRG_FILENAME, versionTag, "yaml");
-    }
+  private String constructMrgFilepath(String glossaryDir, String versionTag) {
+    String mrgFilename =
+        (StringUtils.isEmpty(versionTag))
+            ? String.join(".", DEFAULT_MRG_FILENAME, "yaml")
+            : String.join(".", DEFAULT_MRG_FILENAME, versionTag, "yaml");
+    return String.join("/", glossaryDir, mrgFilename);
   }
 }
