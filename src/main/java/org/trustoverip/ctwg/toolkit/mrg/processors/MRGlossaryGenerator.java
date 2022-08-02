@@ -148,17 +148,22 @@ public class MRGlossaryGenerator {
     SAFModel remoteSaf = wrangler.getSaf(remoteContext.getAbsoluteRepo(), DEFAULT_SAF_FILENAME);
     if (remoteSaf != null) {
       String glossaryDir = remoteSaf.getScope().getGlossarydir();
-      MRGModel remoteMrg = wrangler.getMrg(remoteContext, remoteSaf.getScope().getGlossarydir());
-      if (remoteMrg != null) {
-        List<MRGEntry> mrgEntries = remoteMrg.entries();
-        List<Predicate<Term>> filters = remoteContext.getFilters();
-        Predicate<Term> consolidatedFilter = filters.stream().reduce(Predicate::or).orElse(TermsFilter.all());
-        remoteEntries = mrgEntries.stream().filter(consolidatedFilter).toList();
-        for (MRGEntry e: remoteEntries) {
-          log.info("... Copying remote entry from with id = {} ...", e.getTermid());
+      Optional<Version> versionOfInterest = remoteSaf.getVersions().stream().filter(v -> v.getVsntag().equals(remoteContext.getVersionTag())).findFirst();
+      if (versionOfInterest.isPresent()) {
+        MRGModel remoteMrg = wrangler.getMrg(remoteContext, remoteSaf.getScope().getGlossarydir(), versionOfInterest.get().getAltvsntags());
+        if (remoteMrg != null) {
+          List<MRGEntry> mrgEntries = remoteMrg.entries();
+          List<Predicate<Term>> filters = remoteContext.getFilters();
+          Predicate<Term> consolidatedFilter = filters.stream().reduce(Predicate::or).orElse(TermsFilter.all());
+          remoteEntries = mrgEntries.stream().filter(consolidatedFilter).toList();
+          for (MRGEntry e: remoteEntries) {
+            log.info("... Copying remote entry from with id = {} ...", e.getTermid());
+          }
+        } else {
+          log.warn("No MRG found in glossary directory {} of remote dir {}",remoteContext.getSafDirectory(), glossaryDir);
         }
       } else {
-        log.warn("No MRG found in glossary directory {} of remote dir {}",remoteContext.getSafDirectory(), glossaryDir);
+        log.warn("No version {} found in the SAF of remote scope (tag={}, repo={}) that matches the version specified in the local SAF#versions section", remoteContext.getVersionTag(), scopetag, remoteContext.getAbsoluteRepo());
       }
 
     } else {

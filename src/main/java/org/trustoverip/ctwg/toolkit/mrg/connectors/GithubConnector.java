@@ -45,7 +45,9 @@ public class GithubConnector implements MRGConnector {
         return null;
       }
       return contentAsString(content);
-
+    } catch (GHFileNotFoundException e) {
+      log.warn("Could not find GitHub resource {} in repo {}", contentName, repository);
+      return null;
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
