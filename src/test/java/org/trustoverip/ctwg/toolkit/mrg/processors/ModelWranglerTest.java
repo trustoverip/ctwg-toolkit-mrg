@@ -146,7 +146,7 @@ class ModelWranglerTest {
     assertThat(essiflabContext.getVersionTag()).isEmpty();
     // essif-lab scopetag
     GeneratorContext essifLabContext = contextMap.get("essif-lab");
-    TermsFilter expectedPartyFilter = TermsFilter.of(TermsFilterType.terms, "party");
+    TermsFilter expectedPartyFilter = TermsFilter.of(TermsFilterType.termids, "party");
     TermsFilter expectedManagementFilter = TermsFilter.of(TermsFilterType.tags, "management");
     TermsFilter expectedCommunityFilter = TermsFilter.of(TermsFilterType.tags, "community");
     assertThat(essifLabContext.getFilters()).containsExactlyInAnyOrder(expectedCommunityFilter, expectedManagementFilter, expectedPartyFilter);
@@ -169,14 +169,14 @@ class ModelWranglerTest {
         .thenReturn(List.of(termStringTerm, termStringScope));
     GeneratorContext context =
         new GeneratorContext(OWNER_REPO, ROOT_DIR, MRGTEST_VERSION, CURATED_DIR_NAME);
-    List<Term> terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term"), TermsFilter.of(TermsFilterType.terms, "scope")));
+    List<Term> terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.termids, "term"), TermsFilter.of(TermsFilterType.termids, "scope")));
     assertThat(terms).hasSize(expectedSize);
     // specify both terms as a comma seprated list in a single filter
-    terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term, scope")));
+    terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.termids, "term, scope")));
     assertThat(terms).hasSize(expectedSize);
     // now only ask for the term term
     expectedSize = 1;
-    terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term")));
+    terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.termids, "term")));
     assertThat(terms).hasSize(expectedSize);
   }
 }

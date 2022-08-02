@@ -54,7 +54,7 @@ class ModelWrangler {
   private static final String GENERIC_FRONT_MATTER = "generic front-matter";
 
   private static final Pattern TERM_EXPRESSION_MATCHER =
-      Pattern.compile("(tags|terms|\\*)\\[?([\\w, ]*)]?@?(\\w+-?\\w*)?:?([A-Za-z0-9.-_]+)?");
+      Pattern.compile("(tags|termids|\\*)\\[?([\\w, ]*)]?@?(\\w+-?\\w*)?:?([A-Za-z0-9.-_]+)?");
   private static final int MATCH_FILTER_TYPE_GROUP = 1;
   private static final int MATCH_VALS_GROUP = 2;
   private static final int MATCH_SCOPETAG_GROUP = 3;
@@ -103,7 +103,7 @@ class ModelWrangler {
     Map<String, List<Predicate<Term>>> filtersByScopetag = new HashMap<>();
     if (optionalVersion.isPresent()) {
       Version versionOfInterest = optionalVersion.get();
-      List<String> termExpressions = versionOfInterest.getTerms();
+      List<String> termExpressions = versionOfInterest.getTermselcrit();
       for (String expression : termExpressions) {
         Matcher m = TERM_EXPRESSION_MATCHER.matcher(expression);
         if (m.matches()) {
@@ -114,7 +114,7 @@ class ModelWrangler {
               .add(termsFilter(m.group(MATCH_FILTER_TYPE_GROUP), m.group(MATCH_VALS_GROUP)));
         } else {
           log.warn(
-              "The term expression: {} in the version.terms element could not be parsed",
+              "The  expression: {} in the version.termselcrit element could not be parsed",
               expression);
         }
       }
@@ -126,7 +126,9 @@ class ModelWrangler {
       for (String scopetag : scopetags) {
         GeneratorContext generatorContext =
             createSkeletonContext(
-                externalScope.getScopedir(), saf.getScope().getCuratedir(), StringUtils.EMPTY);
+                externalScope.getScopedir(),
+                StringUtils.EMPTY,
+                StringUtils.EMPTY); // will find dirs later
         generatorContext.setVersionTag(
             versionsByScopetag.getOrDefault(scopetag, StringUtils.EMPTY));
         generatorContext.setFilters(filtersByScopetag.getOrDefault(scopetag, new ArrayList<>()));

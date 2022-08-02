@@ -16,7 +16,7 @@ import lombok.Setter;
 public final class Version {
   private String vsntag;
   private List<String> altvsntags;
-  private List<String> terms;
+  private List<String> termselcrit;
   private String status;
   private String from;
   private String to;

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -150,6 +151,9 @@ public class MRGlossaryGenerator {
       MRGModel remoteMrg = wrangler.getMrg(remoteContext, remoteSaf.getScope().getGlossarydir());
       if (remoteMrg != null) {
         List<MRGEntry> mrgEntries = remoteMrg.entries();
+        List<Predicate<Term>> filters = remoteContext.getFilters();
+        Predicate<Term> consolidatedFilter = filters.stream().reduce(Predicate::or).orElse(TermsFilter.all());
+        remoteEntries = mrgEntries.stream().filter(consolidatedFilter).toList();
       } else {
         log.warn("No MRG found in glossary directory {} of remote dir {}",remoteContext.getRootDirPath(), glossaryDir);
       }
@@ -182,7 +186,9 @@ public class MRGlossaryGenerator {
     log.info("Step 5/6: Parsing remote terms (terms from the scopedirs in the scopes section) to create MRG entries:");
     Set<Entry<String, GeneratorContext>> contextsByScopetag = this.contextMap.entrySet();
     for (Entry<String, GeneratorContext> e : contextsByScopetag ) {
-      ListUtils.union(entries, remoteTerms(e.getKey(), e.getValue()));
+      if (! e.getValue().getFilters().isEmpty()) {
+        ListUtils.union(entries, remoteTerms(e.getKey(), e.getValue()));
+      }
     }
     MRGModel mrg = new MRGModel(terminology, scopes, entries);
     String mrgFilename = wrangler.writeMrgToFile(mrg, saf.getScope().getGlossarydir(), versionTag);

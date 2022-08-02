@@ -52,7 +52,7 @@ public class TermsFilter implements Predicate<Term> {
   public boolean test(Term term) {
     return switch (this.filterType) {
       case all -> true;
-      case terms -> {
+      case termids -> {
         String normalisedTermid = StringUtils.trim(term.getTermid()).toLowerCase(Locale.ROOT);
         yield normalisedValues.contains(normalisedTermid);
       }
@@ -78,7 +78,7 @@ public class TermsFilter implements Predicate<Term> {
 
   enum TermsFilterType {
     tags,
-    terms,
+    termids,
     all
   }
 }

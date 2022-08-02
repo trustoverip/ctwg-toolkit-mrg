@@ -121,7 +121,7 @@ class YamlWranglerTest {
             List.of("latest", "v0.9.4"),
             List.of(
                 "tags[management]@essif-lab",
-                "terms[party]@essif-lab:0.9.4",
+                "termids[party]@essif-lab:0.9.4",
                 "tags[community]@essif-lab:0.9.4",
                 "*@tev2"),
             "proposed",
@@ -160,8 +160,8 @@ class YamlWranglerTest {
   private void assertVersion(Version actualVersion, Version expectedVersion) {
     assertThat(actualVersion.getVsntag()).isEqualTo(expectedVersion.getVsntag());
     assertThat(actualVersion.getAltvsntags()).isEqualTo(expectedVersion.getAltvsntags());
-    assertThat(actualVersion.getTerms())
-        .containsExactlyInAnyOrder(expectedVersion.getTerms().toArray(new String[0]));
+    assertThat(actualVersion.getTermselcrit())
+        .containsExactlyInAnyOrder(expectedVersion.getTermselcrit().toArray(new String[0]));
     assertThat(actualVersion.getStatus()).isEqualTo(expectedVersion.getStatus());
     assertThat(actualVersion.getFrom()).isEqualTo(expectedVersion.getFrom());
     assertThat(actualVersion.getTo()).isEqualTo(expectedVersion.getTo());
