@@ -118,11 +118,11 @@ class ModelWranglerTest {
     // ctwg
     GeneratorContext ctwgContext = contextMap.get("ctwg");
     assertThat(ctwgContext.getOwnerRepo()).isEqualTo("trustoverip/ctwg");
-    assertThat(ctwgContext.getRootDirPath()).isEqualTo("/");
+    assertThat(ctwgContext.getRootDirPath()).isEqualTo("tree/master");
     // toip-ctwg
     GeneratorContext toipCtwgContext = contextMap.get("toip-ctwg");
     assertThat(toipCtwgContext.getOwnerRepo()).isEqualTo("trustoverip/ctwg");
-    assertThat(toipCtwgContext.getRootDirPath()).isEqualTo("/");
+    assertThat(toipCtwgContext.getRootDirPath()).isEqualTo("tree/master");
   }
 
 
@@ -168,7 +168,7 @@ class ModelWranglerTest {
     when(mockReader.getDirectoryContent(OWNER_REPO, CURATED_DIR_PATH))
         .thenReturn(List.of(termStringTerm, termStringScope));
     GeneratorContext context =
-        new GeneratorContext(OWNER_REPO, ROOT_DIR, MRGTEST_VERSION, CURATED_DIR_NAME);
+        new GeneratorContext(OWNER_REPO, SCOPEDIR, ROOT_DIR, MRGTEST_VERSION, CURATED_DIR_NAME);
     List<Term> terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.termids, "term"), TermsFilter.of(TermsFilterType.termids, "scope")));
     assertThat(terms).hasSize(expectedSize);
     // specify both terms as a comma seprated list in a single filter

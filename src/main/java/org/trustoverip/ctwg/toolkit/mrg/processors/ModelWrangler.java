@@ -59,6 +59,7 @@ class ModelWrangler {
   private static final int MATCH_VALS_GROUP = 2;
   private static final int MATCH_SCOPETAG_GROUP = 3;
   private static final int MATCH_VERSION_GROUP = 4;
+  public static final String DEFAULT_BRANCH = "master";
   private final YamlWrangler yamlWrangler;
   @Getter @Setter private MRGConnector connector;
 
@@ -255,7 +256,7 @@ class ModelWrangler {
       String scopedir, String curatedDir, String versionTag) {
     String ownerRepo = getOwnerRepo(scopedir);
     String rootPath = getRootPath(scopedir);
-    return new GeneratorContext(ownerRepo, rootPath, versionTag, curatedDir);
+    return new GeneratorContext(ownerRepo, scopedir, rootPath, versionTag, curatedDir);
   }
 
   private String getOwnerRepo(String scopedir) {
@@ -278,7 +279,7 @@ class ModelWrangler {
     } else {
       int treeIndex = scopedir.indexOf(TREE);
       if (treeIndex == -1) { // no tree found => root dir is /
-        return "/";
+        return String.join("/", TREE, DEFAULT_BRANCH); // TODO get this from github
       }
       treeIndex = treeIndex + TREE.length() + 1; // step past "tree" itself
       String branchDir = scopedir.substring(treeIndex);

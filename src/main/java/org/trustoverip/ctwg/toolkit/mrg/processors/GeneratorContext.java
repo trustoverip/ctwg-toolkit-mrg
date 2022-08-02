@@ -13,6 +13,7 @@ import org.trustoverip.ctwg.toolkit.mrg.model.Term;
 @Getter
 public final class GeneratorContext {
   private final String ownerRepo;
+  private final String absoluteRepo;
   private final String rootDirPath;
   private final String safFilepath;
 
@@ -23,8 +24,13 @@ public final class GeneratorContext {
   @Setter private List<Predicate<Term>> filters;
 
   public GeneratorContext(
-      String ownerRepo, String rootDirPath, String versionTag, String curatedDir) {
+      String ownerRepo,
+      String absoluteRepo,
+      String rootDirPath,
+      String versionTag,
+      String curatedDir) {
     this.ownerRepo = ownerRepo;
+    this.absoluteRepo = absoluteRepo;
     this.rootDirPath = rootDirPath;
     this.curatedDir = curatedDir;
     this.versionTag = versionTag;

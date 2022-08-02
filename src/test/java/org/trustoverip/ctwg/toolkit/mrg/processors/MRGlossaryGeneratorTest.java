@@ -69,7 +69,7 @@ class MRGlossaryGeneratorTest {
     generator = new MRGlossaryGenerator(mockWrangler);
     validSaf = parser.parseSaf(new String(Files.readAllBytes(VALID_SAF_PATH)));
     noGlossarySaf = parser.parseSaf(new String(Files.readAllBytes(NO_GLOSSARY_SAF_PATH)));
-    context = new GeneratorContext(OWNER_REPO, ROOT_DIR_PATH, VERSION_TAG, CURATED_DIR);
+    context = new GeneratorContext(OWNER_REPO, SCOPEDIR, ROOT_DIR_PATH, VERSION_TAG, CURATED_DIR);
     String termStringTerm = new String(Files.readAllBytes(BASIC_TERM_FILE));
     Term termTerm = yamlMapper.readValue(termStringTerm, Term.class);
     matchingTerms = List.of(termTerm);

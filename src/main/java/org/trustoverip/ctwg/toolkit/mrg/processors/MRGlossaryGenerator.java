@@ -145,7 +145,7 @@ public class MRGlossaryGenerator {
       wrangler.setConnector(new GithubConnector());
     }
     // 1. Get remote SAF
-    SAFModel remoteSaf = wrangler.getSaf(remoteContext.getRootDirPath(), DEFAULT_SAF_FILENAME);
+    SAFModel remoteSaf = wrangler.getSaf(remoteContext.getAbsoluteRepo(), DEFAULT_SAF_FILENAME);
     if (remoteSaf != null) {
       String glossaryDir = remoteSaf.getScope().getGlossarydir();
       MRGModel remoteMrg = wrangler.getMrg(remoteContext, remoteSaf.getScope().getGlossarydir());
