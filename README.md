@@ -1,5 +1,7 @@
 # Machine Readable Glossary (MRG) Generator
 
+NOTE: Issues, other than those that are very specific to the MRGtool *implementation*, should be raised in the TEv2 repo (currently part of the [eSSIF-Lab FW](https://github.com/essif-lab/framework/issues)).
+
 ## Overview
 
 ### Status
