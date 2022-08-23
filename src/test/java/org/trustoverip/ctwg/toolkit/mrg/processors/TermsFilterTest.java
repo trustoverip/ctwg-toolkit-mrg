@@ -110,22 +110,22 @@ class TermsFilterTest {
   @DisplayName("""
       Given a filter value that is not all
       When filter
-      Then should return true where termids match
+      Then should return true where terms match
       """)
   void testFilterTerms() {
-    TermsFilter fooFilter = TermsFilter.of(TermsFilterType.termids, "foo");
+    TermsFilter fooFilter = TermsFilter.of(TermsFilterType.terms, "foo");
     assertThat(fooFilter.test(foo)).isTrue();
     assertThat(fooFilter.test(bar)).isFalse();
     assertThat(fooFilter.test(foobar)).isFalse();
     assertThat(fooFilter.test(noo)).isFalse();
 
-    TermsFilter nonMatchingFilter = TermsFilter.of(TermsFilterType.termids, "moo");
+    TermsFilter nonMatchingFilter = TermsFilter.of(TermsFilterType.terms, "moo");
     assertThat(nonMatchingFilter.test(foo)).isFalse();
     assertThat(nonMatchingFilter.test(bar)).isFalse();
     assertThat(nonMatchingFilter.test(foobar)).isFalse();
     assertThat(nonMatchingFilter.test(noo)).isFalse();
 
-    TermsFilter multiMatchFilter = TermsFilter.of(TermsFilterType.termids, "foo, bar");
+    TermsFilter multiMatchFilter = TermsFilter.of(TermsFilterType.terms, "foo, bar");
     assertThat(multiMatchFilter.test(foo)).isTrue();
     assertThat(multiMatchFilter.test(bar)).isTrue();
     assertThat(multiMatchFilter.test(foobar)).isFalse();
@@ -136,10 +136,10 @@ class TermsFilterTest {
   @DisplayName("""
       Given a filter value that is not all
       When filter on mrg entries
-      Then should return true where termids match
+      Then should return true where terms match
       """)
   void testFilterTermsMrg() {
-    TermsFilter fooFilter = TermsFilter.of(TermsFilterType.termids, "foo");
+    TermsFilter fooFilter = TermsFilter.of(TermsFilterType.terms, "foo");
     assertThat(fooFilter.test(mrgFoo)).isTrue();
     assertThat(fooFilter.test(mrgBar)).isFalse();
     assertThat(fooFilter.test(mrgFoobar)).isFalse();
@@ -200,9 +200,9 @@ class TermsFilterTest {
     mustHaveNeither = all.stream().filter(TermsFilter.of(TermsFilterType.tags, "bar, foo").negate()).collect(Collectors.toList());
     assertThat(mustHaveNeither).containsExactlyInAnyOrder(noo);
     // now test with terms
-    mustHaveNeither = all.stream().filter(TermsFilter.of(TermsFilterType.termids, "bar, foo").negate()).collect(Collectors.toList());
+    mustHaveNeither = all.stream().filter(TermsFilter.of(TermsFilterType.terms, "bar, foo").negate()).collect(Collectors.toList());
     assertThat(mustHaveNeither).containsExactlyInAnyOrder(noo, foobar);
-    mustHaveNeither = all.stream().filter(TermsFilter.of(TermsFilterType.termids, "bar, foo, foobar , noo").negate()).collect(Collectors.toList());
+    mustHaveNeither = all.stream().filter(TermsFilter.of(TermsFilterType.terms, "bar, foo, foobar , noo").negate()).collect(Collectors.toList());
     assertThat(mustHaveNeither).isEmpty();
   }
 
