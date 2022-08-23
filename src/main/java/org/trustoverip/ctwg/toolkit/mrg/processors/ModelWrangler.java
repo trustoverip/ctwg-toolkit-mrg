@@ -110,7 +110,8 @@ class ModelWrangler {
     // will contain the versions for each of the remote scopes
     Map<String, String> versionsByScopetag = new HashMap<>();
     // will contain the filters (term selection criteria) for each of the remote scopes
-    Map<String, List<Predicate<Term>>> filtersByScopetag = new HashMap<>();
+    Map<String, List<Predicate<Term>>> addFiltersByScopetag = new HashMap<>();
+    Map<String, List<Predicate<Term>>> removeFiltersByScopetag = new HashMap<>();
     if (optionalVersion.isPresent()) {
       Version versionOfInterest = optionalVersion.get();
       List<String> termExpressions = versionOfInterest.getTermselcrit();
@@ -119,9 +120,17 @@ class ModelWrangler {
         if (m.matches()) {
           String scopetag = m.group(MATCH_SCOPETAG_GROUP);
           versionsByScopetag.put(scopetag, m.group(MATCH_VERSION_GROUP));
-          filtersByScopetag
-              .computeIfAbsent(scopetag, k -> new ArrayList<>())
-              .add(termsFilter(m.group(MATCH_FILTER_TYPE_GROUP), m.group(MATCH_VALS_GROUP)));
+          String filterTypeGroup = m.group(MATCH_FILTER_TYPE_GROUP);
+          if (filterTypeGroup.startsWith("-")) {
+            removeFiltersByScopetag
+                .computeIfAbsent(scopetag, k -> new ArrayList<>())
+                .add(termsFilter(m.group(MATCH_FILTER_TYPE_GROUP), m.group(MATCH_VALS_GROUP)));
+          } else {
+            addFiltersByScopetag
+                .computeIfAbsent(scopetag, k -> new ArrayList<>())
+                .add(termsFilter(m.group(MATCH_FILTER_TYPE_GROUP), m.group(MATCH_VALS_GROUP)));
+          }
+
         } else {
           log.warn(
               "The  expression: {} in the version.termselcrit element could not be parsed",
@@ -141,7 +150,10 @@ class ModelWrangler {
                 StringUtils.EMPTY); // will find dirs later
         generatorContext.setVersionTag(
             versionsByScopetag.getOrDefault(scopetag, StringUtils.EMPTY));
-        generatorContext.setAddFilters(filtersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
+        generatorContext.setAddFilters(
+            addFiltersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
+        generatorContext.setRemoveFilters(
+            removeFiltersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
         contextMap.put(scopetag, generatorContext);
       }
     }

@@ -114,7 +114,8 @@ class YamlWranglerTest {
     int expectedNumberOfVersions = 3;
     assertThat(versions).hasSize(expectedNumberOfVersions);
     Version expectedFirstVersion =
-        new Version("mrgtest", null, List.of("*@tev2"), null, null, null);
+        new Version(
+            "mrgtest", null, List.of("*@tev2", "-terms[@, curated-text-body]"), null, null, null);
     Version expectedSecondVersion =
         new Version(
             "0x921456",
