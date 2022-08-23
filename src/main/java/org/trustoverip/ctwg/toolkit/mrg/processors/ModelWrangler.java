@@ -53,7 +53,7 @@ class ModelWrangler {
   private static final String GENERIC_FRONT_MATTER = "generic front-matter";
 
   private static final Pattern TERM_EXPRESSION_MATCHER =
-      Pattern.compile("(tags|termids|\\*)\\[?([\\w, ]*)]?@?(\\w+-?\\w*)?:?([A-Za-z0-9.-_]+)?");
+      Pattern.compile("(tags|terms|\\*)\\[?([\\w, ]*)]?@?(\\w+-?\\w*)?:?([A-Za-z0-9.-_]+)?");
   private static final int MATCH_FILTER_TYPE_GROUP = 1;
   private static final int MATCH_VALS_GROUP = 2;
   private static final int MATCH_SCOPETAG_GROUP = 3;

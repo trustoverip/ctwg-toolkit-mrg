@@ -121,7 +121,7 @@ class YamlWranglerTest {
             List.of("latest", "v0.9.4"),
             List.of(
                 "tags[management]@essif-lab",
-                "termids[party]@essif-lab:0.9.4",
+                "terms[party]@essif-lab:0.9.4",
                 "tags[community]@essif-lab:0.9.4",
                 "*@tev2"),
             "proposed",

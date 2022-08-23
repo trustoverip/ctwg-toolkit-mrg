@@ -37,7 +37,8 @@ class MRGlossaryGeneratorIntegrationTest {
     assertThat(model.terminology()).isNotNull();
     assertThat(model.scopes()).isNotNull();
     assertThat(model.entries()).hasSize(expectedNumberOfEntries);
-    File expectedMrg = new File(String.join(".", "mrg", VERSION_TAG, "yaml"));
+    File expectedMrg =
+        new File(new File("glossaries"), String.join(".", "mrg", VERSION_TAG, "yaml"));
     assertThat(expectedMrg).exists();
   }
 
@@ -52,7 +53,8 @@ class MRGlossaryGeneratorIntegrationTest {
     assertThat(model.terminology()).isNotNull();
     assertThat(model.scopes()).isNotNull();
     assertThat(model.entries()).isNotEmpty();
-    File expectedMrg = new File(String.join(".", "mrg", VERSION_TAG, "yaml"));
+    File expectedMrg =
+        new File(new File("glossaries"), String.join(".", "mrg", VERSION_TAG, "yaml"));
     assertThat(expectedMrg).exists();
   }
 }
