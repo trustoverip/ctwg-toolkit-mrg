@@ -142,22 +142,22 @@ class ModelWranglerTest {
         .containsOnlyKeys("tev2", "essiflab", "essif-lab", "ctwg", "toip-ctwg");
     // essiflab scopetag
     GeneratorContext essiflabContext = contextMap.get("essiflab");
-    assertThat(essiflabContext.getFilters()).isEmpty();
+    assertThat(essiflabContext.getAddFilters()).isEmpty();
     assertThat(essiflabContext.getVersionTag()).isEmpty();
     // essif-lab scopetag
     GeneratorContext essifLabContext = contextMap.get("essif-lab");
     TermsFilter expectedPartyFilter = TermsFilter.of(TermsFilterType.terms, "party");
     TermsFilter expectedManagementFilter = TermsFilter.of(TermsFilterType.tags, "management");
     TermsFilter expectedCommunityFilter = TermsFilter.of(TermsFilterType.tags, "community");
-    assertThat(essifLabContext.getFilters()).containsExactlyInAnyOrder(expectedCommunityFilter, expectedManagementFilter, expectedPartyFilter);
+    assertThat(essifLabContext.getAddFilters()).containsExactlyInAnyOrder(expectedCommunityFilter, expectedManagementFilter, expectedPartyFilter);
     assertThat(essifLabContext.getVersionTag()).isEqualTo("0.9.4");
     // ctwg scopetag
     GeneratorContext ctwg = contextMap.get("ctwg");
-    assertThat(ctwg.getFilters()).isEmpty();
+    assertThat(ctwg.getAddFilters()).isEmpty();
     assertThat(ctwg.getVersionTag()).isEmpty();
     // toip scopetag
     GeneratorContext toipCtwg = contextMap.get("toip-ctwg");
-    assertThat(toipCtwg.getFilters()).isEmpty();
+    assertThat(toipCtwg.getAddFilters()).isEmpty();
     assertThat(toipCtwg.getVersionTag()).isEmpty();
   }
 

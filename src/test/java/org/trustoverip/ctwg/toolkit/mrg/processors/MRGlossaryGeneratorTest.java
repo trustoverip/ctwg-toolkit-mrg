@@ -98,7 +98,7 @@ class MRGlossaryGeneratorTest {
   @Test
   @DisplayName("Given valid input generate should create MRG")
   void given_valid_input_generate_should_create_mrg() {
-    context.setFilters(List.of(TermsFilter.all()));
+    context.setAddFilters(List.of(TermsFilter.all()));
     context.setVersionTag(VERSION_TAG);
     when(mockWrangler.getSaf(scopedir, safFilename)).thenReturn(validSaf);
     when(mockWrangler.buildContextMap(SCOPEDIR, validSaf, VERSION_TAG))

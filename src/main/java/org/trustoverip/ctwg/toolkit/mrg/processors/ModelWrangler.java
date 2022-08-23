@@ -141,7 +141,7 @@ class ModelWrangler {
                 StringUtils.EMPTY); // will find dirs later
         generatorContext.setVersionTag(
             versionsByScopetag.getOrDefault(scopetag, StringUtils.EMPTY));
-        generatorContext.setFilters(filtersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
+        generatorContext.setAddFilters(filtersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
         contextMap.put(scopetag, generatorContext);
       }
     }
