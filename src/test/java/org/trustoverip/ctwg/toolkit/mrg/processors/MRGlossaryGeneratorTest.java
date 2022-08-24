@@ -116,18 +116,4 @@ class MRGlossaryGeneratorTest {
     // TODO entries
   }
 
-  /*
-   *
-   */
-  @DisplayName(
-      "Given an MRG with an existing id; When generating from a term file with the same id; Then the existing glossary entry should be replaced by the newer")
-  @Test
-  void testMatchingIdsAreReplaced() {
-    // TODO impelment me
-  }
-
-  @DisplayName(
-      "Given more than one formphrases field; When generating an MRG; Then the formfields must be mutually exclusive wrt elements")
-  @Test
-  void testFormfieldsAreMutuallyExclusiveByElement() {}
 }

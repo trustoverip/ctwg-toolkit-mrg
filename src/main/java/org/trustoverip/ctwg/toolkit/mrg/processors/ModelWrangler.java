@@ -213,7 +213,7 @@ class ModelWrangler {
     String mrgAsYaml = connector.getContent(context.getOwnerRepo(), mrgPath);
     int indexToAlts = 0;
     // if no match and alternative version tags exist then try them
-    if (null == mrgAsYaml) {
+    if (null == mrgAsYaml && alternativeVersionTags != null) {
       for (String nextAlternative : alternativeVersionTags) {
         mrgPath = constructMrgFilepath(glossaryDir, nextAlternative);
         mrgAsYaml = connector.getContent(context.getOwnerRepo(), mrgPath);
@@ -243,12 +243,7 @@ class ModelWrangler {
       List<Predicate<Term>> addFilters,
       List<Predicate<Term>> removeFilters) {
     Predicate<Term> consolidatedAddFilter = consolidateAdd(addFilters);
-    Predicate<Term> consolidateRemoveFilter = consolidateRemove(addFilters);
-    if (null == addFilters || addFilters.isEmpty()) {
-      consolidatedAddFilter = TermsFilter.all();
-    } else {
-      consolidatedAddFilter = addFilters.stream().reduce(Predicate::or).get();
-    }
+    Predicate<Term> consolidateRemoveFilter = consolidateRemove(removeFilters);
     List<Term> terms = new ArrayList<>();
     String curatedPath =
         String.join("/", currentContext.getSafDirectory(), currentContext.getCuratedDir());
@@ -260,6 +255,7 @@ class ModelWrangler {
               .map(this::cleanTermFile)
               .map(this::toYaml)
               .filter(consolidatedAddFilter)
+              .filter(consolidateRemoveFilter)
               .collect(Collectors.toList());
     }
     return terms;

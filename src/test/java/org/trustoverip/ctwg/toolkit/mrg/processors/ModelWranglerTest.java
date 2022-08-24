@@ -196,5 +196,13 @@ class ModelWranglerTest {
     expectedSize = 1;
     terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term")), new ArrayList<>());
     assertThat(terms).hasSize(expectedSize);
+    // ask for both terms but for some reason (in this case to test features) exclude one of them
+    expectedSize = 1;
+    terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term, scope")), List.of(TermsFilter.of(TermsFilterType.terms, "term")));
+    assertThat(terms).hasSize(expectedSize);
+    // ask for both terms and exclude both of them
+    expectedSize = 0;
+    terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term, scope")), List.of(TermsFilter.of(TermsFilterType.terms, "scope, term")));
+    assertThat(terms).hasSize(expectedSize);
   }
 }
