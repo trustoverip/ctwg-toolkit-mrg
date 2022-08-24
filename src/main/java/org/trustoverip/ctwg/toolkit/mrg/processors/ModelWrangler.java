@@ -52,12 +52,18 @@ class ModelWrangler {
   private static final String MULTIPLE_USE_FIELDS = "multiple-use fields";
   private static final String GENERIC_FRONT_MATTER = "generic front-matter";
 
+  /*
+    private static final Pattern TERM_EXPRESSION_MATCHER =
+        Pattern.compile("(-?)(tags|terms|\\*)\\[?([\\w, -@]*)]?@?(\\w+-?\\w*)?:?([A-Za-z0-9.-_]+)?");
+  */
   private static final Pattern TERM_EXPRESSION_MATCHER =
-      Pattern.compile("(tags|terms|\\*)\\[?([\\w, ]*)]?@?(\\w+-?\\w*)?:?([A-Za-z0-9.-_]+)?");
-  private static final int MATCH_FILTER_TYPE_GROUP = 1;
-  private static final int MATCH_VALS_GROUP = 2;
-  private static final int MATCH_SCOPETAG_GROUP = 3;
-  private static final int MATCH_VERSION_GROUP = 4;
+      Pattern.compile("(-?)(tags|terms|\\*)\\[?([\\w, -@]*)]?@?(\\w+-?\\w*)?:?([A-Za-z0-9.-_]+)?");
+
+  private static final int MATCH_REMOVE_SYNTAX_GROUP = 1;
+  private static final int MATCH_FILTER_TYPE_GROUP = 2;
+  private static final int MATCH_VALS_GROUP = 3;
+  private static final int MATCH_SCOPETAG_GROUP = 4;
+  private static final int MATCH_VERSION_GROUP = 5;
   private final YamlWrangler yamlWrangler;
   @Getter @Setter private MRGConnector connector;
 
@@ -118,17 +124,22 @@ class ModelWrangler {
       for (String expression : termExpressions) {
         Matcher m = TERM_EXPRESSION_MATCHER.matcher(expression);
         if (m.matches()) {
-          String scopetag = m.group(MATCH_SCOPETAG_GROUP);
+          boolean remove = StringUtils.isNotEmpty(m.group(MATCH_REMOVE_SYNTAX_GROUP));
+          String scopetag =
+              StringUtils.isNotEmpty(m.group(MATCH_SCOPETAG_GROUP))
+                  ? m.group(MATCH_SCOPETAG_GROUP)
+                  : localScope;
           versionsByScopetag.put(scopetag, m.group(MATCH_VERSION_GROUP));
           String filterTypeGroup = m.group(MATCH_FILTER_TYPE_GROUP);
-          if (filterTypeGroup.startsWith("-")) {
+          String matchValsGroup = m.group(MATCH_VALS_GROUP);
+          if (remove) {
             removeFiltersByScopetag
                 .computeIfAbsent(scopetag, k -> new ArrayList<>())
-                .add(termsFilter(m.group(MATCH_FILTER_TYPE_GROUP), m.group(MATCH_VALS_GROUP)));
+                .add(termsFilter(filterTypeGroup, matchValsGroup));
           } else {
             addFiltersByScopetag
                 .computeIfAbsent(scopetag, k -> new ArrayList<>())
-                .add(termsFilter(m.group(MATCH_FILTER_TYPE_GROUP), m.group(MATCH_VALS_GROUP)));
+                .add(termsFilter(filterTypeGroup, matchValsGroup));
           }
 
         } else {
@@ -137,6 +148,10 @@ class ModelWrangler {
               expression);
         }
       }
+      // add filters for local scope
+      localContext.setAddFilters(addFiltersByScopetag.getOrDefault(localScope, new ArrayList<>()));
+      localContext.setRemoveFilters(
+          removeFiltersByScopetag.getOrDefault(localScope, new ArrayList<>()));
     }
     // create external scopes
     List<ScopeRef> externalScopes = saf.getScopes();
@@ -144,16 +159,12 @@ class ModelWrangler {
       List<String> scopetags = externalScope.getScopetags();
       for (String scopetag : scopetags) {
         GeneratorContext generatorContext =
-            createSkeletonContext(
-                externalScope.getScopedir(),
-                StringUtils.EMPTY,
-                StringUtils.EMPTY); // will find dirs later
-        generatorContext.setVersionTag(
-            versionsByScopetag.getOrDefault(scopetag, StringUtils.EMPTY));
-        generatorContext.setAddFilters(
-            addFiltersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
-        generatorContext.setRemoveFilters(
-            removeFiltersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
+            createExternalContext(
+                externalScope,
+                scopetag,
+                versionsByScopetag,
+                addFiltersByScopetag,
+                removeFiltersByScopetag);
         contextMap.put(scopetag, generatorContext);
       }
     }
@@ -162,10 +173,29 @@ class ModelWrangler {
     return contextMap;
   }
 
+  private GeneratorContext createExternalContext(
+      ScopeRef externalScope,
+      String scopetag,
+      Map<String, String> versionsByScopetag,
+      Map<String, List<Predicate<Term>>> addFiltersByScopetag,
+      Map<String, List<Predicate<Term>>> removeFiltersByScopetag) {
+    GeneratorContext generatorContext =
+        createSkeletonContext(
+            externalScope.getScopedir(),
+            StringUtils.EMPTY,
+            StringUtils.EMPTY); // will find dirs later
+    generatorContext.setVersionTag(versionsByScopetag.getOrDefault(scopetag, StringUtils.EMPTY));
+    generatorContext.setAddFilters(addFiltersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
+    generatorContext.setRemoveFilters(
+        removeFiltersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
+
+    return generatorContext;
+  }
+
   private TermsFilter termsFilter(String typeString, String vals) {
     TermsFilterType type;
     if (typeString.equals(ALL_TAGS)) {
-      type = TermsFilterType.all;
+      return TermsFilter.all();
     } else {
       type = TermsFilterType.valueOf(typeString);
     }

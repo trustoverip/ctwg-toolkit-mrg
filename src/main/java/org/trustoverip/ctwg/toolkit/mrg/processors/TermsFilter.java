@@ -39,7 +39,7 @@ public class TermsFilter implements Predicate<Term> {
   }
 
   public static TermsFilter all() {
-    return new TermsFilter(TermsFilterType.all, null);
+    return new TermsFilter(TermsFilterType.all, StringUtils.EMPTY);
   }
 
   /**

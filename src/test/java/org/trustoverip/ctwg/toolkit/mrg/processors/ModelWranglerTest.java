@@ -125,6 +125,24 @@ class ModelWranglerTest {
     assertThat(toipCtwgContext.getSafDirectory()).isEmpty();
   }
 
+  @DisplayName("""
+      Given valid SAF and version with terms to be added and removed
+      When build context map
+      Then both added and remove tags should be saved in the appopriate list
+      """)
+  @Test
+  void testAddAndRemoveFilterTypes() {
+    when(mockReader.getContent(OWNER_REPO, VALID_SAF_TRIGGER)).thenReturn(validSafContent);
+    String expectedScopetag = "tev2";
+    SAFModel saf = wrangler.getSaf(SCOPEDIR, VALID_SAF_NAME);
+    Map<String, GeneratorContext> contextMap =
+        wrangler.buildContextMap(SCOPEDIR, saf, MRGTEST_VERSION);
+    GeneratorContext localContext = contextMap.get(expectedScopetag);
+    assertThat(localContext.getAddFilters()).containsExactly(TermsFilter.all());
+    assertThat(localContext.getRemoveFilters()).containsExactly(TermsFilter.of(TermsFilterType.terms, "@, curated-text-body"));
+  }
+
+
 
   @DisplayName("""
         Given valid SAF and multiple terms of interest and versions from multiple scopes
