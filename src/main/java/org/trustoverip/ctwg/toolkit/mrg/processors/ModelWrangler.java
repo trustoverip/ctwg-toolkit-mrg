@@ -238,12 +238,16 @@ class ModelWrangler {
     return mrgFilepath.toString();
   }
 
-  List<Term> fetchTerms(GeneratorContext currentContext, List<Predicate<Term>> filters) {
-    Predicate<Term> consolidatedFilter;
-    if (null == filters || filters.isEmpty()) {
-      consolidatedFilter = TermsFilter.all();
+  List<Term> fetchTerms(
+      GeneratorContext currentContext,
+      List<Predicate<Term>> addFilters,
+      List<Predicate<Term>> removeFilters) {
+    Predicate<Term> consolidatedAddFilter = consolidateAdd(addFilters);
+    Predicate<Term> consolidateRemoveFilter = consolidateRemove(addFilters);
+    if (null == addFilters || addFilters.isEmpty()) {
+      consolidatedAddFilter = TermsFilter.all();
     } else {
-      consolidatedFilter = filters.stream().reduce(Predicate::or).get();
+      consolidatedAddFilter = addFilters.stream().reduce(Predicate::or).get();
     }
     List<Term> terms = new ArrayList<>();
     String curatedPath =
@@ -255,10 +259,26 @@ class ModelWrangler {
           directoryContent.stream()
               .map(this::cleanTermFile)
               .map(this::toYaml)
-              .filter(consolidatedFilter)
+              .filter(consolidatedAddFilter)
               .collect(Collectors.toList());
     }
     return terms;
+  }
+
+  private Predicate<Term> consolidateAdd(List<Predicate<Term>> addFilters) {
+    if (null == addFilters || addFilters.isEmpty()) {
+      return TermsFilter.all();
+    } else {
+      return addFilters.stream().reduce(Predicate::or).get();
+    }
+  }
+
+  private Predicate<Term> consolidateRemove(List<Predicate<Term>> removeFilters) {
+    if (null == removeFilters || removeFilters.isEmpty()) {
+      return TermsFilter.all();
+    } else {
+      return removeFilters.stream().reduce(Predicate::and).get().negate();
+    }
   }
 
   private FileContent cleanTermFile(FileContent dirtyContent) {

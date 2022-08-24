@@ -120,7 +120,7 @@ public class MRGlossaryGenerator {
    Local entries are selected from the curatedDir
   */
   private List<MRGEntry> currentTerms(GeneratorContext generatorContext, Version currentVersion) {
-    List<Term> currentTerms = wrangler.fetchTerms(generatorContext, generatorContext.getAddFilters());
+    List<Term> currentTerms = wrangler.fetchTerms(generatorContext, generatorContext.getAddFilters(), generatorContext.getRemoveFilters());
     return currentTerms.stream().map(MRGEntry::new).toList();
   }
 
