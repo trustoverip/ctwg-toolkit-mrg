@@ -45,6 +45,7 @@ versions:
   - vsntag: mrgtest # this version MUST only be used for testing the MRG generator
     termselcrit:
       - "*@tev2" # import all tev2 terms.
+      - "-terms[@, curated-text-body]" # do not import the following terms
   - vsntag: 0x921456 # a versiontag that identifies this version from all other versions in the SAF
     altvsntags: # alternative verstiontags
       - latest

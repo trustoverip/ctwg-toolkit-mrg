@@ -120,7 +120,7 @@ public class MRGlossaryGenerator {
    Local entries are selected from the curatedDir
   */
   private List<MRGEntry> currentTerms(GeneratorContext generatorContext, Version currentVersion) {
-    List<Term> currentTerms = wrangler.fetchTerms(generatorContext, generatorContext.getFilters());
+    List<Term> currentTerms = wrangler.fetchTerms(generatorContext, generatorContext.getAddFilters(), generatorContext.getRemoveFilters());
     return currentTerms.stream().map(MRGEntry::new).toList();
   }
 
@@ -153,7 +153,7 @@ public class MRGlossaryGenerator {
         MRGModel remoteMrg = wrangler.getMrg(remoteContext, remoteSaf.getScope().getGlossarydir(), versionOfInterest.get().getAltvsntags());
         if (remoteMrg != null) {
           List<MRGEntry> mrgEntries = remoteMrg.entries();
-          List<Predicate<Term>> filters = remoteContext.getFilters();
+          List<Predicate<Term>> filters = remoteContext.getAddFilters();
           Predicate<Term> consolidatedFilter = filters.stream().reduce(Predicate::or).orElse(TermsFilter.all());
           remoteEntries = mrgEntries.stream().filter(consolidatedFilter).toList();
           for (MRGEntry e: remoteEntries) {
@@ -194,7 +194,7 @@ public class MRGlossaryGenerator {
     log.info("Step 5/6: Parsing remote terms (terms from the scopedirs in the scopes section) to create MRG entries:");
     Set<Entry<String, GeneratorContext>> contextsByScopetag = this.contextMap.entrySet();
     for (Entry<String, GeneratorContext> e : contextsByScopetag ) {
-      if (! e.getValue().getFilters().isEmpty()) {
+      if (! e.getValue().getAddFilters().isEmpty()) {
         entries = ListUtils.union(entries, remoteTerms(e.getKey(), e.getValue()));
       }
     }

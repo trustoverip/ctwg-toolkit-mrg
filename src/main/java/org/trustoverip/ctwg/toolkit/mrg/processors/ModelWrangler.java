@@ -52,12 +52,18 @@ class ModelWrangler {
   private static final String MULTIPLE_USE_FIELDS = "multiple-use fields";
   private static final String GENERIC_FRONT_MATTER = "generic front-matter";
 
+  /*
+    private static final Pattern TERM_EXPRESSION_MATCHER =
+        Pattern.compile("(-?)(tags|terms|\\*)\\[?([\\w, -@]*)]?@?(\\w+-?\\w*)?:?([A-Za-z0-9.-_]+)?");
+  */
   private static final Pattern TERM_EXPRESSION_MATCHER =
-      Pattern.compile("(tags|terms|\\*)\\[?([\\w, ]*)]?@?(\\w+-?\\w*)?:?([A-Za-z0-9.-_]+)?");
-  private static final int MATCH_FILTER_TYPE_GROUP = 1;
-  private static final int MATCH_VALS_GROUP = 2;
-  private static final int MATCH_SCOPETAG_GROUP = 3;
-  private static final int MATCH_VERSION_GROUP = 4;
+      Pattern.compile("(-?)(tags|terms|\\*)\\[?([\\w, -@]*)]?@?(\\w+-?\\w*)?:?([A-Za-z0-9.-_]+)?");
+
+  private static final int MATCH_REMOVE_SYNTAX_GROUP = 1;
+  private static final int MATCH_FILTER_TYPE_GROUP = 2;
+  private static final int MATCH_VALS_GROUP = 3;
+  private static final int MATCH_SCOPETAG_GROUP = 4;
+  private static final int MATCH_VERSION_GROUP = 5;
   private final YamlWrangler yamlWrangler;
   @Getter @Setter private MRGConnector connector;
 
@@ -110,24 +116,42 @@ class ModelWrangler {
     // will contain the versions for each of the remote scopes
     Map<String, String> versionsByScopetag = new HashMap<>();
     // will contain the filters (term selection criteria) for each of the remote scopes
-    Map<String, List<Predicate<Term>>> filtersByScopetag = new HashMap<>();
+    Map<String, List<Predicate<Term>>> addFiltersByScopetag = new HashMap<>();
+    Map<String, List<Predicate<Term>>> removeFiltersByScopetag = new HashMap<>();
     if (optionalVersion.isPresent()) {
       Version versionOfInterest = optionalVersion.get();
       List<String> termExpressions = versionOfInterest.getTermselcrit();
       for (String expression : termExpressions) {
         Matcher m = TERM_EXPRESSION_MATCHER.matcher(expression);
         if (m.matches()) {
-          String scopetag = m.group(MATCH_SCOPETAG_GROUP);
+          boolean remove = StringUtils.isNotEmpty(m.group(MATCH_REMOVE_SYNTAX_GROUP));
+          String scopetag =
+              StringUtils.isNotEmpty(m.group(MATCH_SCOPETAG_GROUP))
+                  ? m.group(MATCH_SCOPETAG_GROUP)
+                  : localScope;
           versionsByScopetag.put(scopetag, m.group(MATCH_VERSION_GROUP));
-          filtersByScopetag
-              .computeIfAbsent(scopetag, k -> new ArrayList<>())
-              .add(termsFilter(m.group(MATCH_FILTER_TYPE_GROUP), m.group(MATCH_VALS_GROUP)));
+          String filterTypeGroup = m.group(MATCH_FILTER_TYPE_GROUP);
+          String matchValsGroup = m.group(MATCH_VALS_GROUP);
+          if (remove) {
+            removeFiltersByScopetag
+                .computeIfAbsent(scopetag, k -> new ArrayList<>())
+                .add(termsFilter(filterTypeGroup, matchValsGroup));
+          } else {
+            addFiltersByScopetag
+                .computeIfAbsent(scopetag, k -> new ArrayList<>())
+                .add(termsFilter(filterTypeGroup, matchValsGroup));
+          }
+
         } else {
           log.warn(
               "The  expression: {} in the version.termselcrit element could not be parsed",
               expression);
         }
       }
+      // add filters for local scope
+      localContext.setAddFilters(addFiltersByScopetag.getOrDefault(localScope, new ArrayList<>()));
+      localContext.setRemoveFilters(
+          removeFiltersByScopetag.getOrDefault(localScope, new ArrayList<>()));
     }
     // create external scopes
     List<ScopeRef> externalScopes = saf.getScopes();
@@ -135,13 +159,12 @@ class ModelWrangler {
       List<String> scopetags = externalScope.getScopetags();
       for (String scopetag : scopetags) {
         GeneratorContext generatorContext =
-            createSkeletonContext(
-                externalScope.getScopedir(),
-                StringUtils.EMPTY,
-                StringUtils.EMPTY); // will find dirs later
-        generatorContext.setVersionTag(
-            versionsByScopetag.getOrDefault(scopetag, StringUtils.EMPTY));
-        generatorContext.setFilters(filtersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
+            createExternalContext(
+                externalScope,
+                scopetag,
+                versionsByScopetag,
+                addFiltersByScopetag,
+                removeFiltersByScopetag);
         contextMap.put(scopetag, generatorContext);
       }
     }
@@ -150,10 +173,29 @@ class ModelWrangler {
     return contextMap;
   }
 
+  private GeneratorContext createExternalContext(
+      ScopeRef externalScope,
+      String scopetag,
+      Map<String, String> versionsByScopetag,
+      Map<String, List<Predicate<Term>>> addFiltersByScopetag,
+      Map<String, List<Predicate<Term>>> removeFiltersByScopetag) {
+    GeneratorContext generatorContext =
+        createSkeletonContext(
+            externalScope.getScopedir(),
+            StringUtils.EMPTY,
+            StringUtils.EMPTY); // will find dirs later
+    generatorContext.setVersionTag(versionsByScopetag.getOrDefault(scopetag, StringUtils.EMPTY));
+    generatorContext.setAddFilters(addFiltersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
+    generatorContext.setRemoveFilters(
+        removeFiltersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
+
+    return generatorContext;
+  }
+
   private TermsFilter termsFilter(String typeString, String vals) {
     TermsFilterType type;
     if (typeString.equals(ALL_TAGS)) {
-      type = TermsFilterType.all;
+      return TermsFilter.all();
     } else {
       type = TermsFilterType.valueOf(typeString);
     }
@@ -171,7 +213,7 @@ class ModelWrangler {
     String mrgAsYaml = connector.getContent(context.getOwnerRepo(), mrgPath);
     int indexToAlts = 0;
     // if no match and alternative version tags exist then try them
-    if (null == mrgAsYaml) {
+    if (null == mrgAsYaml && alternativeVersionTags != null) {
       for (String nextAlternative : alternativeVersionTags) {
         mrgPath = constructMrgFilepath(glossaryDir, nextAlternative);
         mrgAsYaml = connector.getContent(context.getOwnerRepo(), mrgPath);
@@ -196,13 +238,12 @@ class ModelWrangler {
     return mrgFilepath.toString();
   }
 
-  List<Term> fetchTerms(GeneratorContext currentContext, List<Predicate<Term>> filters) {
-    Predicate<Term> consolidatedFilter;
-    if (null == filters || filters.isEmpty()) {
-      consolidatedFilter = TermsFilter.all();
-    } else {
-      consolidatedFilter = filters.stream().reduce(Predicate::or).get();
-    }
+  List<Term> fetchTerms(
+      GeneratorContext currentContext,
+      List<Predicate<Term>> addFilters,
+      List<Predicate<Term>> removeFilters) {
+    Predicate<Term> consolidatedAddFilter = consolidateAdd(addFilters);
+    Predicate<Term> consolidateRemoveFilter = consolidateRemove(removeFilters);
     List<Term> terms = new ArrayList<>();
     String curatedPath =
         String.join("/", currentContext.getSafDirectory(), currentContext.getCuratedDir());
@@ -213,10 +254,27 @@ class ModelWrangler {
           directoryContent.stream()
               .map(this::cleanTermFile)
               .map(this::toYaml)
-              .filter(consolidatedFilter)
+              .filter(consolidatedAddFilter)
+              .filter(consolidateRemoveFilter)
               .collect(Collectors.toList());
     }
     return terms;
+  }
+
+  private Predicate<Term> consolidateAdd(List<Predicate<Term>> addFilters) {
+    if (null == addFilters || addFilters.isEmpty()) {
+      return TermsFilter.all();
+    } else {
+      return addFilters.stream().reduce(Predicate::or).get();
+    }
+  }
+
+  private Predicate<Term> consolidateRemove(List<Predicate<Term>> removeFilters) {
+    if (null == removeFilters || removeFilters.isEmpty()) {
+      return TermsFilter.all();
+    } else {
+      return removeFilters.stream().reduce(Predicate::and).get().negate();
+    }
   }
 
   private FileContent cleanTermFile(FileContent dirtyContent) {

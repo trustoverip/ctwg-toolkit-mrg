@@ -21,7 +21,8 @@ public final class GeneratorContext {
 
   @Setter private String versionTag;
 
-  @Setter private List<Predicate<Term>> filters;
+  @Setter private List<Predicate<Term>> addFilters;
+  @Setter private List<Predicate<Term>> removeFilters;
 
   public GeneratorContext(
       String ownerRepo,
@@ -35,6 +36,7 @@ public final class GeneratorContext {
     this.curatedDir = curatedDir;
     this.versionTag = versionTag;
     this.safFilepath = String.join("/", safDirectory, MRGlossaryGenerator.DEFAULT_SAF_FILENAME);
-    this.filters = new ArrayList<>();
+    this.addFilters = new ArrayList<>();
+    this.removeFilters = new ArrayList<>();
   }
 }

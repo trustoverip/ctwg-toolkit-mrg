@@ -125,6 +125,24 @@ class ModelWranglerTest {
     assertThat(toipCtwgContext.getSafDirectory()).isEmpty();
   }
 
+  @DisplayName("""
+      Given valid SAF and version with terms to be added and removed
+      When build context map
+      Then both added and remove tags should be saved in the appopriate list
+      """)
+  @Test
+  void testAddAndRemoveFilterTypes() {
+    when(mockReader.getContent(OWNER_REPO, VALID_SAF_TRIGGER)).thenReturn(validSafContent);
+    String expectedScopetag = "tev2";
+    SAFModel saf = wrangler.getSaf(SCOPEDIR, VALID_SAF_NAME);
+    Map<String, GeneratorContext> contextMap =
+        wrangler.buildContextMap(SCOPEDIR, saf, MRGTEST_VERSION);
+    GeneratorContext localContext = contextMap.get(expectedScopetag);
+    assertThat(localContext.getAddFilters()).containsExactly(TermsFilter.all());
+    assertThat(localContext.getRemoveFilters()).containsExactly(TermsFilter.of(TermsFilterType.terms, "@, curated-text-body"));
+  }
+
+
 
   @DisplayName("""
         Given valid SAF and multiple terms of interest and versions from multiple scopes
@@ -142,22 +160,22 @@ class ModelWranglerTest {
         .containsOnlyKeys("tev2", "essiflab", "essif-lab", "ctwg", "toip-ctwg");
     // essiflab scopetag
     GeneratorContext essiflabContext = contextMap.get("essiflab");
-    assertThat(essiflabContext.getFilters()).isEmpty();
+    assertThat(essiflabContext.getAddFilters()).isEmpty();
     assertThat(essiflabContext.getVersionTag()).isEmpty();
     // essif-lab scopetag
     GeneratorContext essifLabContext = contextMap.get("essif-lab");
     TermsFilter expectedPartyFilter = TermsFilter.of(TermsFilterType.terms, "party");
     TermsFilter expectedManagementFilter = TermsFilter.of(TermsFilterType.tags, "management");
     TermsFilter expectedCommunityFilter = TermsFilter.of(TermsFilterType.tags, "community");
-    assertThat(essifLabContext.getFilters()).containsExactlyInAnyOrder(expectedCommunityFilter, expectedManagementFilter, expectedPartyFilter);
+    assertThat(essifLabContext.getAddFilters()).containsExactlyInAnyOrder(expectedCommunityFilter, expectedManagementFilter, expectedPartyFilter);
     assertThat(essifLabContext.getVersionTag()).isEqualTo("0.9.4");
     // ctwg scopetag
     GeneratorContext ctwg = contextMap.get("ctwg");
-    assertThat(ctwg.getFilters()).isEmpty();
+    assertThat(ctwg.getAddFilters()).isEmpty();
     assertThat(ctwg.getVersionTag()).isEmpty();
     // toip scopetag
     GeneratorContext toipCtwg = contextMap.get("toip-ctwg");
-    assertThat(toipCtwg.getFilters()).isEmpty();
+    assertThat(toipCtwg.getAddFilters()).isEmpty();
     assertThat(toipCtwg.getVersionTag()).isEmpty();
   }
 
@@ -169,14 +187,22 @@ class ModelWranglerTest {
         .thenReturn(List.of(termStringTerm, termStringScope));
     GeneratorContext context =
         new GeneratorContext(OWNER_REPO, SCOPEDIR, ROOT_DIR, MRGTEST_VERSION, CURATED_DIR_NAME);
-    List<Term> terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term"), TermsFilter.of(TermsFilterType.terms, "scope")));
+    List<Term> terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term"), TermsFilter.of(TermsFilterType.terms, "scope")), new ArrayList<>());
     assertThat(terms).hasSize(expectedSize);
     // specify both terms as a comma seprated list in a single filter
-    terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term, scope")));
+    terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term, scope")), new ArrayList<>());
     assertThat(terms).hasSize(expectedSize);
     // now only ask for the term term
     expectedSize = 1;
-    terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term")));
+    terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term")), new ArrayList<>());
+    assertThat(terms).hasSize(expectedSize);
+    // ask for both terms but for some reason (in this case to test features) exclude one of them
+    expectedSize = 1;
+    terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term, scope")), List.of(TermsFilter.of(TermsFilterType.terms, "term")));
+    assertThat(terms).hasSize(expectedSize);
+    // ask for both terms and exclude both of them
+    expectedSize = 0;
+    terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term, scope")), List.of(TermsFilter.of(TermsFilterType.terms, "scope, term")));
     assertThat(terms).hasSize(expectedSize);
   }
 }

@@ -30,7 +30,7 @@ class MRGlossaryGeneratorIntegrationTest {
   @DisplayName("Should generate an MRG from the datasoc-ltd/framework sample on GitHub")
   void testGenerateTev2Remote() {
     generator = new MRGlossaryGenerator(false);
-    int expectedNumberOfEntries = 30;
+    int expectedNumberOfEntries = 29; // including an external term and removing a local term
     MRGModel model =
         generator.generate(GITHUB_SCOPEDIR, MRGlossaryGenerator.DEFAULT_SAF_FILENAME, VERSION_TAG);
     assertThat(model).isNotNull();
