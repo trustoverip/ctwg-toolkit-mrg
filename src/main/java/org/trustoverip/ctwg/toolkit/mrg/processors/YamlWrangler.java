@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.springframework.stereotype.Service;
 import org.trustoverip.ctwg.toolkit.mrg.model.MRGModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.SAFModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.Term;
@@ -18,6 +19,7 @@ import org.trustoverip.ctwg.toolkit.mrg.model.Term;
 /**
  * @author sih
  */
+@Service
 final class YamlWrangler {
 
   private final ObjectMapper yamlMapper;

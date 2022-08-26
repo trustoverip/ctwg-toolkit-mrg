@@ -6,11 +6,14 @@ import java.io.File;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.trustoverip.ctwg.toolkit.mrg.model.MRGModel;
 
 /**
  * @author sih
  */
+@SpringBootTest
 class MRGlossaryGeneratorIntegrationTest {
 
   private static final String GITHUB_SCOPEDIR =
@@ -19,7 +22,7 @@ class MRGlossaryGeneratorIntegrationTest {
   private static final String LOCAL_SCOPEDIR = "./src/test/resources/essif-lab-skeleton/tev2";
 
   private static final String VERSION_TAG = "mrgtest";
-  private MRGlossaryGenerator generator;
+  @Autowired private MRGlossaryGenerator generator;
 
   @BeforeEach
   void setUp() {

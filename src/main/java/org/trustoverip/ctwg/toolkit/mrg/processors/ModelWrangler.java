@@ -24,6 +24,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.FileContent;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.LocalFSConnector;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.MRGConnector;
@@ -41,6 +42,7 @@ import org.trustoverip.ctwg.toolkit.mrg.processors.TermsFilter.TermsFilterType;
  * @author sih
  */
 @Slf4j
+@Service
 class ModelWrangler {
 
   private static final String TERM_HORIZONTAL_RULE = "---";

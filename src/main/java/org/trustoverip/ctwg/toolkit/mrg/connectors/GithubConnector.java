@@ -12,12 +12,16 @@ import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHFileNotFoundException;
 import org.kohsuke.github.GHRepository;
 import org.kohsuke.github.GitHub;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Service;
 import org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException;
 
 /**
  * @author sih
  */
 @Slf4j
+@Service
+@Primary
 public class GithubConnector implements MRGConnector {
 
   private static final String GH_NAME = "GH_NAME";
