@@ -4,31 +4,25 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGlossaryGenerator.DEFAULT_SAF_FILENAME;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.GithubConnector;
 
 /**
  * @author sih
  */
+@SpringBootTest
 class ModelWranglerIntegrationTest {
 
   private static final String TEV2_SCOPEDIR =
       "https://github.com/essif-lab/framework/tree/master/docs/tev2";
   private static final String PRIVATE_SCOPEDIR = "https://github.com/sih/scratch";
   private static final String SAF_FILENAME = "saf.yaml";
-  private static final String MRGTEST_VERSION = "mrgtest";
-  private static final String EXPECTED_OWNER_REPO = "essif-lab/framework";
-  private static final String EXPECTED_ROOT_DIR_PATH = "docs/tev2";
-  private static final String EXPECTED_SCOPETAG = "tev2";
-  private static final String EXPECTED_SAF_FILEPATH = "docs/tev2/saf.yaml";
 
-  private ModelWrangler wrangler;
-
-  @BeforeEach
-  void set_up() {
-    wrangler = new ModelWrangler(new YamlWrangler(), new GithubConnector());
-  }
+  @Autowired private ModelWrangler wrangler;
+  @Autowired private YamlWrangler yamlWrangler;
+  @Autowired private GithubConnector githubConnector;
 
   @Test
   void given_private_scopedir_when_get_saf_as_string_then_return_saf_exception() {

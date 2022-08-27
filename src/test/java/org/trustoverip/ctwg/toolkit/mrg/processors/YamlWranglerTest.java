@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.trustoverip.ctwg.toolkit.mrg.model.Curator;
 import org.trustoverip.ctwg.toolkit.mrg.model.Email;
-import org.trustoverip.ctwg.toolkit.mrg.model.MRGModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.SAFModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.Scope;
 import org.trustoverip.ctwg.toolkit.mrg.model.ScopeRef;
@@ -33,7 +32,6 @@ class YamlWranglerTest {
   @Autowired private YamlWrangler yamlWrangler;
   private String safAsString;
   private String invalidYamlSaf;
-  private MRGModel sampleMrg;
 
   @BeforeEach
   void setUp() throws Exception {
