@@ -17,9 +17,9 @@ import java.util.function.Predicate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.trustoverip.ctwg.toolkit.mrg.model.MRGModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.SAFModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.ScopeRef;
@@ -33,7 +33,7 @@ import org.trustoverip.ctwg.toolkit.mrg.model.Terminology;
  *     href="https://essif-lab.github.io/framework/docs/tev2/tev2-toolbox#creating-an-mrg">...</a>
  * @author sih
  */
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class MRGlossaryGeneratorTest {
 
   private static final String SCOPEDIR =
@@ -47,8 +47,9 @@ class MRGlossaryGeneratorTest {
       Paths.get("./src/test/resources/no-glossary-saf.yaml");
   private static final Path VALID_SAF_PATH = Paths.get("./src/test/resources/saf-sample-1.yaml");
   private static final Path BASIC_TERM_FILE = Paths.get("./src/test/resources/basic-term.yaml");
-  @Mock private ModelWrangler mockWrangler;
-  private MRGlossaryGenerator generator;
+  @MockBean private ModelWrangler mockWrangler;
+  @Autowired private ModelWrangler wrangler;
+  @Autowired private MRGlossaryGenerator generator;
   private String scopedir;
   private String safFilename;
   private String version;
@@ -67,7 +68,6 @@ class MRGlossaryGeneratorTest {
     scopedir = "https://github.com/essif-lab/framework/tree/master/docs/tev2";
     safFilename = "saf.yaml";
     version = "version";
-    generator = new MRGlossaryGenerator(mockWrangler);
     validSaf = parser.parseSaf(new String(Files.readAllBytes(VALID_SAF_PATH)));
     noGlossarySaf = parser.parseSaf(new String(Files.readAllBytes(NO_GLOSSARY_SAF_PATH)));
     context = new GeneratorContext(OWNER_REPO, SCOPEDIR, ROOT_DIR_PATH, VERSION_TAG, CURATED_DIR);

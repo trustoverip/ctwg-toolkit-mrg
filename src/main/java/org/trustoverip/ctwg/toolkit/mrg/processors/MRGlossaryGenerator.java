@@ -15,6 +15,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.GithubConnector;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.LocalFSConnector;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.MRGConnector;
@@ -30,6 +32,7 @@ import org.trustoverip.ctwg.toolkit.mrg.model.Version;
  * @author sih
  */
 @Slf4j
+@Service
 public class MRGlossaryGenerator {
 
   public static final String DEFAULT_MRG_FILENAME = "mrg";
@@ -42,16 +45,13 @@ public class MRGlossaryGenerator {
   @Setter(AccessLevel.PRIVATE)
   private Map<String, GeneratorContext> contextMap;
 
-  public MRGlossaryGenerator() {
-    this(true);
-  }
   private static final int LOCAL_PARAMS_EXPECTED = 3;
   private static final int SCOPEDIR_INDEX = 0;
 
-  public MRGlossaryGenerator(boolean runLocal) {
-    MRGConnector connector = runLocal ? new LocalFSConnector() : new GithubConnector();
-    wrangler = new ModelWrangler(new YamlWrangler(), connector);
-    remoteErrorCollector = new ArrayList<>();
+  private final List<String> remoteErrorCollector = new ArrayList<>(); // collect errors rather than fail fast
+  @Autowired
+  public MRGlossaryGenerator(ModelWrangler wrangler) {
+    this.wrangler = wrangler;
   }
 
   private Version getVersion(SAFModel saf, String versionTag) throws MRGGenerationException {
@@ -88,7 +88,13 @@ public class MRGlossaryGenerator {
       
       %s
       """;
-  private final List<String> remoteErrorCollector; // collect errors rather than fail fast
+  /*
+    Use this when running locally for development or test purposes
+   */
+  public MRGlossaryGenerator(boolean runLocal) {
+    MRGConnector connector = runLocal ? new LocalFSConnector() : new GithubConnector();
+    wrangler = new ModelWrangler(new YamlWrangler(), connector);
+  }
 
   public static void main(String[] args) {
     if (args.length != PARAMS_EXPECTED && args.length != LOCAL_PARAMS_EXPECTED) {
@@ -110,10 +116,6 @@ public class MRGlossaryGenerator {
       log.error(String.format(UNEXPECTED_ERROR, e.getMessage()));
     }
 
-  }
-  public MRGlossaryGenerator(ModelWrangler wrangler) {
-    this.wrangler = wrangler;
-    remoteErrorCollector = new ArrayList<>();
   }
 
   /*
@@ -204,4 +206,6 @@ public class MRGlossaryGenerator {
 
     return mrg;
   }
+
+
 }

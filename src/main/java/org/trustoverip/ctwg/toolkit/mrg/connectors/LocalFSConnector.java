@@ -9,11 +9,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+import org.springframework.stereotype.Service;
 import org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException;
 
 /**
  * @author sih
  */
+@Service
 public class LocalFSConnector implements MRGConnector {
 
   @Override

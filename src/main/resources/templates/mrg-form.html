@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <title>MRG Generator</title>
+  <meta charset="UTF-8">
+  <style>
+    form  { display: table;      }
+	  p     { display: table-row;  }
+	  label { display: table-cell; }
+	  input.t { display: table-cell; text-align: right; width: 250px}
+
+
+  </style>
+</head>
+<body>
+<div id="main-title">
+  <h1>Machine Readable Glossary (MRG) Generator</h1>
+</div>
+<hr/>
+<h2>Create MRG</h2>
+<p>
+<div id="overview">
+  Use this form to create a new MRG from a set of curated terms and a Scope Administration File
+  (SAF)
+</div>
+</p>
+<br/>
+<p>
+<div id="generator-form">
+  <form ,action="/ctwg/mrg" method="post" modelAttribute>
+    <p>
+      <label for="inp-scopedir">Scope directory location</label>
+      <input , class="t" id="inp-scopedir" name="scopedir" type="text"
+             value="https://github.com/datasoc-ltd/framework/tree/master/docs/tev2">
+    </p>
+    <p>
+      <label for="inp-saf-filename">Scope Admin File (SAF) </label>
+      <input , class="t" id="inp-saf-filename" name="safFilename" type="text" value="saf.yaml">
+    </p>
+    <p>
+      <label for="inp-versiontag">Scope version tag</label>
+      <input , class="t" id="inp-versiontag" name="versionTag" type="text" value="mrgtest"><br/>
+    </p>
+    <br/>
+    <p>
+      <input ,type="submit" value="Generate!">
+    </p>
+  </form>
+
+</div>
+</p>
+</body>
+</html>

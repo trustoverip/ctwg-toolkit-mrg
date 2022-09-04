@@ -7,10 +7,13 @@ import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import org.springframework.stereotype.Service;
 import org.trustoverip.ctwg.toolkit.mrg.model.MRGModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.SAFModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.Term;
@@ -18,7 +21,8 @@ import org.trustoverip.ctwg.toolkit.mrg.model.Term;
 /**
  * @author sih
  */
-final class YamlWrangler {
+@Service
+public final class YamlWrangler {
 
   private final ObjectMapper yamlMapper;
 
@@ -47,7 +51,7 @@ final class YamlWrangler {
     try {
       return yamlMapper.readValue(mrgAsString, MRGModel.class);
     } catch (Exception e) {
-      throw new MRGGenerationException(String.format(UNABLE_TO_PARSE_MRG, mrgAsString));
+      throw new MRGGenerationException(UNABLE_TO_PARSE_MRG);
     }
   }
 
@@ -56,6 +60,15 @@ final class YamlWrangler {
       yamlMapper.writeValue(fos, mrg);
     } catch (IOException ioException) {
       throw new MRGGenerationException(String.format(CANNOT_WRITE_MRG, location.toAbsolutePath()));
+    }
+  }
+
+  public String asYamlString(MRGModel model) throws MRGGenerationException {
+    try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+      yamlMapper.writerWithDefaultPrettyPrinter().writeValue(baos, model);
+      return baos.toString(StandardCharsets.UTF_8);
+    } catch (IOException ioe) {
+      throw new MRGGenerationException("Cannot convert MRG to YAML");
     }
   }
 }

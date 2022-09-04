@@ -15,9 +15,9 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.FileContent;
 import org.trustoverip.ctwg.toolkit.mrg.connectors.GithubConnector;
 import org.trustoverip.ctwg.toolkit.mrg.model.SAFModel;
@@ -27,9 +27,8 @@ import org.trustoverip.ctwg.toolkit.mrg.processors.TermsFilter.TermsFilterType;
 /**
  * @author sih
  */
-@ExtendWith(MockitoExtension.class)
+@SpringBootTest
 class ModelWranglerTest {
-
   static final Path CURATED_TERM_TERM = Paths.get("./src/test/resources/terms/term.md");
   static final Path CURATED_TERM_SCOPE = Paths.get("./src/test/resources/terms/scope.md");
   private static final String MRGTEST_VERSION = "mrgtest";
@@ -40,15 +39,15 @@ class ModelWranglerTest {
   private static final String OWNER_REPO = "essif-lab/framework";
   private static final String VALID_SAF_NAME = "valid.saf";
   private static final String INVALID_SAF_NAME = "invalid.saf";
-  private static final String VALID_SAF_TRIGGER = String.join("", "docs/tev2/", VALID_SAF_NAME);
-  private static final String INVALID_SAF_TRIGGER = String.join("", "docs/tev2/", INVALID_SAF_NAME);
   private static final String ROOT_DIR = "docs/tev2";
+  private static final String VALID_SAF_TRIGGER = String.join("/", ROOT_DIR, VALID_SAF_NAME);
+  private static final String INVALID_SAF_TRIGGER = String.join("/", ROOT_DIR, INVALID_SAF_NAME);
   private static final String CURATED_DIR_NAME = "terms";
-  private static final String SCOPETAG = "tev2";
   private static final String CURATED_DIR_PATH = String.join("/", ROOT_DIR, CURATED_DIR_NAME);
-  @Mock private GithubConnector mockReader;
-  private static final YamlWrangler YAML_WRANGLER = new YamlWrangler();
-  private ModelWrangler wrangler;
+  @MockBean
+  private GithubConnector mockReader;
+  @Autowired private YamlWrangler yamlWrangler;
+  @Autowired private ModelWrangler wrangler;
   private String invalidSafContent;
   private String validSafContent;
   private FileContent termStringTerm;
@@ -56,7 +55,6 @@ class ModelWranglerTest {
 
   @BeforeEach
   void set_up() throws Exception {
-    wrangler = new ModelWrangler(YAML_WRANGLER, mockReader);
     invalidSafContent = new String(Files.readAllBytes(INVALID_SAF));
     validSafContent = new String(Files.readAllBytes(VALID_SAF));
     termStringTerm =
