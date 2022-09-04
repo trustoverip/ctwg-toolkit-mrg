@@ -1,0 +1,25 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>MRG Generator</title>
+  <meta charset="UTF-8">
+  <style>
+    form  { display: table;      }
+	  p     { display: table-row;  }
+	  label { display: table-cell; }
+	  input.t { display: table-cell; text-align: right; width: 250px}
+
+
+  </style>
+</head>
+<body>
+<div id="main-title">
+  <h1>Machine Readable Glossary (MRG) Generator</h1>
+</div>
+<hr/>
+<h2>Generated MRG</h2>
+<p>
+  <span style="white-space: pre-wrap" th:text="${mrg}"></span>
+</p>
+</body>
+</html>

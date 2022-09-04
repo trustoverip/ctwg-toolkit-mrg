@@ -23,16 +23,17 @@ import org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException;
 @Service
 @Primary
 public class GithubConnector implements MRGConnector {
+  private static final String GH_NAME = "gh_user";
 
-  private static final String GH_NAME = "GH_NAME";
-
-  private static final String GH_TOKEN = "GH_TOKEN";
+  private static final String GH_TOKEN = "gh_token";
   private final GitHub gh;
+
 
   public GithubConnector() {
     String user = null;
     try {
       user = System.getenv(GH_NAME);
+      log.info("Connecting to Github as {}", user);
       gh = GitHub.connect(user, System.getenv(GH_TOKEN));
     } catch (IOException ioe) {
       throw new MRGGenerationException(String.format(GITHUB_LOGON_ERROR, user));

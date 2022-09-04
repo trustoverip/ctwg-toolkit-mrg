@@ -13,6 +13,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.trustoverip.ctwg.toolkit.mrg.connectors.GithubConnector;
 import org.trustoverip.ctwg.toolkit.mrg.model.Curator;
 import org.trustoverip.ctwg.toolkit.mrg.model.Email;
 import org.trustoverip.ctwg.toolkit.mrg.model.SAFModel;
@@ -30,6 +32,9 @@ class YamlWranglerTest {
   private static final Path SAMPLE_MRG = Paths.get("./src/test/resources/sample-mrg.yaml");
 
   @Autowired private YamlWrangler yamlWrangler;
+
+  @MockBean private GithubConnector githubConnector;
+
   private String safAsString;
   private String invalidYamlSaf;
 

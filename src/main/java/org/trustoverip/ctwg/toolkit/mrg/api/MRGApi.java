@@ -1,13 +1,15 @@
 package org.trustoverip.ctwg.toolkit.mrg.api;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.context.request.WebRequest;
 import org.trustoverip.ctwg.toolkit.mrg.model.MRGModel;
 import org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException;
 import org.trustoverip.ctwg.toolkit.mrg.processors.MRGlossaryGenerator;
@@ -16,22 +18,25 @@ import org.trustoverip.ctwg.toolkit.mrg.processors.YamlWrangler;
 /**
  * @author sih
  */
-@RestController
+@Controller
 @RequiredArgsConstructor
+@Slf4j
 public class MRGApi {
 
   private final MRGlossaryGenerator generator;
   private final YamlWrangler yamlWrangler;
 
-  @PostMapping(
-      value = "/ctwg/mrg",
-      produces = MediaType.APPLICATION_JSON_VALUE,
-      consumes = MediaType.APPLICATION_JSON_VALUE)
-  ResponseEntity<String> createMrg(@RequestBody MRGParams params) {
-    MRGModel model =
-        generator.generate(params.scopedir(), params.safFilename(), params.versionTag());
-    String mrg = yamlWrangler.asYamlString(model);
-    return ResponseEntity.ok(mrg);
+  @RequestMapping(value = "/ctwg/mrg", method = RequestMethod.POST)
+  String createMrg(WebRequest webRequest, Model webMvcModel) {
+    MRGParams params =
+        new MRGParams(
+            webRequest.getParameter("scopedir"),
+            webRequest.getParameter("safFilename"),
+            webRequest.getParameter("versionTag"));
+    MRGModel mrg = generator.generate(params.scopedir(), params.safFilename(), params.versionTag());
+    String mrgString = yamlWrangler.asYamlString(mrg);
+    webMvcModel.addAttribute("mrg", mrgString);
+    return "mrg-result";
   }
 
   @ExceptionHandler

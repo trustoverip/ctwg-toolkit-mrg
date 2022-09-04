@@ -65,7 +65,7 @@ public final class YamlWrangler {
 
   public String asYamlString(MRGModel model) throws MRGGenerationException {
     try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-      yamlMapper.writeValue(baos, model);
+      yamlMapper.writerWithDefaultPrettyPrinter().writeValue(baos, model);
       return baos.toString(StandardCharsets.UTF_8);
     } catch (IOException ioe) {
       throw new MRGGenerationException("Cannot convert MRG to YAML");
