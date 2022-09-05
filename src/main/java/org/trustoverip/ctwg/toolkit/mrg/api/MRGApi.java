@@ -26,6 +26,11 @@ public class MRGApi {
   private final MRGlossaryGenerator generator;
   private final YamlWrangler yamlWrangler;
 
+  @RequestMapping(value = "/ctwg/mrg", method = RequestMethod.GET)
+  String mrgForm() {
+    return "mrg-form";
+  }
+
   @RequestMapping(value = "/ctwg/mrg", method = RequestMethod.POST)
   String createMrg(WebRequest webRequest, Model webMvcModel) {
     MRGParams params =
