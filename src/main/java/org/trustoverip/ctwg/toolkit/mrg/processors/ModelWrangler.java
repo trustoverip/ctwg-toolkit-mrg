@@ -54,6 +54,8 @@ class ModelWrangler {
   private static final String MULTIPLE_USE_FIELDS = "multiple-use fields";
   private static final String GENERIC_FRONT_MATTER = "generic front-matter";
 
+  private static final String GLOSSARY_VIRTUAL_PATH = "/glossaries";
+
   /*
     private static final Pattern TERM_EXPRESSION_MATCHER =
         Pattern.compile("(-?)(tags|terms|\\*)\\[?([\\w, -@]*)]?@?(\\w+-?\\w*)?:?([A-Za-z0-9.-_]+)?");
@@ -226,7 +228,7 @@ class ModelWrangler {
 
   String writeMrgToFile(MRGModel mrg, String glossaryDir, String versionTag)
       throws MRGGenerationException {
-    String pathStr = constructMrgFilepath(glossaryDir, versionTag);
+    String pathStr = constructMrgFilepath(GLOSSARY_VIRTUAL_PATH, versionTag);
     log.debug(String.format("MRG filename to be generated is: %s", pathStr));
     Path glossaryPath = Paths.get(glossaryDir);
     try {
