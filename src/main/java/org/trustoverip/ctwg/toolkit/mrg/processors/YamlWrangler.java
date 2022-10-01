@@ -7,6 +7,7 @@ import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.fasterxml.jackson.dataformat.yaml.YAMLGenerator.Feature;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -27,7 +28,7 @@ public final class YamlWrangler {
   private final ObjectMapper yamlMapper;
 
   YamlWrangler() {
-    yamlMapper = new ObjectMapper(new YAMLFactory());
+    yamlMapper = new ObjectMapper(new YAMLFactory().enable(Feature.INDENT_ARRAYS));
     yamlMapper.findAndRegisterModules();
   }
 
