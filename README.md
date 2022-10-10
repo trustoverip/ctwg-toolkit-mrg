@@ -26,14 +26,11 @@ resolution links or widgets in documents and websites, etc.
 ### Who will use the MRG
 
 The MRG will be used by terminology creators and curators and requires a number of terminology
-artefacts
-to be present, namely
+artefacts to be present, namely
 the [curated texts](https://essif-lab.github.io/framework/docs/tev2/spec-files/ctext) themselves -
-the MRG is not an authoring tool
-
-- and
-  a [Scope Administration File]( https://essif-lab.github.io/framework/docs/tev2/spec-files/saf) (
-  SAF) as defined in the eSSIF documentation.
+the MRG is not an authoring tool and
+a [Scope Administration File]( https://essif-lab.github.io/framework/docs/tev2/spec-files/saf) (SAF)
+as defined in the eSSIF documentation.
 
 ### How does the MRG work?
 
@@ -57,7 +54,7 @@ to change with them.
 
 ## Before you begin
 
-### Pre-requisites
+### Technical pre-requisites
 
 * An account on [GitHub](https://github.com/)
   * Terminologies are developed and shared on GitHub
@@ -68,11 +65,43 @@ A [personal access token on GitHub](https://docs.github.com/en/authentication/ke
   * The MRG tool uses the GitHub user and a personal access token to authenticate with GitHub
   * This ensures that the curator can benefit from
     the [higher GitHub API rate limits](https://docs.github.com/en/developers/apps/building-github-apps/rate-limits-for-github-apps)
-    * Anonymous access is limited to only 50 requests per hour which for scopes with more than 50
-      files would make generation impossible
-* [Docker](https://www.docker.com/products/docker-desktop/)
-  * The MRG tool runs in its own container on the curator's machine and there is a Docker image that
-    the curator will need to download
-  * This image will run in Docker and Docker Desktop provides a simple user interface to start and
-    stop Docker containers
+      * Anonymous access is limited to only 50 requests per hour which for scopes with more than 50
+        files would make generation impossible
+  * [Docker](https://www.docker.com/products/docker-desktop/)
+      * The MRG tool runs in its own container on the curator's machine and there is a Docker image
+        that
+        the curator will need to download
+      * This image will run in Docker and Docker Desktop provides a simple user interface to start
+        and
+        stop Docker containers
+
+## Generating a machine-readable glossary
+
+In order to generate the MRG you will have a scope repository on GitHUb containing the Scope
+Administration
+File (SAF) and the curated texts. If terms are being imported from other repositories then these
+external scopes will have been defined in the SAF and the appropriate versions selected. See the
+links
+to the eSSIf-lab.
+
+### 1. Start Docker Desktop
+
+### 2. Pull the MRG Generator from Trustoverip GitHub packages
+
+Browse
+the [Trust Over IP MRG Packages](https://github.com/orgs/trustoverip/packages/container/package/ctwg-mrg-gen)
+to find the latest
+version of the CTWG MRG Genenrator.
+
+![ToIP CTWG MRG Packages page](/docs/toip-github-package.png?raw=true "ToIP CTWG MRG Packages")
+
+Copy the docker pull command on this page or if you prefer use the digest as per the command below
+to download
+the correct version. You may need to change the digest to match that of the version you need.
+
+Paste this command in to a Terminal window (Mac) or a command prompt (Windows)
+
+````docker pull ghcr.io/trustoverip/ctwg-mrg-gen@sha256:06058bf1d904fa37e1f03834f7148d9024d2abfbd2006999fe6ddeeedc87c397````
+
+This will download a new image 
 

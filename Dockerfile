@@ -4,3 +4,4 @@ ARG JAR_FILE
 COPY ${JAR_FILE} app.jar
 ENTRYPOINT ["java","-jar","/app.jar"]
 EXPOSE 8083
+LABEL org.opencontainers.image.source=https://github.com/trustoverip/ctwg-mrg-gen
