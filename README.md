@@ -10,8 +10,7 @@ Toolbox developed by eSSIF-Lab and governed by the Trust Over IP (ToIP) Concepts
 Working Group (CTWG).
 A detailed description of the tool, its purpose and related concepts can be found at
 the [MR Glossary Generation page](https://essif-lab.github.io/framework/docs/tev2/spec-tools/mrgt)
-whilst and
-its [structure at this page](https://essif-lab.github.io/framework/docs/tev2/spec-files/mrg).
+whilst its [structure at this page](https://essif-lab.github.io/framework/docs/tev2/spec-files/mrg).
 
 This README assumes the reader is familiar with these concepts and instead focuses on how someone
 can download, install, and use the MRG.
@@ -54,9 +53,8 @@ at [the following page]( https://essif-lab.github.io/framework/docs/tev2/spec-to
 ### Note
 
 As of October 2022 the specification of the tool, term construction and other key concepts are still
-under construction so this might change and the implementation and these instructions might also
-need
-to change with them.
+under construction so this might change the implementation and these instructions might also
+need to change with them.
 
 ## Before you begin
 
@@ -78,40 +76,30 @@ A [personal access token on GitHub](https://docs.github.com/en/authentication/ke
         that
         the curator will need to download
       * This image will run in Docker and Docker Desktop provides a simple user interface to start
-        and
-        stop Docker containers
+        and stop Docker containers
 
 ## Generating a machine-readable glossary
 
-In order to generate the MRG you will have a scope repository on GitHUb containing the Scope
-Administration
-File (SAF) and the curated texts. If terms are being imported from other repositories then these
-external scopes will have been defined in the SAF and the appropriate versions selected. See the
-links
-to the eSSIf-lab.
+In order to generate the MRG you will have a scope repository on GitHub containing the Scope
+Administration File (SAF) and the curated texts. If terms are being imported from other repositories then these external scopes will have been defined in the SAF and the appropriate versions selected. See the links to the eSSIf-lab.
 
 ### 1. Start Docker Desktop
 
 You should find this in Applications (Mac) or the Start Menu (Windows) depending on how you
-installed
-the software.
+installed the software.
 
 It might take a minute or two to start but when the whale turns green then it has started and is
-ready
-to use.
+ready to use.
 
 ### 2. Pull the MRG Generator from Trustoverip GitHub packages
 
 Browse
-the [Trust Over IP MRG Packages](https://github.com/orgs/trustoverip/packages/container/package/ctwg-mrg-gen)
-to find the latest
-version of the CTWG MRG Genenrator.
+the [Trust Over IP MRG Packages](https://github.com/orgs/trustoverip/packages/container/package/ctwg-mrg-gen) to find the latest version of the CTWG MRG Generator.
 
 ![ToIP CTWG MRG Packages page](./docs/toip-github-package.png?raw=true "ToIP CTWG MRG Packages")
 
 Copy the docker pull command on this page or if you prefer use the digest as per the command below
-to download
-the correct version. You may need to change the digest to match that of the version you need.
+to download the correct version. You may need to change the digest to match that of the version you need.
 
 Paste this command in to a Terminal window (Mac) or a command prompt (Windows)
 
