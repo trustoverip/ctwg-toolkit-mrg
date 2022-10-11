@@ -82,7 +82,7 @@ A [personal access token on GitHub](https://docs.github.com/en/authentication/ke
         that
         the curator will need to download
       * This image will run in Docker and Docker Desktop provides a simple user interface to start
-        and stop Docker containers
+        and stop Docker containers. This document assumes you have a recent enough version of Docker Desktop.
 
 ## Generating a machine-readable glossary
 
@@ -118,7 +118,7 @@ This will download a new image to your Docker Desktop as below.
 ### 3. Run the MRG Generator
 
 * Hover over the Docker image in Docker Desktop and click the ````Run```` button on the right-hand
-  side
+  side.
 * A smaller window will appear. Don't click run yet but instead select ````Optional Settings````
 
 ![Docker Run Optional Settings Initial](./docs/docker-optional-initial.png?raw=true "Docker Run Optional Settings Initial")
