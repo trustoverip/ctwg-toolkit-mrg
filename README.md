@@ -35,8 +35,9 @@ The MRG generator will be used by terminology creators and curators to generate 
 It can also be used in a CD/CI pipe to automatically generate an MRG as part of a GitHub action or similar.
 
 For MRG generation to work, the following artefacts need to be present:
-- the [Scope Administration File (SAF)]( https://essif-lab.github.io/framework/docs/tev2/spec-files/saf)
-- the [curated texts](https://essif-lab.github.io/framework/docs/tev2/spec-files/ctext).
+-
+The [Scope Administration File (SAF)]( https://essif-lab.github.io/framework/docs/tev2/spec-files/saf)
+- The [curated texts](https://essif-lab.github.io/framework/docs/tev2/spec-files/ctext).
 
 ### How does the MRG work?
 
@@ -119,6 +120,9 @@ This will download a new image to your Docker Desktop as below.
 * Hover over the Docker image in Docker Desktop and click the ````Run```` button on the right-hand
   side
 * A smaller window will appear. Don't click run yet but instead select ````Optional Settings````
+
+![Docker Run Optional Settings Initial](./docs/docker-optional-initial.png?raw=true "Docker Run Optional Settings Initial")
+
 * Make sure you have your GitHub Personal Access Token to hand and fill out the settings as below (
   substituting your details where needed)
     * Choose a local port to map the container to. This example uses 8083
