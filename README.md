@@ -4,10 +4,10 @@
 
 ## Overview
 
-The Machine Readable Glossary Generator (MRG) tool is part of the Terminology Engine version 2 (
-TEv2)
-Toolbox developed by eSSIF-Lab and governed by the Trust Over IP (ToIP) Concepts and Terminology
-Working Group (CTWG).
+The Machine Readable Glossary Generator (MRG) tool is part of the [Terminology Engine version 2 (
+TEv2)](https://essif-lab.github.io/framework/docs/tev2/tev2-overview)
+Toolbox developed by eSSIF-Lab and governed by the Trust Over IP (ToIP) [Concepts and Terminology
+Working Group (CTWG)](https://wiki.trustoverip.org/pages/viewpage.action?pageId=65700).
 A detailed description of the tool, its purpose and related concepts can be found at
 the [MR Glossary Generation page](https://essif-lab.github.io/framework/docs/tev2/spec-tools/mrgt)
 whilst its [structure at this page](https://essif-lab.github.io/framework/docs/tev2/spec-files/mrg).
@@ -15,31 +15,36 @@ whilst its [structure at this page](https://essif-lab.github.io/framework/docs/t
 This README assumes the reader is familiar with these concepts and instead focuses on how someone
 can download, install, and use the MRG.
 
-### What does the MRG do?
+### What does the MRG generator do?
 
-The MRG helps terminology creators make a Machine Readable Glossary from a set of curated texts.
-This glossary
-is then the foundation to create and format additional content, e.g. human-readable glossaries, term
-resolution links or widgets in documents and websites, etc.
+The MRG helps terminology creators make a Machine Readable Glossary from a set of curated texts
+that are curated in a particular scope, and a selection of terms curated in other scopes. 
+See the [TEv2 architecture](https://essif-lab.github.io/framework/docs/tev2/overview/tev2-architecture) 
+for its position in the toolbox
 
-### Who will use the MRG
+The MRG generator is NOT an authoring tool. Authoring and curating terms is authoring and curating the 
+[curated texts](https://essif-lab.github.io/framework/docs/tev2/spec-files/ctext) that the MRG generator
+uses as input for creating an MRG.
 
-The MRG will be used by terminology creators and curators and requires a number of terminology
-artefacts to be present, namely
-the [curated texts](https://essif-lab.github.io/framework/docs/tev2/spec-files/ctext) themselves -
-the MRG is not an authoring tool and
-a [Scope Administration File]( https://essif-lab.github.io/framework/docs/tev2/spec-files/saf) (SAF)
-as defined in the eSSIF documentation.
+An MRG is then used as the foundation to create and format additional content, e.g. human-readable 
+glossaries, term resolution links or widgets in documents and websites, etc.
+
+### Who will use the MRG generator
+
+The MRG generator will be used by terminology creators and curators to generate an MRG. 
+It can also be used in a CD/CI pipe to automatically generate an MRG as part of a GitHub action or similar.
+
+For MRG generation to work, the following artefacts need to be present:
+- the [Scope Administration File (SAF)]( https://essif-lab.github.io/framework/docs/tev2/spec-files/saf)
+- the [curated texts](https://essif-lab.github.io/framework/docs/tev2/spec-files/ctext).
 
 ### How does the MRG work?
 
 The MRG will run on a curator's machine in its own container and will connect to one or more GitHub
 repositories where the curated files reside. The Scope Administration File (SAF) of the primary (or
-local) scope
-repository contains instructions as to how to create the MRG (e.g. which versions to use, which
-terms to include, etc.)
-and the MRG follows these instructions to build the glossary from the local terms and any terms from
-remote scopes (i.e. other repositories) that the SAF specifies.
+local) scope repository contains instructions as to how to create the MRG (e.g. which versions to use,
+which terms to include, etc.) and the MRG follows these instructions to build the glossary from the 
+local terms and any terms from remote scopes (i.e. other repositories) that the SAF specifies.
 
 Once run it will generate the MRG in directory the user selects on their local machine. This will
 usually
