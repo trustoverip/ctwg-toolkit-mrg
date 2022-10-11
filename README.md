@@ -126,9 +126,9 @@ This will download a new image to your Docker Desktop as below.
 * Make sure you have your GitHub Personal Access Token to hand and fill out the settings as below (
   substituting your details where needed)
     * Choose a local port to map the container to. This example uses 8083
-    * Use the selector on the Volume to select your local directory where the MRG will be written
-    * Enter your GitHub username against the gh_user environment variable
-    * Enter your GitHub personal access token against the gh_token environment variable
+    * Use the selector on the Volume to select your local directory where the MRG will be written. This should result in something like `C:\git\essif-lab\docs\tev2`
+    * Enter your GitHub username against the gh_user environment variable, i.e. something like `RieksJ` or `sidh`
+    * Enter your GitHub personal access token against the gh_token environment variable, i.e. something like `ghp_v3fSgDIjlsXYZncjEzDQ1bLnwdl2YJOaF` (see [Technical pre-requisites](#technical-pre-requisites) above on how to get such a token if you need one)
 
 ![Docker Run Optional Settings](./docs/docker-optional.png?raw=true "Docker Run Optional Settings")
 
