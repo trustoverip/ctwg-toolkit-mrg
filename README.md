@@ -72,6 +72,17 @@ need to change with them.
       needed in order authenticate with GitHub
 
 A [personal access token on GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+  * The MRG tool uses the GitHub user and a personal access token to authenticate with GitHub
+  * This ensures that the curator can benefit from
+    the [higher GitHub API rate limits](https://docs.github.com/en/developers/apps/building-github-apps/rate-limits-for-github-apps)
+      * Anonymous access is limited to only 50 requests per hour which for scopes with more than 50
+        files would make generation impossible
+  * [Docker](https://www.docker.com/products/docker-desktop/)
+      * The MRG tool runs in its own container on the curator's machine and there is a Docker image
+        that
+        the curator will need to download
+      * This image will run in Docker and Docker Desktop provides a simple user interface to start
+        and stop Docker containers. This document assumes you have a recent enough version of Docker Desktop.
 
 * The MRG tool uses the GitHub user and a personal access token to authenticate with GitHub
 * This ensures that the curator can benefit from
@@ -125,7 +136,7 @@ This will download a new image to your Docker Desktop as below.
 ### 3. Run the MRG Generator
 
 * Hover over the Docker image in Docker Desktop and click the ````Run```` button on the right-hand
-  side
+  side.
 * A smaller window will appear. Don't click run yet but instead select ````Optional Settings````
 
 ![Docker Run Optional Settings Initial](./docs/docker-optional-initial.png?raw=true "Docker Run Optional Settings Initial")
