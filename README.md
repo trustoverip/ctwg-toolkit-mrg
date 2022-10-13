@@ -67,10 +67,10 @@ need to change with them.
 ### Technical pre-requisites
 
 * An account on [GitHub](https://github.com/)
-  * Terminologies are developed and shared on GitHub
-  * The MRG tool uses the GitHub APIs to fetch terminology artefacts, and valid credentials are
-    needed in order authenticate with GitHub
-*
+    * Terminologies are developed and shared on GitHub
+    * The MRG tool uses the GitHub APIs to fetch terminology artefacts, and valid credentials are
+      needed in order authenticate with GitHub
+
 A [personal access token on GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
   * The MRG tool uses the GitHub user and a personal access token to authenticate with GitHub
   * This ensures that the curator can benefit from
@@ -84,10 +84,28 @@ A [personal access token on GitHub](https://docs.github.com/en/authentication/ke
       * This image will run in Docker and Docker Desktop provides a simple user interface to start
         and stop Docker containers. This document assumes you have a recent enough version of Docker Desktop.
 
+* The MRG tool uses the GitHub user and a personal access token to authenticate with GitHub
+* This ensures that the curator can benefit from
+  the [higher GitHub API rate limits](https://docs.github.com/en/developers/apps/building-github-apps/rate-limits-for-github-apps)
+    * Anonymous access is limited to only 50 requests per hour which for scopes with more than 50
+      files would make generation impossible
+* Choose the following access settings
+
+![Personal Access Token settings](./docs/github-pat-settings.png?raw=true "Personl Access Token settings")
+
+* [Docker](https://www.docker.com/products/docker-desktop/)
+    * The MRG tool runs in its own container on the curator's machine and there is a Docker image
+      that
+      the curator will need to download
+    * This image will run in Docker and Docker Desktop provides a simple user interface to start
+      and stop Docker containers
+
 ## Generating a machine-readable glossary
 
 In order to generate the MRG you will have a scope repository on GitHub containing the Scope
-Administration File (SAF) and the curated texts. If terms are being imported from other repositories then these external scopes will have been defined in the SAF and the appropriate versions selected. See the links to the eSSIf-lab.
+Administration File (SAF) and the curated texts. If terms are being imported from other repositories
+then these external scopes will have been defined in the SAF and the appropriate versions selected.
+See the links to the eSSIf-lab.
 
 ### 1. Start Docker Desktop
 
@@ -109,7 +127,7 @@ to download the correct version. You may need to change the digest to match that
 
 Paste this command in to a Terminal window (Mac) or a command prompt (Windows)
 
-````docker pull ghcr.io/trustoverip/ctwg-mrg-gen@sha256:f9aa075d8f9083df86a28e133f6d9205b26b5fd928fad47b48b30700ac3730de````
+````docker pull ghcr.io/trustoverip/ctwg-mrg-gen@sha256:1bc93a04c501bf487a6b8d4e0eccfc0590730f08deb8e3c31263b387406725ec````
 
 This will download a new image to your Docker Desktop as below.
 
@@ -125,10 +143,14 @@ This will download a new image to your Docker Desktop as below.
 
 * Make sure you have your GitHub Personal Access Token to hand and fill out the settings as below (
   substituting your details where needed)
-    * Choose a local port to map the container to. This example uses 8083
-    * Use the selector on the Volume to select your local directory where the MRG will be written. This should result in something like `C:\git\essif-lab\docs\tev2`
-    * Enter your GitHub username against the gh_user environment variable, i.e. something like `RieksJ` or `sidh`
-    * Enter your GitHub personal access token against the gh_token environment variable, i.e. something like `ghp_v3fSgDIjlsXYZncjEzDQ1bLnwdl2YJOaF` (see [Technical pre-requisites](#technical-pre-requisites) above on how to get such a token if you need one)
+    * Choose a local port to map the container to. This example uses ````8083````
+    * Use the selector on the Volume to select your local directory where the MRG will be written.
+      This should result in something like ````C:\git\essif-lab\docs\tev2````
+    * Enter your GitHub username against the ````gh_user```` environment variable. This is the
+      username you use to log in to GitHub, e.g.  ````RieksJ````
+    * Enter your GitHub personal access token against the ````gh_token```` environment variable,
+      i.e. something like ````ghp_v3fSgDIjlsXYZncjEzDQ1bLnwdl2YJOaF```` (see Technical
+      pre-requisites above on how to get such a token if you need one)
 
 ![Docker Run Optional Settings](./docs/docker-optional.png?raw=true "Docker Run Optional Settings")
 
@@ -138,6 +160,10 @@ This will start up a Docker container and when you click ````Containers```` on y
 you should see something like:
 
 ![Running MRG Container in Docker Desktop](./docs/docker-running.png?raw=true "Running MRG Container in Docker Desktop")
+
+Depending on how much of the required software needs to be / has already been downloaded, it may
+take anything from 15 seconds to a minute for the generator to be ready. It's important to check
+the generator is ready before accessing it. The step below describes how to do so.
 
 ### 4. Check the MRG log output in Docker Desktop
 

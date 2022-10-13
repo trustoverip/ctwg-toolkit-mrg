@@ -1,6 +1,7 @@
 package org.trustoverip.ctwg.toolkit.mrg.processors;
 
 import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException.CANNOT_CREATE_GLOSSARY_DIR;
+import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException.NO_SAF;
 import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGlossaryGenerator.DEFAULT_MRG_FILENAME;
 import static org.trustoverip.ctwg.toolkit.mrg.processors.TermsFilter.ALL_TAGS;
 
@@ -12,8 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
@@ -82,6 +83,9 @@ class ModelWrangler {
 
   SAFModel getSaf(String scopedir, String safFilename) throws MRGGenerationException {
     String safAsString = this.getSafAsString(scopedir, safFilename);
+    if (null == safAsString) {
+      throw new MRGGenerationException(String.format(NO_SAF, scopedir));
+    }
     return yamlWrangler.parseSaf(safAsString);
   }
 
@@ -91,7 +95,6 @@ class ModelWrangler {
     String safFilepath = String.join("/", getRootPath(scopedir), saf);
     try {
       return connector.getContent(ownerRepo, safFilepath);
-
     } catch (Throwable t) {
       throw new MRGGenerationException(
           String.format(MRGGenerationException.NOT_FOUND, String.join("/", scopedir, safFilename)));
@@ -258,6 +261,7 @@ class ModelWrangler {
           directoryContent.stream()
               .map(this::cleanTermFile)
               .map(this::toYaml)
+              .filter(Objects::nonNull)
               .filter(consolidatedAddFilter)
               .filter(consolidateRemoveFilter)
               .collect(Collectors.toList());
@@ -283,13 +287,11 @@ class ModelWrangler {
 
   private FileContent cleanTermFile(FileContent dirtyContent) {
     StringBuilder cleanYaml = new StringBuilder();
-    String[] lines = dirtyContent.content().split("\n");
-    boolean sectionOfInterest = false;
+    String[] parts = dirtyContent.content().split("---");
+    String partWithYaml = parts[1];
+    String[] lines = partWithYaml.split("\n");
     for (String line : lines) {
-      if (line.startsWith(MARKDOWN_HEADING)) {
-        sectionOfInterest = isSectionOfInterest(line);
-      }
-      if (isClean(line) && sectionOfInterest) {
+      if (isClean(line)) {
         log.debug(
             "Found something of interest in file: {}\nline: {}", dirtyContent.filename(), line);
         cleanYaml.append(line);
@@ -300,26 +302,16 @@ class ModelWrangler {
   }
 
   private Term toYaml(FileContent fileContent) {
-    Term t = null;
+    Term term = null;
     try {
-      t = yamlWrangler.parseTerm(fileContent.content());
-      t.setFilename(fileContent.filename());
-      t.setHeadings(fileContent.headings());
-      log.info("... Creating entry from term with id = {} ...", t.getTermid());
-    } catch (Exception e) {
+      term = yamlWrangler.parseTerm(fileContent.content());
+      term.setFilename(fileContent.filename());
+      term.setHeadings(fileContent.headings());
+      log.info("... Creating entry from term with id = {} ...", term.getTerm());
+    } catch (Throwable t) {
       log.error("Couldn't read or parse the following term file: {}", fileContent.filename());
     }
-    return t;
-  }
-
-  /*
-    Used to filter out items in the file that aren't of interest to the MRG but more oriented
-    towards human-readable content
-  */
-  private boolean isSectionOfInterest(String line) {
-    return !StringUtils.isEmpty(line)
-        && (line.toLowerCase(Locale.ROOT).contains(MULTIPLE_USE_FIELDS)
-            || line.toLowerCase(Locale.ROOT).contains(GENERIC_FRONT_MATTER));
+    return term;
   }
 
   /*

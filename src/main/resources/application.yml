@@ -3,3 +3,4 @@ server:
 spring:
   thymeleaf:
     cache: false
+

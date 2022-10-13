@@ -53,11 +53,11 @@ public class TermsFilter implements Predicate<Term> {
     return switch (this.filterType) {
       case all -> true;
       case terms -> {
-        String normalisedTermid = StringUtils.trim(term.getTermid()).toLowerCase(Locale.ROOT);
+        String normalisedTermid = StringUtils.trim(term.getTerm()).toLowerCase(Locale.ROOT);
         yield normalisedValues.contains(normalisedTermid);
       }
       case tags -> {
-        List<String> normalisedGrouptags = splitAndNormalise(term.getGrouptags());
+        List<String> normalisedGrouptags = splitAndNormalise(term.getGroupTags());
         if (normalisedGrouptags.isEmpty()) { yield false;}
         else {yield normalisedGrouptags.stream().anyMatch(normalisedValues::contains);}
       }

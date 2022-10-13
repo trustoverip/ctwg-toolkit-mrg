@@ -187,7 +187,7 @@ class ModelWranglerTest {
         new GeneratorContext(OWNER_REPO, SCOPEDIR, ROOT_DIR, MRGTEST_VERSION, CURATED_DIR_NAME);
     List<Term> terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term"), TermsFilter.of(TermsFilterType.terms, "scope")), new ArrayList<>());
     assertThat(terms).hasSize(expectedSize);
-    // specify both terms as a comma seprated list in a single filter
+    // specify both terms as a comma separated list in a single filter
     terms = wrangler.fetchTerms(context, List.of(TermsFilter.of(TermsFilterType.terms, "term, scope")), new ArrayList<>());
     assertThat(terms).hasSize(expectedSize);
     // now only ask for the term term

@@ -17,8 +17,8 @@ import org.trustoverip.ctwg.toolkit.mrg.model.MRGModel;
 class MRGlossaryGeneratorIntegrationTest {
 
   private static final String GITHUB_SCOPEDIR =
-      "https://github.com/datasoc-ltd/framework/tree/master/docs/tev2";
-
+      //      "https://github.com/datasoc-ltd/framework/tree/master/docs/tev2";
+      "https://github.com/essif-lab/framework/tree/master/docs/tev2";
   private static final String LOCAL_SCOPEDIR = "./src/test/resources/essif-lab-skeleton/tev2";
 
   private static final String VERSION_TAG = "mrgtest";
