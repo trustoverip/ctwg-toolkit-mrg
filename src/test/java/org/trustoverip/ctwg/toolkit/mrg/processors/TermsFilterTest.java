@@ -29,17 +29,18 @@ class TermsFilterTest {
   @BeforeEach
   void setUp() {
     foo = new Term();
-    foo.setTermid("foo");
-    foo.setGrouptags("foo");
+    foo.setTerm("foo");
+    foo.setGroupTags("foo");
+    foo.setGlossaryText("foo");
     bar = new Term();
-    bar.setTermid("bar");
-    bar.setGrouptags("bar");
+    bar.setTerm("bar");
+    bar.setGroupTags("bar");
     foobar = new Term();
-    foobar.setTermid("foobar");
-    foobar.setGrouptags("foo, bar");
+    foobar.setTerm("foobar");
+    foobar.setGroupTags("foo, bar");
     noo = new Term();
-    noo.setTermid("noo");
-    noo.setGrouptags(null);
+    noo.setTerm("noo");
+    noo.setGroupTags(null);
     mrgFoo = new MRGEntry(foo);
     mrgBar = new MRGEntry(bar);
     mrgFoobar = new MRGEntry(foobar);

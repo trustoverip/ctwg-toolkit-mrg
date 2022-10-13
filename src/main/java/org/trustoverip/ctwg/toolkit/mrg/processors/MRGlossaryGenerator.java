@@ -159,7 +159,7 @@ public class MRGlossaryGenerator {
           Predicate<Term> consolidatedFilter = filters.stream().reduce(Predicate::or).orElse(TermsFilter.all());
           remoteEntries = mrgEntries.stream().filter(consolidatedFilter).toList();
           for (MRGEntry e: remoteEntries) {
-            log.info("... Copying remote entry from with id = {} ...", e.getTermid());
+            log.info("... Copying remote term {} ...", e.getTerm());
           }
         } else {
           log.warn("No MRG found in glossary directory {} of remote dir {}",remoteContext.getSafDirectory(), glossaryDir);

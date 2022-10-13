@@ -13,6 +13,8 @@ public class MRGGenerationException extends RuntimeException {
 
   public static final String COULD_NOT_READ_LOCAL_CONTENT =
       "Could not read local content from path: %s";
+  public static final String NO_SAF =
+      "There is no SAF at location %s. Check that the repository address is correct and the SAF is present.";
   public static final String NOT_FOUND =
       "%s: There is no such resource or anonymous access to this repository is not allowed.";
   public static final String UNABLE_TO_PARSE_SAF =
