@@ -71,7 +71,7 @@ need to change with them.
     * The MRG tool uses the GitHub APIs to fetch terminology artefacts, and valid credentials are
       needed in order authenticate with GitHub
 
-A [personal access token on GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+A [personal access token on GitHub](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) (if that doesn't work, use the [direct link](https://github.com/settings/tokens) 
   * The MRG tool uses the GitHub user and a personal access token to authenticate with GitHub
   * This ensures that the curator can benefit from
     the [higher GitHub API rate limits](https://docs.github.com/en/developers/apps/building-github-apps/rate-limits-for-github-apps)
