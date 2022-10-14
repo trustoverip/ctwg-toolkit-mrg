@@ -14,18 +14,21 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Term implements Comparable<Term> {
-  @EqualsAndHashCode.Include private String id;
-  private String scope;
-  private String termtype;
-  private String termid;
-  private String formphrases;
+  @EqualsAndHashCode.Include private String term;
+  private String isa;
+  private String termType;
+  private String formPhrases;
   private String status;
-  private String grouptags;
+  private String synonyms;
+  private String groupTags;
+  private String glossaryText;
   private String created;
   private String updated;
   private String vsntag;
   private String commit;
   private String contributors;
+  private String attribution;
+  private String originalLicense;
 
   @JsonIgnore
   @Getter(AccessLevel.PROTECTED)
@@ -37,6 +40,6 @@ public class Term implements Comparable<Term> {
 
   @Override
   public int compareTo(Term other) {
-    return this.getId().compareTo(other.getId());
+    return this.term.compareTo(other.term);
   }
 }

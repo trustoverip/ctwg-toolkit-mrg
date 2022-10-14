@@ -4,8 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException.UNABLE_TO_PARSE_SAF;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,9 +11,10 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.trustoverip.ctwg.toolkit.mrg.model.Curator;
 import org.trustoverip.ctwg.toolkit.mrg.model.Email;
-import org.trustoverip.ctwg.toolkit.mrg.model.MRGModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.SAFModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.Scope;
 import org.trustoverip.ctwg.toolkit.mrg.model.ScopeRef;
@@ -24,25 +23,23 @@ import org.trustoverip.ctwg.toolkit.mrg.model.Version;
 /**
  * @author sih
  */
+@SpringBootTest
 class YamlWranglerTest {
   private static final Path SAF_SAMPLE_1_FILE = Paths.get("./src/test/resources/saf-sample-1.yaml");
   private static final Path INVALID_YAML_FILE = Paths.get("./src/test/resources/invalid-saf.yaml");
-  private static final Path SAMPLE_MRG = Paths.get("./src/test/resources/sample-mrg.yaml");
-  ;
-  private static ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-  private YamlWrangler yamlWrangler;
+
+
+  @Autowired private YamlWrangler yamlWrangler;
+
+
   private String safAsString;
   private String invalidYamlSaf;
-  private MRGModel sampleMrg;
 
   @BeforeEach
   void setUp() throws Exception {
     yamlWrangler = new YamlWrangler();
     safAsString = new String(Files.readAllBytes(SAF_SAMPLE_1_FILE));
     invalidYamlSaf = new String(Files.readAllBytes(INVALID_YAML_FILE));
-    String sampleMrgStr = new String(Files.readAllBytes(SAMPLE_MRG));
-    // List<MRGEntry> mrgEntry = mapper.readValue(sampleMrgStr, MRGEntry.class);
-    // sampleMrg = new MRGModel()
   }
 
   @Test
@@ -114,29 +111,19 @@ class YamlWranglerTest {
     int expectedNumberOfVersions = 3;
     assertThat(versions).hasSize(expectedNumberOfVersions);
     Version expectedFirstVersion =
-        new Version("mrgtest", null, List.of("[tev2]@tev2"), null, null, null);
+        new Version(
+            "mrgtest", null, List.of("*@tev2", "-terms[@, curated-text-body]"), null, null, null);
     Version expectedSecondVersion =
         new Version(
             "0x921456",
             List.of("latest", "v0.9.4"),
             List.of(
-                "[management]@essif-lab",
-                "[party](@essif-lab:0.9.4)",
-                "[community](@essif-lab:0.9.4)",
-                "[tev2]@tev2"),
+                "tags[management]@essif-lab",
+                "terms[party]@essif-lab:0.9.4",
+                "tags[community]@essif-lab:0.9.4",
+                "*@tev2"),
             "proposed",
             "20220312",
-            null);
-    Version expectedThirdVersion =
-        new Version(
-            "0x654129",
-            List.of("v0.9.0"),
-            List.of(
-                "[management]@essif-lab",
-                "[party](@essif-lab:0.9.4)",
-                "[community](@essif-lab:0.9.4)"),
-            null,
-            null,
             null);
 
     Version[] actualVersions = versions.toArray(new Version[0]);
@@ -171,8 +158,8 @@ class YamlWranglerTest {
   private void assertVersion(Version actualVersion, Version expectedVersion) {
     assertThat(actualVersion.getVsntag()).isEqualTo(expectedVersion.getVsntag());
     assertThat(actualVersion.getAltvsntags()).isEqualTo(expectedVersion.getAltvsntags());
-    assertThat(actualVersion.getTerms())
-        .containsExactly(expectedVersion.getTerms().toArray(new String[0]));
+    assertThat(actualVersion.getTermselcrit())
+        .containsExactlyInAnyOrder(expectedVersion.getTermselcrit().toArray(new String[0]));
     assertThat(actualVersion.getStatus()).isEqualTo(expectedVersion.getStatus());
     assertThat(actualVersion.getFrom()).isEqualTo(expectedVersion.getFrom());
     assertThat(actualVersion.getTo()).isEqualTo(expectedVersion.getTo());

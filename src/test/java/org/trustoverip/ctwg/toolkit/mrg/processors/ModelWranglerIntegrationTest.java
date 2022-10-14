@@ -4,34 +4,28 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.trustoverip.ctwg.toolkit.mrg.processors.MRGlossaryGenerator.DEFAULT_SAF_FILENAME;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.trustoverip.ctwg.toolkit.mrg.connectors.GithubReader;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.trustoverip.ctwg.toolkit.mrg.connectors.GithubConnector;
 
 /**
  * @author sih
  */
+@SpringBootTest
 class ModelWranglerIntegrationTest {
 
   private static final String TEV2_SCOPEDIR =
       "https://github.com/essif-lab/framework/tree/master/docs/tev2";
   private static final String PRIVATE_SCOPEDIR = "https://github.com/sih/scratch";
   private static final String SAF_FILENAME = "saf.yaml";
-  private static final String MRGTEST_VERSION = "mrgtest";
-  private String expectedOwnerRepo = "essif-lab/framework";
-  private String expectedRootDirPath = "docs/tev2";
-  private String expectedScopetag = "tev2";
-  private String expectedSafFilepath = "docs/tev2/saf.yaml";
 
-  private ModelWrangler wrangler;
-
-  @BeforeEach
-  void set_up() {
-    wrangler = new ModelWrangler(new YamlWrangler(), new GithubReader());
-  }
+  @Autowired private ModelWrangler wrangler;
+  @Autowired private YamlWrangler yamlWrangler;
+  @Autowired private GithubConnector githubConnector;
 
   @Test
-  void given_private_scopedir_when_get_saf_as_string_then_return_saf_exception() throws Exception {
+  void given_private_scopedir_when_get_saf_as_string_then_return_saf_exception() {
     assertThatExceptionOfType(MRGGenerationException.class)
         .isThrownBy(() -> wrangler.getSafAsString(PRIVATE_SCOPEDIR, SAF_FILENAME))
         .withMessage(
@@ -41,7 +35,7 @@ class ModelWranglerIntegrationTest {
   }
 
   @Test
-  void given_non_existent_saf_when_get_saf_as_string_then_return_saf_exception() throws Exception {
+  void given_non_existent_saf_when_get_saf_as_string_then_return_saf_exception() {
     assertThatExceptionOfType(MRGGenerationException.class)
         .isThrownBy(() -> wrangler.getSafAsString(TEV2_SCOPEDIR, "foo"))
         .withMessage(
@@ -50,7 +44,7 @@ class ModelWranglerIntegrationTest {
   }
 
   @Test
-  void given_saf_that_exists_when_get_saf_as_string_then_return_valid_content() throws Exception {
+  void given_saf_that_exists_when_get_saf_as_string_then_return_valid_content() {
     String safString = wrangler.getSafAsString(TEV2_SCOPEDIR, SAF_FILENAME);
     assertThat(safString).isNotNull();
   }

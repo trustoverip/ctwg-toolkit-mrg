@@ -21,6 +21,8 @@ import org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException;
 class LocalFSConnectorTest {
 
   private static final String WORKING_DIRECTORY_KEY = "user.dir";
+  public static final String VALID_CONTENT_NAME = "./src/test/resources/saf-sample-1.yaml";
+  public static final String VALID_DIRECTORY_NAME = "./src/test/resources/terms";
   private GeneratorContext context;
   private MRGConnector connector;
   private String termAsString;
@@ -30,9 +32,8 @@ class LocalFSConnectorTest {
   void setUp() throws Exception {
     String osSeparator = FileSystems.getDefault().getSeparator();
     // will use the SAF file in the ./src/test/resources directory so set this dir as the scopedir
-    String projectRoot = System.getProperty(WORKING_DIRECTORY_KEY);
-    String scopedir = String.join(osSeparator, projectRoot, "src", "test", "resources");
-    context = new GeneratorContext(scopedir, scopedir, "mrgtest", "terms");
+    String scopedir = "./src/test/resources";
+    context = new GeneratorContext(scopedir, scopedir, scopedir, "mrgtest", "terms");
     connector = new LocalFSConnector();
     termAsString = new String(Files.readAllBytes(Paths.get("./src/test/resources/terms/term.md")));
     scopeAsString =
@@ -42,11 +43,10 @@ class LocalFSConnectorTest {
   @DisplayName("Given content exists at the location when getContent then return expected content")
   @Test
   void testValidGetContent() {
-    String contentName = "saf-sample-1.yaml";
     String expectedFirstLine = "#";
     String expectedSecondLine =
         "# This is a Scope Administration File that can be used in conjunction with TEv2.";
-    String actualContent = connector.getContent(context.getOwnerRepo(), contentName);
+    String actualContent = connector.getContent(context.getOwnerRepo(), VALID_CONTENT_NAME);
     assertThat(actualContent).isNotNull();
     String[] actualLines = actualContent.split("\n");
     assertThat(actualLines[0]).isEqualTo(expectedFirstLine);
@@ -57,23 +57,21 @@ class LocalFSConnectorTest {
   @Test
   void testInvalidGetContent() {
     String contentName = "foo";
-    Path expectedPath = Path.of(context.getRootDirPath(), contentName);
+    Path expectedPath = Paths.get(contentName);
     assertThatExceptionOfType(MRGGenerationException.class)
         .isThrownBy(() -> connector.getContent(context.getOwnerRepo(), contentName))
         .withMessage(
             String.format(
-                MRGGenerationException.COULD_NOT_READ_LOCAL_CONTENT,
-                expectedPath.toAbsolutePath().toUri()));
+                MRGGenerationException.COULD_NOT_READ_LOCAL_CONTENT, expectedPath.toUri()));
   }
 
   @Test
   @DisplayName("Given valid directory when getDirectoryContent then return correct content")
   void testValidGetDirectoryContent() {
-    String directoryName = "terms";
     FileContent term = new FileContent("term.md", termAsString, new ArrayList<>());
     FileContent scope = new FileContent("scope.md", scopeAsString, new ArrayList<>());
     List<FileContent> contents =
-        connector.getDirectoryContent(context.getOwnerRepo(), directoryName);
+        connector.getDirectoryContent(context.getOwnerRepo(), VALID_DIRECTORY_NAME);
     assertThat(contents).containsExactlyInAnyOrder(term, scope);
   }
 
@@ -81,7 +79,7 @@ class LocalFSConnectorTest {
   @Test
   void testInvalidGetDirectoryContent() {
     String directoryName = "foo";
-    Path expectedPath = Path.of(context.getRootDirPath(), directoryName);
+    Path expectedPath = Paths.get(directoryName);
     assertThatExceptionOfType(MRGGenerationException.class)
         .isThrownBy(() -> connector.getDirectoryContent(context.getOwnerRepo(), directoryName))
         .withMessage(

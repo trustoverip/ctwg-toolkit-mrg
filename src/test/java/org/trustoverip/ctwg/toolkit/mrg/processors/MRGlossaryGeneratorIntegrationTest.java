@@ -6,33 +6,58 @@ import java.io.File;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.trustoverip.ctwg.toolkit.mrg.model.MRGModel;
 
 /**
  * @author sih
  */
+@SpringBootTest
 class MRGlossaryGeneratorIntegrationTest {
 
-  private static final String SCOPEDIR =
+  private static final String GITHUB_SCOPEDIR =
+      //      "https://github.com/datasoc-ltd/framework/tree/master/docs/tev2";
       "https://github.com/essif-lab/framework/tree/master/docs/tev2";
+  private static final String LOCAL_SCOPEDIR = "./src/test/resources/essif-lab-skeleton/tev2";
+
   private static final String VERSION_TAG = "mrgtest";
-  private MRGlossaryGenerator generator;
+  @Autowired private MRGlossaryGenerator generator;
 
   @BeforeEach
   void setUp() {
-    generator = new MRGlossaryGenerator(false);
+
   }
 
   @Test
-  @DisplayName("Should generate an MRG from the essif-lab/framework sample")
-  void testGenerateTev2() throws Exception {
+  @DisplayName("Should generate an MRG from the datasoc-ltd/framework sample on GitHub")
+  void testGenerateTev2Remote() {
+    generator = new MRGlossaryGenerator(false);
+    int expectedNumberOfEntries = 29; // including an external term and removing a local term
     MRGModel model =
-        generator.generate(SCOPEDIR, MRGlossaryGenerator.DEFAULT_SAF_FILENAME, VERSION_TAG);
+        generator.generate(GITHUB_SCOPEDIR, MRGlossaryGenerator.DEFAULT_SAF_FILENAME, VERSION_TAG);
+    assertThat(model).isNotNull();
+    assertThat(model.terminology()).isNotNull();
+    assertThat(model.scopes()).isNotNull();
+    assertThat(model.entries()).hasSize(expectedNumberOfEntries);
+    File expectedMrg =
+        new File(new File("glossaries"), String.join(".", "mrg", VERSION_TAG, "yaml"));
+    assertThat(expectedMrg).exists();
+  }
+
+  @Test
+  @DisplayName("Should generate an MRG from a local copy of the essif-lab/framework repo")
+  //
+  void testGenerateTev2Local() {
+    generator = new MRGlossaryGenerator(true);
+    MRGModel model =
+        generator.generate(LOCAL_SCOPEDIR, MRGlossaryGenerator.DEFAULT_SAF_FILENAME, VERSION_TAG);
     assertThat(model).isNotNull();
     assertThat(model.terminology()).isNotNull();
     assertThat(model.scopes()).isNotNull();
     assertThat(model.entries()).isNotEmpty();
-    File expectedMrg = new File(String.join(".", "mrg", VERSION_TAG, "yaml"));
+    File expectedMrg =
+        new File(new File("glossaries"), String.join(".", "mrg", VERSION_TAG, "yaml"));
     assertThat(expectedMrg).exists();
   }
 }
