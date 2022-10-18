@@ -110,7 +110,11 @@ class MRGlossaryGeneratorTest {
     assertThat(generatedMrg).isNotNull();
     assertThat(generatedMrg.terminology())
         .isEqualTo(
-            new Terminology(validSaf.getScope().getScopetag(), validSaf.getScope().getScopedir()));
+            new Terminology(
+                validSaf.getScope().getScopetag(),
+                validSaf.getScope().getScopedir(),
+                validSaf.getScope().getCuratedir(),
+                VERSION_TAG));
     ScopeRef[] expectedScopesInOrder = validSaf.getScopes().toArray(new ScopeRef[0]);
     assertThat(generatedMrg.scopes()).containsExactly(expectedScopesInOrder);
     // TODO entries

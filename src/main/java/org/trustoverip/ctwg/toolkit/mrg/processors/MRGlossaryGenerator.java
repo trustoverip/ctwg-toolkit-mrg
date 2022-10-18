@@ -159,6 +159,7 @@ public class MRGlossaryGenerator {
           Predicate<Term> consolidatedFilter = filters.stream().reduce(Predicate::or).orElse(TermsFilter.all());
           remoteEntries = mrgEntries.stream().filter(consolidatedFilter).toList();
           for (MRGEntry e: remoteEntries) {
+            e.setScopetag(scopetag);
             log.info("... Copying remote term {} ...", e.getTerm());
           }
         } else {
@@ -188,7 +189,9 @@ public class MRGlossaryGenerator {
     // construct the parts of the MRG Model
     log.info("Step 3/6: Creating the <terminology> section of the MRG");
     Terminology terminology =
-        new Terminology(saf.getScope().getScopetag(), saf.getScope().getScopedir());
+        new Terminology(saf.getScope().getScopetag(), saf.getScope().getScopedir(), saf.getScope().getCuratedir(), versionTag);
+    terminology.setLicense(saf.getScope().getLicense());
+    terminology.setAltvsntags(localVersion.getAltvsntags());
     List<ScopeRef> scopes = new ArrayList<>(saf.getScopes());
     log.info("Step 4/6: Parsing local terms (terms in this scopedir) to create MRG entries:");
     List<MRGEntry> entries =

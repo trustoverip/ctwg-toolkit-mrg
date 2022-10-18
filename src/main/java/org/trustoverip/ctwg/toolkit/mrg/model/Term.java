@@ -15,6 +15,8 @@ import lombok.Setter;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Term implements Comparable<Term> {
   @EqualsAndHashCode.Include private String term;
+  private String scopetag;
+  private String locator;
   private String isa;
   private String termType;
   private String formPhrases;
@@ -34,7 +36,9 @@ public class Term implements Comparable<Term> {
   @Getter(AccessLevel.PROTECTED)
   private String filename;
 
-  @JsonIgnore
+  @Getter(AccessLevel.PROTECTED)
+  private String navurl;
+
   @Getter(AccessLevel.PROTECTED)
   private List<String> headings;
 
