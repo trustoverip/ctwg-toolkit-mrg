@@ -71,7 +71,11 @@ public class GithubConnector implements MRGConnector {
                 .filter(GHContent::isFile)
                 .map(
                     gc ->
-                        new FileContent(gc.getName(), this.contentAsString(gc), new ArrayList<>()))
+                        new FileContent(
+                            gc.getName(),
+                            this.contentAsString(gc),
+                            gc.getHtmlUrl(),
+                            new ArrayList<>()))
                 .toList();
       }
     } catch (GHFileNotFoundException e) {

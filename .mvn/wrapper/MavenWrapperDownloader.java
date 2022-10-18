@@ -22,13 +22,13 @@ public class MavenWrapperDownloader {
 
     private static final String WRAPPER_VERSION = "0.5.6";
     /**
-     * Default URL to download the maven-wrapper.jar from, if no 'downloadUrl' is provided.
+     * Default URL to download the maven-wrapper.jar from, if no 'htmlLink' is provided.
      */
     private static final String DEFAULT_DOWNLOAD_URL = "https://repo.maven.apache.org/maven2/io/takari/maven-wrapper/"
         + WRAPPER_VERSION + "/maven-wrapper-" + WRAPPER_VERSION + ".jar";
 
     /**
-     * Path to the maven-wrapper.properties file, which might contain a downloadUrl property to
+     * Path to the maven-wrapper.properties file, which might contain a htmlLink property to
      * use instead of the default one.
      */
     private static final String MAVEN_WRAPPER_PROPERTIES_PATH =

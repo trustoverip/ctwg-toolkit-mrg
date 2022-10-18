@@ -116,6 +116,7 @@ class ModelWrangler {
     String localScope = saf.getScope().getScopetag();
     GeneratorContext localContext =
         createSkeletonContext(scopedir, saf.getScope().getCuratedir(), versionTag);
+    localContext.setScopetag(localScope);
     contextMap.put(localScope, localContext);
     // get local version we are building MRG for
     Optional<Version> optionalVersion =
@@ -195,7 +196,7 @@ class ModelWrangler {
     generatorContext.setAddFilters(addFiltersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
     generatorContext.setRemoveFilters(
         removeFiltersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
-
+    generatorContext.setScopetag(scopetag);
     return generatorContext;
   }
 
@@ -262,6 +263,12 @@ class ModelWrangler {
               .map(this::cleanTermFile)
               .map(this::toYaml)
               .filter(Objects::nonNull)
+              .map(
+                  t -> {
+                    t.setScopetag(currentContext.getScopetag());
+                    t.setVsntag(currentContext.getVersionTag());
+                    return t;
+                  })
               .filter(consolidatedAddFilter)
               .filter(consolidateRemoveFilter)
               .collect(Collectors.toList());
@@ -298,7 +305,11 @@ class ModelWrangler {
         cleanYaml.append("\n");
       }
     }
-    return new FileContent(dirtyContent.filename(), cleanYaml.toString(), dirtyContent.headings());
+    return new FileContent(
+        dirtyContent.filename(),
+        cleanYaml.toString(),
+        dirtyContent.htmlLink(),
+        dirtyContent.headings());
   }
 
   private Term toYaml(FileContent fileContent) {
@@ -307,6 +318,7 @@ class ModelWrangler {
       term = yamlWrangler.parseTerm(fileContent.content());
       term.setFilename(fileContent.filename());
       term.setHeadings(fileContent.headings());
+      term.setNavurl(fileContent.htmlLink());
       log.info("... Creating entry from term with id = {} ...", term.getTerm());
     } catch (Throwable t) {
       log.error("Couldn't read or parse the following term file: {}", fileContent.filename());

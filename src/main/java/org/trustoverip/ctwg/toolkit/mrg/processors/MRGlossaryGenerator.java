@@ -159,6 +159,7 @@ public class MRGlossaryGenerator {
           Predicate<Term> consolidatedFilter = filters.stream().reduce(Predicate::or).orElse(TermsFilter.all());
           remoteEntries = mrgEntries.stream().filter(consolidatedFilter).toList();
           for (MRGEntry e: remoteEntries) {
+            e.setScopetag(scopetag);
             log.info("... Copying remote term {} ...", e.getTerm());
           }
         } else {
