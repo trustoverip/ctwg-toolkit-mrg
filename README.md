@@ -12,8 +12,8 @@ A detailed description of the tool, its purpose and related concepts can be foun
 the [MR Glossary Generation page](https://essif-lab.github.io/framework/docs/tev2/spec-tools/mrgt)
 whilst its [structure at this page](https://essif-lab.github.io/framework/docs/tev2/spec-files/mrg).
 
-This README assumes the reader is familiar with these concepts.
-It focuses on how someone can download, install, and use the MRG.
+This README assumes the reader is familiar with these concepts. It focuses on how someone can
+download, install, and use the MRG.
 
 ### 1.1 What does the MRG generator do? {#1.1}
 
