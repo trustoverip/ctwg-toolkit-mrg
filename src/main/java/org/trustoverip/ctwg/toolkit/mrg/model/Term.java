@@ -39,7 +39,6 @@ public class Term implements Comparable<Term> {
   @Getter(AccessLevel.PROTECTED)
   private String navurl;
 
-  @JsonIgnore
   @Getter(AccessLevel.PROTECTED)
   private List<String> headings;
 

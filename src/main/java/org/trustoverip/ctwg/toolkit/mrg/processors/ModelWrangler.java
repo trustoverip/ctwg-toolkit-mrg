@@ -296,20 +296,29 @@ class ModelWrangler {
     StringBuilder cleanYaml = new StringBuilder();
     String[] parts = dirtyContent.content().split("---");
     String partWithYaml = parts[1];
+    String[] restOfFile = parts[2].split("\n");
     String[] lines = partWithYaml.split("\n");
+    List<String> headings = new ArrayList<>();
     for (String line : lines) {
       if (isClean(line)) {
         log.debug(
             "Found something of interest in file: {}\nline: {}", dirtyContent.filename(), line);
         cleanYaml.append(line);
         cleanYaml.append("\n");
+      } else {
+        if (line.startsWith(MARKDOWN_HEADING)) {
+          headings.add(line);
+        }
+      }
+    }
+    // extract headings from rest of file
+    for (String line : restOfFile) {
+      if (line.startsWith(MARKDOWN_HEADING)) {
+        headings.add(line);
       }
     }
     return new FileContent(
-        dirtyContent.filename(),
-        cleanYaml.toString(),
-        dirtyContent.htmlLink(),
-        dirtyContent.headings());
+        dirtyContent.filename(), cleanYaml.toString(), dirtyContent.htmlLink(), headings);
   }
 
   private Term toYaml(FileContent fileContent) {
