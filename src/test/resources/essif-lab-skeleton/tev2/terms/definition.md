@@ -37,9 +37,10 @@ hoverText: "Definition: a text that helps Parties to have the same understanding
 ---
 
 :::caution
-The entire section on Terminology Engine v 2 (TEv2) is still under construction.<br/>
+The entire section on Terminology Engine v 2 (TEv2) is still under construction.\
 As TEv2 is not (yet) available, the texts that specify the tool are still 'raw', i.e. not yet
-processed.<br/>[readers](@) will need to see through some (currently unprocessed) notational
+processed.\
+[readers](@) will need to see through some (currently unprocessed) notational
 conventions.
 :::
 
@@ -122,14 +123,14 @@ suffices that they get the gist of it) as for engineers (that need much more pre
 point where they can use it for formal reasoning). You face the challenge of conveying your
 intangible ideas or [concepts](@) with tangible words or phrases. You can do this by
 using [intensional definitions](https://en.wikipedia.org/wiki/Extensional_and_intensional_definitions)
-, i.e. by defining criteria that specify *the necessary and sufficient conditions* for when the term
+, i.e. by defining criteria that specify _the necessary and sufficient conditions_ for when the term
 you define should (not) be used. When defining such criteria, make sure they have the following
 properties:
 
 - you are convinced that the vast majority of people in your audience will *make the same judgements
   as you do when applying these criteria* in a situation that you and your audience consider
   relevant; and
-- the *ability to make this distinction is relevant* for one or more purposes of your intended
+- the _ability to make this distinction is relevant_ for one or more purposes of your intended
   audience.
 
 Note that the actual word or phrase you choose as the [term](@) name for a concept is much less

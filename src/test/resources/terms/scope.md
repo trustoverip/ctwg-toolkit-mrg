@@ -28,13 +28,14 @@ originalLicense: "[CC BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/?
 # Scope
 
 :::caution
-The entire section on Terminology Engine v 2 (TEv2) is still under construction.<br/>
+The entire section on Terminology Engine v 2 (TEv2) is still under construction.\
 As TEv2 is not (yet) available, the texts that specify the tool are still 'raw', i.e. not yet
-processed.<br/>[readers](@) will need to see through some (currently unprocessed) notational
+processed.\
+[readers](@) will need to see through some (currently unprocessed) notational
 conventions.
 :::
 
-### Summary
+## Summary
 
 A **scope** is the extent of the [terms](@), [definitions](@) and other documentation that
 a [community](@) (which we call the [owner](@) of the [scope](@)) needs to express, communicate and
@@ -59,7 +60,7 @@ as [namespaces](https://en.wikipedia.org/wiki/Namespace).
 The [terminology pattern](pattern-terminology-support@) provides an overview of how this concept
 fits in with related concepts.
 
-### Purpose
+## Purpose
 
 The purpose of having [scopes](@) is that it enables [communities](@) (and other [parties](@)) to
 come to develop and maintain [terminologies](@) that are not only relevant for realizing

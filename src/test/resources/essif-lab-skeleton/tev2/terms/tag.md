@@ -37,9 +37,10 @@ hoverText: "Tag: an alphanumeric string that is used to identify Scopes (so call
 ---
 
 :::caution
-The entire section on Terminology Engine v 2 (TEv2) is still under construction.<br/>
+The entire section on Terminology Engine v 2 (TEv2) is still under construction.\
 As TEv2 is not (yet) available, the texts that specify the tool are still 'raw', i.e. not yet
-processed.<br/>[readers](@) will need to see through some (currently unprocessed) notational
+processed.\
+[readers](@) will need to see through some (currently unprocessed) notational
 conventions.
 :::
 
