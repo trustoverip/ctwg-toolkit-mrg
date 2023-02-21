@@ -34,9 +34,10 @@ as 'Concept', 'Term', 'Pattern', 'Mental Model', 'Glossary' etc."
 ---
 
 :::caution
-The entire section on Terminology Engine v 2 (TEv2) is still under construction.<br/>
+The entire section on Terminology Engine v 2 (TEv2) is still under construction.\
 As TEv2 is not (yet) available, the texts that specify the tool are still 'raw', i.e. not yet
-processed.<br/>[readers](@) will need to see through some (currently unprocessed) notational
+processed.\
+[readers](@) will need to see through some (currently unprocessed) notational
 conventions.
 :::
 
@@ -107,20 +108,20 @@ role as different [communities](@) seek to establish a language for cooperating 
 This pattern has two basic parts:
 
 1. the [management](@)-related part. This part consists of a [community](@) that [owns](@) its
-   particular set of [objectives](@) which exist for establishing cooperation between its members,
-   and for which it needs to establish and maintain, a [terminology](@). [Managing, or curating](@)
-   a [terminology](@) consists of realizing the [objectives](@) that the terminology is intended to
-   serve, i.e. to establish a set of [concepts](@), [definitions](@), [terms](@)
-   and [mental models](@), the quality of which is such that
+particular set of [objectives](@) which exist for establishing cooperation between its members,
+and for which it needs to establish and maintain, a [terminology](@). [Managing, or curating](@)
+a [terminology](@) consists of realizing the [objectives](@) that the terminology is intended to
+serve, i.e. to establish a set of [concepts](@), [definitions](@), [terms](@)
+and [mental models](@), the quality of which is such that
 
-- members of the [community](@) use them ***in the same, single meaning***, thereby preventing
-  difficulties in their cooperation, caused by differences in the individual understandings of words
-  or phrases, and
-- non non-members of the [community](@) can obtain a precise understanding of the communications
-  within that community.
-  Also, this [management](@) may cause reference documents to be created and maintained, e.g.
-  a [glossary](@) that lists the [terminology](@) of the [community](@), a [dictionary](@) that
-  includes its [terminology](@) as well as [terminologies](@) from other, related [communities](@).
+    - members of the [community](@) use them ***in the same, single meaning***, thereby preventing
+      difficulties in their cooperation, caused by differences in the individual understandings of words
+      or phrases, and
+    - non non-members of the [community](@) can obtain a precise understanding of the communications
+      within that community.
+      Also, this [management](@) may cause reference documents to be created and maintained, e.g.
+      a [glossary](@) that lists the [terminology](@) of the [community](@), a [dictionary](@) that
+      includes its [terminology](@) as well as [terminologies](@) from other, related [communities](@).
 
 2. the terminology-related part. This is where [concepts](@), [definitions](@), [terms](@)
    , [glossaries](@) etc. live. This part is what one needs to create tools/support for managing and
@@ -176,19 +177,19 @@ A [terms-community](@) is a [community](@) that
 
 - has one or more [objectives](@) to serve/support itself and/or other [communities](@) by enabling
   them to
-    - prevent misunderstandings amongst their members, and
-    - author communications in such a way that the likelihood of non-members misunderstanding such
-      communications is minimized.
+  - prevent misunderstandings amongst their members, and
+  - author communications in such a way that the likelihood of non-members misunderstanding such
+    communications is minimized.
 - [manages](@) these [objectives](@) itself, producing results that include:
-    - one or more [glossaries](@) that each render the [terminology](@) of the [scope](@) that it
-      curates;
-    - the specification of (any number of) [tags](@) that either
-        - [identify](@) a [scope](@) (and thereby implicitly also its [terminology](@)) - the
-          so-called [scope tags](@), or
-        - can be associated with [definitions](@) as a means of grouping the [concepts](@)
-          such [definitions](@) define - the so-called [group tags](@).
-        - [identify](@) a specific version of the [terminology](@) - the so-called [version tags](@)
-          .
+  - one or more [glossaries](@) that each render the [terminology](@) of the [scope](@) that it
+    curates;
+  - the specification of (any number of) [tags](@) that either
+    - [identify](@) a [scope](@) (and thereby implicitly also its [terminology](@)) - the
+      so-called [scope tags](@), or
+    - can be associated with [definitions](@) as a means of grouping the [concepts](@)
+      such [definitions](@) define - the so-called [group tags](@).
+    - [identify](@) a specific version of the [terminology](@) - the so-called [version tags](@)
+      .
 
 We refer the reader to the [governance and management pattern](pattern-governance-and-management@)
 to learn more about transferring such results between a [terms-community](@) and
@@ -221,10 +222,10 @@ the [terms-community](@)
 - [manages](@) (creates/maintains) the (single) [terminology](@) of the [scope](@), i.e. the set
   of [terms](@) that members of the [terms-community](@) are expected to use in their
   communications. This set consists of:
-    - at least one term for every [definition](@) that is part of the [scope](@), and
-    - at least one term for any other [definition](@) (which is part of *another* [scope](@), i.e.
-      curated by another [terms-community](@)) that defines a concept that is relevant for realizing
-      one or more [objectives](@) of the [terms-community](@).
+  - at least one term for every [definition](@) that is part of the [scope](@), and
+  - at least one term for any other [definition](@) (which is part of *another* [scope](@), i.e.
+    curated by another [terms-community](@)) that defines a concept that is relevant for realizing
+    one or more [objectives](@) of the [terms-community](@).
 - [manages](@) (creates/maintains) the various [tags](@) in the scope, i.e. defines a [scopetag](@)
   for the [scope](@), [versiontags](@) (if necessary) for the different versions of
   the [terminology](@) of that [scope](@), and (optionally) any [grouptags](@) for grouping sets
