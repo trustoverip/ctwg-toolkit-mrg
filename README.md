@@ -211,7 +211,7 @@ There are three fields to fill out:
   This is the URL at which the scope directory (scopedir) is located; it is typically a directory in a (remote!) GitHub repository. This directory must contain the SAF of the scope you want to generate an MRG for. It must also contain the so-called `curatedir` that contains the curated texts (terms). It would typically be something like `https://github.com/essif-lab/framework/tree/master/docs/tev2`.
 
 2. **Scope Administration File (SAF)**
-  This is the filename (not the location) of the SAF that is located in the scopedir. It *MUST* be called `saf.yaml` (as shown in the diagram, see also https://essif-lab.github.io/framework/docs/tev2/spec-files/saf).
+  This is the filename (not the location) of the SAF that is located in the scopedir. It *MUST* be called `saf.yaml` (as shown in the diagram, see also <https://essif-lab.github.io/framework/docs/tev2/spec-files/saf>).
 
 3. **Scope version tag**
   This is the tag (name) of the glossary that should be generated. It must have been [defined in the SAF](https://essif-lab.github.io/framework/docs/tev2/spec-files/saf#versions). Typical values of it could be `latest`, or `v3.1` or so.
