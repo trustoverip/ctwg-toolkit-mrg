@@ -24,14 +24,12 @@ term: corpus # Text that is the name of the concept in (human readable) texts.
 fullterm: "Corpus of Terminology"
 shorterm:
 synonyms:
-glossaryText: "the documentation that describes the [knowledge](@) around a set of [terms](@)
-and [concepts](@)."
+glossaryText: "the documentation that describes the [knowledge](@) around a set of [terms](@) and [concepts](@)."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: "Corpus of Terminology"
-hoverText: "Corpus (of Terminology): the documentation that describes the Knowledge around a set of
-Terms and Concepts."
+hoverText: "Corpus (of Terminology): the documentation that describes the Knowledge around a set of Terms and Concepts."
 
 # sidebar_label:
 

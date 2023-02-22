@@ -24,14 +24,12 @@ term: term # Text that is the name of the concept in (human readable) texts.
 fullterm:
 shorterm:
 synonyms:
-glossaryText: "a word or phrase (i.e.: text) that is used in at least one [scope](@)/context to
-represent a specific [concept](@)."
+glossaryText: "a word or phrase (i.e.: text) that is used in at least one [scope](@)/context to represent a specific [concept](@)."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: "Term"
-hoverText: "Term: a word or phrase (i.e.: text) that is used in at least one Scope/context to
-represent a specific Concept."
+hoverText: "Term: a word or phrase (i.e.: text) that is used in at least one Scope/context to represent a specific Concept."
 
 # sidebar_label:
 

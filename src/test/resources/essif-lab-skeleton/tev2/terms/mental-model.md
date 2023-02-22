@@ -24,16 +24,12 @@ term: Mental Model # Text that is the name of the concept in (human readable) te
 fullterm: "Mental Model (Conceptual Model, Pattern)"
 shorterm:
 synonyms: [ Pattern, "Conceptual Model" ]
-glossaryText: "A description, both casual and formal, of a set of [concepts](@) (ideas), relations
-between them, and constraints, that together form a coherent and consistent 'viewpoint', or 'way of
-thinking' about a certain topic."
+glossaryText: "A description, both casual and formal, of a set of [concepts](@) (ideas), relations between them, and constraints, that together form a coherent and consistent 'viewpoint', or 'way of thinking' about a certain topic."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: "Mental Model (Conceptual Model, Pattern)"
-hoverText: "A description, both casual and formal, of a set of Concepts (ideas), relations between
-them, and constraints, that together form a coherent and consistent 'viewpoint', or 'way of
-thinking' about a certain topic."
+hoverText: "A description, both casual and formal, of a set of Concepts (ideas), relations between them, and constraints, that together form a coherent and consistent 'viewpoint', or 'way of thinking' about a certain topic."
 
 # sidebar_label:
 

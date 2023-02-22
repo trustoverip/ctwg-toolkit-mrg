@@ -24,14 +24,12 @@ term: grouptag # Text that is the name of the concept in (human readable) texts.
 fullterm: Grouptag (of/within a Scope)
 shorterm:
 synonyms:
-glossaryText: "a [tag](@) that is used to group [terminological artifacts](@) within a
-specific [scope](@)."
+glossaryText: "a [tag](@) that is used to group [terminological artifacts](@) within a specific [scope](@)."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: "Grouptag"
-hoverText: "Grouptag: a Tag (alphanumeric string) that is used to group Terminological Artifacts
-within a specific Scope."
+hoverText: "Grouptag: a Tag (alphanumeric string) that is used to group Terminological Artifacts within a specific Scope."
 
 # sidebar_label:
 
