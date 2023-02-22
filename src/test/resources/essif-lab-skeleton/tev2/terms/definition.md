@@ -24,16 +24,12 @@ term: definition # Text that is the name of the concept in (human readable) text
 fullterm: definition (of a [terminological artifact](@) in a [scope](@))
 shorterm:
 synonyms:
-glossaryText: "a text that helps [parties](@) to have the same understanding about the meaning of (
-and [concepts](@) behind) a [term](@), ideally in such a way that these [parties](@) can determine
-whether or not they make the same distinction."
+glossaryText: "a text that helps [parties](@) to have the same understanding about the meaning of (and [concepts](@) behind) a [term](@), ideally in such a way that these [parties](@) can determine whether or not they make the same distinction."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: "Definition"
-hoverText: "Definition: a text that helps Parties to have the same understanding about the meaning
-of (and Concepts behind) a Term, ideally in such a way that these Parties can determine whether or
-not they make the same distinction."
+hoverText: "Definition: a text that helps Parties to have the same understanding about the meaning of (and Concepts behind) a Term, ideally in such a way that these Parties can determine whether or not they make the same distinction."
 
 # sidebar_label:
 
