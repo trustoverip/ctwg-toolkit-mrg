@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 import lombok.EqualsAndHashCode;
 import org.apache.commons.lang3.StringUtils;
 import org.trustoverip.ctwg.toolkit.mrg.model.Term;
@@ -70,7 +72,7 @@ public class TermsFilter implements Predicate<Term> {
     return switch (vals.length) {
       case 0 -> new ArrayList<>();
       case 1 -> List.of(StringUtils.trim(vals[0]).toLowerCase(Locale.ROOT));
-      default -> Arrays.stream(vals).map(StringUtils::trim).map(StringUtils::toRootLowerCase).toList();
+      default -> Arrays.stream(vals).map(StringUtils::trim).map(StringUtils::toRootLowerCase).collect(Collectors.toList());
     };
  }
 

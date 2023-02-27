@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.springframework.stereotype.Service;
 import org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException;
@@ -54,7 +55,7 @@ public class LocalFSConnector implements MRGConnector {
                   path ->
                       new FileContent(
                           path.getFileName().toString(), this.getContent(path), new ArrayList<>()))
-              .toList();
+              .collect(Collectors.toList());
     } catch (Exception e) {
       throw new MRGGenerationException(
           String.format(COULD_NOT_READ_LOCAL_CONTENT, directoryPath.toUri()));
