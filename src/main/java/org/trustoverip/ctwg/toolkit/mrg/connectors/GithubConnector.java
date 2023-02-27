@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
 import org.kohsuke.github.GHContent;
 import org.kohsuke.github.GHFileNotFoundException;
@@ -76,7 +78,7 @@ public class GithubConnector implements MRGConnector {
                             this.contentAsString(gc),
                             gc.getHtmlUrl(),
                             new ArrayList<>()))
-                .toList();
+                .collect(Collectors.toList());
       }
     } catch (GHFileNotFoundException e) {
       log.warn("There's no such directory {} in the repo {}", directoryName, repository);
