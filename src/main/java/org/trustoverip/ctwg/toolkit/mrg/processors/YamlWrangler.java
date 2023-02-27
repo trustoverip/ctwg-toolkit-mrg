@@ -18,11 +18,14 @@ import org.springframework.stereotype.Service;
 import org.trustoverip.ctwg.toolkit.mrg.model.MRGModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.SAFModel;
 import org.trustoverip.ctwg.toolkit.mrg.model.Term;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author sih
  */
 @Service
+@Slf4j
+
 public final class YamlWrangler {
 
   private final ObjectMapper yamlMapper;
@@ -34,9 +37,10 @@ public final class YamlWrangler {
 
   SAFModel parseSaf(String safAsString) throws MRGGenerationException {
     try {
+      log.debug(String.format("SAF As String: %s", safAsString));
       return yamlMapper.readValue(safAsString, SAFModel.class);
     } catch (Exception e) {
-      throw new MRGGenerationException(UNABLE_TO_PARSE_SAF);
+      throw new MRGGenerationException(UNABLE_TO_PARSE_SAF, e);
     }
   }
 
@@ -44,15 +48,16 @@ public final class YamlWrangler {
     try {
       return yamlMapper.readValue(termString, Term.class);
     } catch (Exception e) {
-      throw new MRGGenerationException(CANNOT_PARSE_TERM);
+      throw new MRGGenerationException(CANNOT_PARSE_TERM, e);
     }
   }
 
   MRGModel parseMrg(String mrgAsString) throws MRGGenerationException {
     try {
+      log.debug(String.format("MRG As String: %s", mrgAsString));
       return yamlMapper.readValue(mrgAsString, MRGModel.class);
     } catch (Exception e) {
-      throw new MRGGenerationException(UNABLE_TO_PARSE_MRG);
+      throw new MRGGenerationException(UNABLE_TO_PARSE_MRG, e);
     }
   }
 
@@ -60,7 +65,7 @@ public final class YamlWrangler {
     try (OutputStream fos = Files.newOutputStream(location)) {
       yamlMapper.writeValue(fos, mrg);
     } catch (IOException ioException) {
-      throw new MRGGenerationException(String.format(CANNOT_WRITE_MRG, location.toAbsolutePath()));
+      throw new MRGGenerationException(String.format(CANNOT_WRITE_MRG, location.toAbsolutePath()), ioException);
     }
   }
 
@@ -69,7 +74,7 @@ public final class YamlWrangler {
       yamlMapper.writerWithDefaultPrettyPrinter().writeValue(baos, model);
       return baos.toString(StandardCharsets.UTF_8);
     } catch (IOException ioe) {
-      throw new MRGGenerationException("Cannot convert MRG to YAML");
+      throw new MRGGenerationException("Cannot convert MRG to YAML", ioe);
     }
   }
 }
