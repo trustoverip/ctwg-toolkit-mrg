@@ -119,7 +119,7 @@ class ModelWrangler {
     contextMap.put(localScope, localContext);
     // get local version we are building MRG for
     Optional<Version> optionalVersion =
-        saf.getVersions().stream().filter(v -> v.getVsntag().equals(versionTag)).findFirst();
+        saf.getVersions().stream().filter(v -> v.getVsnTag().equals(versionTag)).findFirst();
     // will contain the versions for each of the remote scopes
     Map<String, String> versionsByScopetag = new HashMap<>();
     // will contain the filters (term selection criteria) for each of the remote scopes

@@ -15,6 +15,8 @@ import lombok.Setter;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Term implements Comparable<Term> {
   @EqualsAndHashCode.Include private String term;
+  private String id;
+  private String scope;
   private String isa;
   private String termType;
   private String formPhrases;
@@ -24,7 +26,7 @@ public class Term implements Comparable<Term> {
   private String glossaryText;
   private String created;
   private String updated;
-  private String vsntag;
+  private String vsnTag;
   private String commit;
   private String contributors;
   private String attribution;

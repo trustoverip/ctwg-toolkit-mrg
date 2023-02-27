@@ -1,13 +1,13 @@
 id: term
 scope: tev2
-termtype: concept
+termType: concept
 termid: term
 formphrases: term{ss}, word{ss}, phrase{ss}
 grouptags:
 status: proposed
 created: 2022-06-06
 updated: 2022-06-06
-vsntag: v0.1
+vsnTag: v0.1
 contributors: RieksJ
 headings:
 locator: term.md

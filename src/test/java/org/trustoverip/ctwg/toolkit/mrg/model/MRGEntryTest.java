@@ -22,6 +22,8 @@ class MRGEntryTest {
   private static ObjectMapper yamlMapper;
   private Term termTerm;
   // common attributes
+  private String expectedId;
+  private String expectedScope;
   private String expectedGlossaryText;
   private String expectedTermType;
   private String expectedTerm;
@@ -30,7 +32,7 @@ class MRGEntryTest {
   private String expectedStatus;
   private String expectedCreated;
   private String expectedUpdated;
-  private String expectedVsntag;
+  private String expectedVsnTag;
   // private String expectedCommit; // this is expected as null
   private String expectedContributors;
   // mrgentry specific
@@ -62,6 +64,8 @@ class MRGEntryTest {
   }
 
   private void setUpExpectations() {
+    expectedId = "curated-text";
+    expectedScope = "tev2";
     expectedTermType = "concept";
     expectedTerm = "term";
     expectedFormPhrases = "term{ss}, word{ss}, phrase{ss}";
@@ -70,7 +74,7 @@ class MRGEntryTest {
     expectedGlossaryText = "foo bar";
     expectedCreated = "2022-06-06";
     expectedUpdated = "2022-06-06";
-    expectedVsntag = "v0.1";
+    expectedVsnTag = "v0.1";
     // note commit is expected to be null
     expectedContributors = "RieksJ";
     expectedFilename = "basic-term.yaml";
@@ -78,7 +82,9 @@ class MRGEntryTest {
 
   void assertCommonTermAttributes(Term t) {
     SoftAssertions softly = new SoftAssertions();
-    softly.assertThat(t.getTermType()).as("Check termtype").isEqualTo(expectedTermType);
+    softly.assertThat(t.getId()).as("Check id").isEqualTo(expectedId);
+    softly.assertThat(t.getScope()).as("Check scope").isEqualTo(expectedScope);
+    softly.assertThat(t.getTermType()).as("Check termType").isEqualTo(expectedTermType);
     softly.assertThat(t.getTerm()).as("Check term").isEqualTo(expectedTerm);
     softly.assertThat(t.getFormPhrases()).as("Check formphrases").isEqualTo(expectedFormPhrases);
     softly.assertThat(t.getGroupTags()).as("Check grouptags").isNull();
@@ -86,7 +92,7 @@ class MRGEntryTest {
     softly.assertThat(t.getStatus()).as("Check status").isEqualTo(expectedStatus);
     softly.assertThat(t.getCreated()).as("Check created").isEqualTo(expectedCreated);
     softly.assertThat(t.getUpdated()).as("Check updated").isEqualTo(expectedUpdated);
-    softly.assertThat(t.getVsntag()).as("Check version tag").isEqualTo(expectedVsntag);
+    softly.assertThat(t.getVsnTag()).as("Check version tag").isEqualTo(expectedVsnTag);
     softly.assertThat(t.getContributors()).as("Check contributors").isEqualTo(expectedContributors);
     softly.assertAll();
   }

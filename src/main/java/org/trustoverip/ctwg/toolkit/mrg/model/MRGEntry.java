@@ -17,6 +17,8 @@ public class MRGEntry extends Term {
   public MRGEntry() {}
 
   public MRGEntry(Term t) {
+    this.setId(t.getId());
+    this.setScope(t.getScope());
     this.setTermType(t.getTermType());
     this.setTerm(t.getTerm());
     this.setFormPhrases(t.getFormPhrases());
@@ -25,7 +27,7 @@ public class MRGEntry extends Term {
     this.setStatus(t.getStatus());
     this.setCreated(t.getCreated());
     this.setUpdated(t.getUpdated());
-    this.setVsntag(t.getVsntag());
+    this.setVsnTag(t.getVsnTag());
     this.setCommit(t.getCommit());
     this.setContributors(t.getContributors());
     this.setLocator(t.getFilename());
