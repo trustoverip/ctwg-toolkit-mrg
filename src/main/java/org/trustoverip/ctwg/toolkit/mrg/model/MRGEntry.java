@@ -19,6 +19,7 @@ public class MRGEntry extends Term {
   public MRGEntry(Term t) {
     this.setTermType(t.getTermType());
     this.setTerm(t.getTerm());
+    this.setScopetag(t.getScopetag());
     this.setFormPhrases(t.getFormPhrases());
     this.setGroupTags(t.getGroupTags());
     this.setGlossaryText(t.getGlossaryText());
@@ -29,7 +30,7 @@ public class MRGEntry extends Term {
     this.setCommit(t.getCommit());
     this.setContributors(t.getContributors());
     this.setLocator(t.getFilename());
-    this.setNavurl("To be definedT");
+    this.setNavurl(t.getNavurl());
     this.setHeadingids(t.getHeadings());
   }
 
