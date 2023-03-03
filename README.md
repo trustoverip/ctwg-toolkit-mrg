@@ -12,8 +12,8 @@ A detailed description of the tool, its purpose and related concepts can be foun
 the [MR Glossary Generation page](https://essif-lab.github.io/framework/docs/tev2/spec-tools/mrgt)
 whilst its [structure at this page](https://essif-lab.github.io/framework/docs/tev2/spec-files/mrg).
 
-This README assumes the reader is familiar with these concepts.
-It focuses on how someone can download, install, and use the MRG.
+This README assumes the reader is familiar with these concepts. It focuses on how someone can
+download, install, and use the MRG.
 
 ### 1.1 What does the MRG generator do? {#1.1}
 
@@ -155,6 +155,43 @@ This will start up a Docker container and when you click ````Containers```` on y
 ![Running MRG Container in Docker Desktop](./docs/docker-running.png?raw=true "Running MRG Container in Docker Desktop")
 
 Depending on how much of the required software needs to be, or has already been downloaded, and also depending on the speed of your Internet connection, it may take anything from 15 seconds to a minute for the generator to be ready. *It is important to check the generator is ready before accessing it*.
+
+### 3.1.1 Starting the MRG generator in a Docker container running local code for local development {#3.1.1}
+
+Build the docker image locally:
+
+```bash
+docker build -t ctwg-mgr-local -f Dockerfile .
+```
+
+- Hover over the Docker image in Docker Desktop and click the ````Run```` button on the right-hand
+  side. A smaller window will appear. Don't click run yet but instead select ````Optional Settings````
+
+![Docker Run Optional Settings Initial](./docs/docker-optional-initial.png?raw=true "Docker Run Optional Settings Initial")
+
+- Now another window will appear that contains fields you need to fill in:
+
+![Docker Run Optional Settings](./docs/docker-optional-local.png?raw=true "Docker Run Optional Settings")
+
+- Enter the following details:
+  - Container name: ctwg-mgr-local
+  - Ports: 8083
+  - Volumes:
+    - First
+      - Host path: C:\git\my-repodir\glossaries
+      - Container path: /glossaries
+    - Second
+      - Host path: C:\git\my-repodir\ctwg-mrg-gen (or wherever you have cloned the ctwg-mrg-gen repo)
+      - Container path: /app
+  - Environment variables:
+    - First
+      - Variable: gh_user
+      - Value: RieksJ
+    - Second
+      - Variable: gh_token
+      - Value: \<Your_Gihub_Token\>
+
+- Click the Run buttom.
 
 ### 3.2 Start your webbrowser and instruct the MRG generator to create an MRG {#3.2}
 
