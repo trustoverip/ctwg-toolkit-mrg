@@ -17,6 +17,8 @@ public class Term implements Comparable<Term> {
   @EqualsAndHashCode.Include private String term;
   private String id;
   private String scope;
+  private String scopetag;
+  private String locator;
   private String isa;
   private String termtype;
   private String formphrases;
@@ -36,7 +38,9 @@ public class Term implements Comparable<Term> {
   @Getter(AccessLevel.PROTECTED)
   private String filename;
 
-  @JsonIgnore
+  @Getter(AccessLevel.PROTECTED)
+  private String navurl;
+
   @Getter(AccessLevel.PROTECTED)
   private List<String> headings;
 
