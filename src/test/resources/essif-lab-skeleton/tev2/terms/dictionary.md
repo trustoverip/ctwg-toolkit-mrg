@@ -7,14 +7,14 @@ id: dictionary
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termType: concept
+termtype: concept
 termid: dictionary
 formphrases: dictionar{yies}
 grouptags:
 status: proposed
 created: 2022-06-06
 updated: 2022-06-06
-vsnTag: v0.1
+vsntag: v0.1
 contributors: RieksJ
 
 # TEv2: type-specific front-matter for type `concept`
@@ -24,7 +24,7 @@ term: dictionary # Text that is the name of the concept in (human readable) text
 fullterm:
 shorterm:
 synonyms:
-glossaryText: "an alphabetically sorted list of [terms](@) with various meanings that they may have
+glossarytext: "an alphabetically sorted list of [terms](@) with various meanings that they may have
 in different contexts."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):

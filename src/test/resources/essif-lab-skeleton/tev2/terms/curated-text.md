@@ -7,14 +7,14 @@ id: curated-text
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termType: concept
+termtype: concept
 termid: ctext
 formphrases: curated-text{ss}
 grouptags: ctext
 status: proposed
 created: 2022-06-02
 updated: 2022-06-02
-vsnTag: v0.1
+vsntag: v0.1
 contributors: RieksJ
 
 # TEv2: type-specific front-matter for type `concept`
@@ -24,7 +24,7 @@ term: Curated Text
 fullterm: curated text (in a [scope](@))
 shorterm: ctext
 synonyms:
-glossaryText: a text that describes a [terminological artifact](@) of a specific [scope](@) in a
+glossarytext: a text that describes a [terminological artifact](@) of a specific [scope](@) in a
 format that is defined by the [curators](@) of that [scope](@)
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):

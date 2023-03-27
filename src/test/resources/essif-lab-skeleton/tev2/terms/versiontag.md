@@ -7,14 +7,14 @@ id: versiontag
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termType: concept
+termtype: concept
 termid: versiontag
 formphrases: versiontag{ss}, version-tag{ss}
 grouptags:
 status: proposed
 created: 2022-06-06
 updated: 2022-06-06
-vsnTag: v0.1
+vsntag: v0.1
 contributors: RieksJ
 
 # TEv2: type-specific front-matter for type `concept`
@@ -24,7 +24,7 @@ term: versiontag # Text that is the name of the concept in (human readable) text
 fullterm: Versiontag (of/within a Scope)
 shorterm:
 synonyms:
-glossaryText: "a [tag](@) that is used to [identify](@) a specific version of a [terminology](@)
+glossarytext: "a [tag](@) that is used to [identify](@) a specific version of a [terminology](@)
 from within a specific [scope](@)."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):

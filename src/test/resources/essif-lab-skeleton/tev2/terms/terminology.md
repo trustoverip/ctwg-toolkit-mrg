@@ -7,14 +7,14 @@ id: terminology
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termType: concept
+termtype: concept
 termid: terminology
 formphrases: terminolog{yies}
 grouptags:
 status: proposed
 created: 2022-06-06
 updated: 2022-06-06
-vsnTag: v0.1
+vsntag: v0.1
 contributors: RieksJ
 
 # TEv2: type-specific front-matter for type `concept`
@@ -23,7 +23,7 @@ term: terminology # Text that is the name of the concept in (human readable) tex
 fullterm: terminology (in/of a scope)
 shorterm:
 synonyms:
-glossaryText: "the set of [terms](@) that are used within a single [scope](@) to refer to a
+glossarytext: "the set of [terms](@) that are used within a single [scope](@) to refer to a
 single [definition](@), enabling [parties](@) to reason and communicate ideas they have about one or
 more specific topics."
 

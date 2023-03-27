@@ -58,7 +58,7 @@ public class MRGlossaryGenerator {
     List<Version> versions = saf.getVersions();
     Optional<Version> version = Optional.empty();
     for (Version v : versions) {
-      if (v.getVsnTag().equals(versionTag)) {
+      if (v.getVsntag().equals(versionTag)) {
         version = Optional.of(v);
         break;
       }
@@ -150,7 +150,7 @@ public class MRGlossaryGenerator {
     SAFModel remoteSaf = wrangler.getSaf(remoteContext.getAbsoluteRepo(), DEFAULT_SAF_FILENAME);
     if (remoteSaf != null) {
       String glossaryDir = remoteSaf.getScope().getGlossarydir();
-      Optional<Version> versionOfInterest = remoteSaf.getVersions().stream().filter(v -> v.getVsnTag().equals(remoteContext.getVersionTag())).findFirst();
+      Optional<Version> versionOfInterest = remoteSaf.getVersions().stream().filter(v -> v.getVsntag().equals(remoteContext.getVersionTag())).findFirst();
       if (versionOfInterest.isPresent()) {
         MRGModel remoteMrg = wrangler.getMrg(remoteContext, remoteSaf.getScope().getGlossarydir(), versionOfInterest.get().getAltvsntags());
         if (remoteMrg != null) {

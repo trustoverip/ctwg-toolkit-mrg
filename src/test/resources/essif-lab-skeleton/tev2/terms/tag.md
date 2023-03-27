@@ -7,14 +7,14 @@ id: tag
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termType: concept
+termtype: concept
 termid: tag
 formphrases: tag{ss}
 grouptags:
 status: proposed
 created: 2022-06-06
 updated: 2022-06-06
-vsnTag: v0.1
+vsntag: v0.1
 contributors: RieksJ
 
 # TEv2: type-specific front-matter for type `concept`
@@ -24,7 +24,7 @@ term: tag # Text that is the name of the concept in (human readable) texts.
 fullterm: Tag (of/within a Scope)
 shorterm:
 synonyms:
-glossaryText: "an alphanumeric string that is used to identify [scopes](@) (so called 'scopetags'),
+glossarytext: "an alphanumeric string that is used to identify [scopes](@) (so called 'scopetags'),
 group [terms](@) (so called 'grouptags'), or identify a specific version of a [terminology](@) (so
 called 'versiontags') from within a specific [scope](@)."
 

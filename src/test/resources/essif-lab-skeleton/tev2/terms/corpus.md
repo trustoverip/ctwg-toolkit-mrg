@@ -7,14 +7,14 @@ id: corpus
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termType: concept
+termtype: concept
 termid: corpus
 formphrases: corpus, corpus-of-terminology
 grouptags:
 status: proposed
 created: 2022-06-06
 updated: 2022-06-06
-vsnTag: v0.1
+vsntag: v0.1
 contributors: RieksJ
 
 # TEv2: type-specific front-matter for type `concept`
@@ -24,7 +24,7 @@ term: corpus # Text that is the name of the concept in (human readable) texts.
 fullterm: "Corpus of Terminology"
 shorterm:
 synonyms:
-glossaryText: "the documentation that describes the [knowledge](@) around a set of [terms](@)
+glossarytext: "the documentation that describes the [knowledge](@) around a set of [terms](@)
 and [concepts](@)."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):

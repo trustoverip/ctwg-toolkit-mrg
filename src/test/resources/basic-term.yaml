@@ -1,11 +1,11 @@
 term: term
 isa: knowledge-artifact
-termType: concept
-glossaryText: "a [knowledge artifact](@) that captures the ideas/thoughts behind a classification of [entities](@) (what makes [entities](@) in that class 'the same')."
-formPhrases: term{ss}, word{ss}, phrase{ss}
-groupTags:
+termtype: concept
+glossarytext: "a [knowledge artifact](@) that captures the ideas/thoughts behind a classification of [entities](@) (what makes [entities](@) in that class 'the same')."
+formphrases: term{ss}, word{ss}, phrase{ss}
+grouptags:
 status: proposed
 created: 2022-06-06
 updated: 2022-06-06
-vsnTag: v0.1
+vsntag: v0.1
 contributors: RieksJ

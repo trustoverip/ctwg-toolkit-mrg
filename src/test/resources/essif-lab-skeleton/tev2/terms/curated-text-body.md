@@ -7,14 +7,14 @@ id: curated-text-body
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termType: concept
+termtype: concept
 termid: curated-text-body
 formphrases: curated-text-bod{yies}, ctext-bod{yies}, bod{yies}
 grouptags: ctext
 status: proposed
 created: 2022-06-02
 updated: 2022-06-02
-vsnTag: v0.1
+vsntag: v0.1
 contributors: RieksJ
 
 # TEv2: type-specific front-matter for type `concept`
@@ -24,7 +24,7 @@ term: Curated Text Body
 fullterm: body (of a [curated text](@))
 shorterm: body
 synonyms:
-glossaryText: the (raw) text that follows the [header](@) of a [curated text](@)
+glossarytext: the (raw) text that follows the [header](@) of a [curated text](@)
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 

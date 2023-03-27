@@ -25,7 +25,7 @@ public class MRGGenerationException extends RuntimeException {
   public static final String NO_GLOSSARY_DIR =
       "Generation failed: The glossarydir attribute in the SAF scope is empty so no location to save MRG.";
   public static final String NO_SUCH_VERSION =
-      "Generation failed: No version with version tag (vsnTag) of %s found in SAF";
+      "Generation failed: No version with version tag (vsntag) of %s found in SAF";
   public static final String CANNOT_WRITE_MRG =
       "Generation failed: Unable to write MRG to location %s";
   public static final String CANNOT_PARSE_TERM = "Could not create term from input string of:\n%s";

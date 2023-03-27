@@ -7,14 +7,14 @@ id: definition
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termType: concept
+termtype: concept
 termid: definition
 formphrases: definition{ss}
 grouptags:
 status: proposed
 created: 2022-06-06
 updated: 2022-06-06
-vsnTag: v0.1
+vsntag: v0.1
 contributors: RieksJ
 
 # TEv2: type-specific front-matter for type `concept`
@@ -24,7 +24,7 @@ term: definition # Text that is the name of the concept in (human readable) text
 fullterm: definition (of a [terminological artifact](@) in a [scope](@))
 shorterm:
 synonyms:
-glossaryText: "a text that helps [parties](@) to have the same understanding about the meaning of (
+glossarytext: "a text that helps [parties](@) to have the same understanding about the meaning of (
 and [concepts](@) behind) a [term](@), ideally in such a way that these [parties](@) can determine
 whether or not they make the same distinction."
 
