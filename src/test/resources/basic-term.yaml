@@ -1,3 +1,5 @@
+id: curated-text
+scope: tev2
 term: term
 isa: knowledge-artifact
 termtype: concept
