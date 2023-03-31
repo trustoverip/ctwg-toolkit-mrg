@@ -140,7 +140,7 @@ You must have completed the prerequisites, and have started the Docker Desktop a
 ![Docker Run Optional Settings](./docs/docker-optional.png?raw=true "Docker Run Optional Settings")
 
   * under 'Optional settings', you type the name of the container as you like it, e.g. `ctwg-mrg`.
-  * under 'Ports`, you type the port number of where you can access the tool on localhost, e.g. `8083`. This means that you can later browse to `localhost:8083/ctwg/mrg` to make the tool run.
+  * under `Ports`, you type the port number of where you can access the tool on localhost, e.g. `8083`. This means that you can later browse to `localhost:8083/ctwg/mrg` to make the tool run.
   * under 'Volumes', there are rows that consist of two fields, the left one specifying a directory on your local machine, and the right one specifying a directory on the (virtual) machine in the docker container. The idea is that when the MRG generator writes the MRG in the directory of the docker container, it will be automatically transferred to the local directory, so it becomes available for you to do with as you like. So here is how you fill in the fields
     * the left field ('Host path') specifies a directory on your local machine, e.g. `C:\git\my-repodir\glossaries`
     * the right field ('Container path') MUST contain the text `/glossaries`, as that is the path in the container where the MRG generator will put the generated MRG.
@@ -207,12 +207,13 @@ There are three fields to fill out:
   This is the URL at which the scope directory (scopedir) is located; it is typically a directory in a (remote!) GitHub repository. This directory must contain the SAF of the scope you want to generate an MRG for. It must also contain the so-called `curatedir` that contains the curated texts (terms). It would typically be something like `https://github.com/essif-lab/framework/tree/master/docs/tev2`.
 
 2. **Scope Administration File (SAF)**
-  This is the filename (not the location) of the SAF that is located in the scopedir. It would typically be called `saf.yamal` (as shown in the diagram).
+  This is the filename (not the location) of the SAF that is located in the scopedir. It *MUST* be called `saf.yaml` (as shown in the diagram, see also https://essif-lab.github.io/framework/docs/tev2/spec-files/saf).
 
 3. **Scope version tag**
   This is the tag (name) of the glossary that should be generated. It must have been [defined in the SAF](https://essif-lab.github.io/framework/docs/tev2/spec-files/saf#versions). Typical values of it could be `latest`, or `v3.1` or so.
 
-Once these are filled out click the ````Generate```` button
+Once these are filled out click the ````Generate```` button.
+
 ### 3.3 Obtain/view the MRG output {#3.3}
 
 Generation of an MRG takes a bit of time, but not all that long. If it takes too long, you can watch the progress in the Docker Desktop log (see [next step]{#3.4}).
