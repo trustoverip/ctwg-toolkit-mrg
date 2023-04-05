@@ -59,11 +59,12 @@ class ModelWranglerTest {
     validSafContent = new String(Files.readAllBytes(VALID_SAF));
     termStringTerm =
         new FileContent(
-            "terms/term.md", new String(Files.readAllBytes(CURATED_TERM_TERM)), new ArrayList<>());
+            "terms/term.md", new String(Files.readAllBytes(CURATED_TERM_TERM)), "htmllink", new ArrayList<>());
     termStringScope =
         new FileContent(
             "terms/scope.md",
             new String(Files.readAllBytes(CURATED_TERM_SCOPE)),
+            "htmllink",
             new ArrayList<>());
   }
 
