@@ -156,7 +156,7 @@ class YamlWranglerTest {
   }
 
   private void assertVersion(Version actualVersion, Version expectedVersion) {
-    assertThat(actualVersion.getVsntag()).isEqualTo(expectedVersion.getVsntag());
+    assertThat(actualVersion.getVsnTag()).isEqualTo(expectedVersion.getVsnTag());
     assertThat(actualVersion.getAltvsntags()).isEqualTo(expectedVersion.getAltvsntags());
     assertThat(actualVersion.getTermselcrit())
         .containsExactlyInAnyOrder(expectedVersion.getTermselcrit().toArray(new String[0]));

@@ -7,14 +7,14 @@ id: terminology-process
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termtype: concept
+termType: concept
 termid: terminology-process
-formphrases: terminology-process, terminology-processes
+formPhrases: terminology-process, terminology-processes
 grouptags:
 status: proposed
 created: 2022-06-06
 updated: 2022-06-06
-vsntag: v0.1
+vsnTag: v0.1
 contributors: RieksJ
 
 # TEv2: type-specific front-matter for type `concept`
@@ -24,7 +24,7 @@ term: terminology process # Text that is the name of the concept in (human reada
 fullterm: "Terminology Process"
 shorterm:
 synonyms:
-glossarytext: "a method for recognizing misunderstandings as such, and creating or
+glossaryText: "a method for recognizing misunderstandings as such, and creating or
 maintaining [definitions](@) that resolve them."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):

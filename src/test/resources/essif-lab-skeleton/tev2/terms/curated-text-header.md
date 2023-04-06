@@ -7,14 +7,14 @@ id: curated-text-header
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termtype: concept
+termType: concept
 termid: curated-text-header
-formphrases: curated-text-header{ss}, ctext-header{ss}, header{ss}
+formPhrases: curated-text-header{ss}, ctext-header{ss}, header{ss}
 grouptags: ctext
 status: proposed
 created: 2022-06-02
 updated: 2022-06-02
-vsntag: v0.1
+vsnTag: v0.1
 contributors: RieksJ
 
 # TEv2: type-specific front-matter for type `concept`
@@ -24,7 +24,7 @@ term: Curated Text Header
 fullterm: header (of a [curated text](@))
 shorterm: header
 synonyms:
-glossarytext: the (YAML) text at the beginning of a [curated text](@) (also called the '
+glossaryText: the (YAML) text at the beginning of a [curated text](@) (also called the '
 front-matter').
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
@@ -102,14 +102,14 @@ the [concept](@) '[curate](@)':
 id: curated-text-header
 # TEv2: generic front-matter for curated texts
 scope: tev2
-termtype: concept
+termType: concept
 termid: curated-text-header
-formphrases: curated-text-header{ss}, ctext-header{ss}, header{ss}
+formPhrases: curated-text-header{ss}, ctext-header{ss}, header{ss}
 grouptags: ctext
 status: proposed
 created: 2022-06-02
 updated: 2022-06-02
-vsntag: v0.1
+vsnTag: v0.1
 contributors: RieksJ
 # TEv2: type-specific front-matter for type `concept`
 isa:
@@ -117,7 +117,7 @@ term: Curated Text Header
 fullterm: header (of a [curated text](@))
 shorterm: header
 synonyms:
-glossarytext: the (YAML) text at the beginning of a [curated text](@) (also called the 'front-matter').
+glossaryText: the (YAML) text at the beginning of a [curated text](@) (also called the 'front-matter').
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 title: Header (of a Curated Text)
 hoverText: the (YAML) text at the beginning of a curated text (also called the 'front-matter').
@@ -132,7 +132,7 @@ hide_table_of_contents: true
 We may want to think a bit more about TEv2 front matter. While our experience has shown that it is a
 good practice to use comments to dinstinguish between the various uses of front matter (basically
 creating 'header sections'), it isn't always clear what should go in which section. Consider the
-field `glossarytext`. It was decided to put it in because practice showed that while automated
+field `glossaryText`. It was decided to put it in because practice showed that while automated
 generation may work in many (if not most) cases, it does not work in all cases as we'd like it to.
 So where does it belong? One might argue that it belongs in the generic TEv2 header, so that
 every [terminological artifact](@) might have one. But do we really want all such artifacts to be

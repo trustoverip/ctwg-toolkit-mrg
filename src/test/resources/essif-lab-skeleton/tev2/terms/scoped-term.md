@@ -7,13 +7,13 @@ id: scoped-term
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termtype: concept
+termType: concept
 termid: term
 grouptags:
 status: proposed
 created: 2022-06-06
 updated: 2022-06-06
-vsntag: v0.1
+vsnTag: v0.1
 contributors: RieksJ
 
 # TEv2: type-specific front-matter for type `concept`
@@ -23,7 +23,7 @@ term: scoped term # Text that is the name of the concept in (human readable) tex
 fullterm: "Term (Scoped)"
 shorterm:
 synonyms:
-glossarytext: "a [term](@), the meaning of which is determined by the [definition](@) to which it
+glossaryText: "a [term](@), the meaning of which is determined by the [definition](@) to which it
 refers in a specific [scope](@)/context."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):

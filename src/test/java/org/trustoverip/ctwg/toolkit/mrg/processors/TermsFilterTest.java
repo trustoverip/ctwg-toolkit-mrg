@@ -31,7 +31,7 @@ class TermsFilterTest {
     foo = new Term();
     foo.setTerm("foo");
     foo.setGrouptags("foo");
-    foo.setGlossarytext("foo");
+    foo.setGlossaryText("foo");
     bar = new Term();
     bar.setTerm("bar");
     bar.setGrouptags("bar");

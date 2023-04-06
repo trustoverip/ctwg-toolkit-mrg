@@ -7,14 +7,14 @@ id: mental-model
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termtype: concept
+termType: concept
 termid: mental-model
-formphrases: mental-model{ss}, pattern{ss}, conceptual-model{ss}
+formPhrases: mental-model{ss}, pattern{ss}, conceptual-model{ss}
 grouptags:
 status: proposed
 created: 2022-06-06
 updated: 2022-06-07
-vsntag: v0.1
+vsnTag: v0.1
 contributors: RieksJ
 
 # TEv2: type-specific front-matter for type `concept`
@@ -24,7 +24,7 @@ term: Mental Model # Text that is the name of the concept in (human readable) te
 fullterm: "Mental Model (Conceptual Model, Pattern)"
 shorterm:
 synonyms: [ Pattern, "Conceptual Model" ]
-glossarytext: "A description, both casual and formal, of a set of [concepts](@) (ideas), relations
+glossaryText: "A description, both casual and formal, of a set of [concepts](@) (ideas), relations
 between them, and constraints, that together form a coherent and consistent 'viewpoint', or 'way of
 thinking' about a certain topic."
 

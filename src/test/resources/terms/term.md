@@ -3,13 +3,13 @@
 # TEv2 Curated Text Header
 
 term: term
-termtype: concept
+termType: concept
 isa: identifier
-glossarytext: "a word or phrase (i.e.: text) that is used to represent
+glossaryText: "a word or phrase (i.e.: text) that is used to represent
 specific [knowledge artifacts](@)."
 synonyms:
 grouptags:
-formphrases: term{ss}, word{ss}, phrase{ss}
+formPhrases: term{ss}, word{ss}, phrase{ss}
 
 # Curation status
 
@@ -21,7 +21,7 @@ updated: 2022-08-09
 
 contributors: RieksJ
 attribution: "[eSSIF-Lab](https://essif-lab.github.io/framework)"
-originallicense: "[CC BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/?ref=chooser-v1)"
+originalLicense: "[CC BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/?ref=chooser-v1)"
 ---
 
 # Term

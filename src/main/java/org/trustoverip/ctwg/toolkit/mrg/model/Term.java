@@ -20,19 +20,19 @@ public class Term implements Comparable<Term> {
   private String scopetag;
   private String locator;
   private String isa;
-  private String termtype;
-  private String formphrases;
+  private String termType;
+  private String formPhrases;
   private String status;
   private String synonyms;
   private String grouptags;
-  private String glossarytext;
+  private String glossaryText;
   private String created;
   private String updated;
-  private String vsntag;
+  private String vsnTag;
   private String commit;
   private String contributors;
   private String attribution;
-  private String originallicense;
+  private String originalLicense;
 
   @JsonIgnore
   @Getter(AccessLevel.PROTECTED)

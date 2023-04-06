@@ -7,14 +7,14 @@ id: scope
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termtype: concept
+termType: concept
 termid: scope
-formphrases: scope{ss}
+formPhrases: scope{ss}
 grouptags:
 status: proposed
 created: 2022-06-06
 updated: 2022-06-06
-vsntag: v0.1
+vsnTag: v0.1
 contributors: RieksJ
 
 # TEv2: type-specific front-matter for type `concept`
@@ -24,7 +24,7 @@ term: scope # Text that is the name of the concept in (human readable) texts.
 fullterm:
 shorterm:
 synonyms:
-glossarytext: "the extent of the area or subject matter (which we use, e.g., to define [patterns](@)
+glossaryText: "the extent of the area or subject matter (which we use, e.g., to define [patterns](@)
 , [concepts](@), [terms](@) and [glossaries](@) in, but it serves other purposes as well)."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):

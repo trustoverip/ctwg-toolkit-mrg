@@ -20,7 +20,7 @@ public class Terminology {
 
   @EqualsAndHashCode.Include private final String curatedir;
 
-  @EqualsAndHashCode.Include private final String vsntag;
+  @EqualsAndHashCode.Include private final String vsnTag;
 
   private String license;
   private List<String> altvsntags;

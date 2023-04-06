@@ -7,14 +7,14 @@ id: term
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termtype: concept
+termType: concept
 termid: term
-formphrases: term{ss}, word{ss}, phrase{ss}
+formPhrases: term{ss}, word{ss}, phrase{ss}
 grouptags:
 status: proposed
 created: 2022-06-06
 updated: 2022-06-06
-vsntag: v0.1
+vsnTag: v0.1
 contributors: RieksJ
 
 # TEv2: type-specific front-matter for type `concept`
@@ -24,7 +24,7 @@ term: term # Text that is the name of the concept in (human readable) texts.
 fullterm:
 shorterm:
 synonyms:
-glossarytext: "a word or phrase (i.e.: text) that is used in at least one [scope](@)/context to
+glossaryText: "a word or phrase (i.e.: text) that is used in at least one [scope](@)/context to
 represent a specific [concept](@)."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):

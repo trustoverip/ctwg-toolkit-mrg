@@ -24,15 +24,15 @@ class MRGEntryTest {
   // common attributes
   private String expectedId;
   private String expectedScope;
-  private String expectedGlossarytext;
-  private String expectedTermtype;
+  private String expectedGlossaryText;
+  private String expectedTermType;
   private String expectedTerm;
-  private String expectedFormphrases;
+  private String expectedFormPhrases;
   private String expectedGrouptags;
   private String expectedStatus;
   private String expectedCreated;
   private String expectedUpdated;
-  private String expectedVsntag;
+  private String expectedVsnTag;
   // private String expectedCommit; // this is expected as null
   private String expectedContributors;
   // mrgentry specific
@@ -66,15 +66,15 @@ class MRGEntryTest {
   private void setUpExpectations() {
     expectedId = "curated-text";
     expectedScope = "tev2";
-    expectedTermtype = "concept";
+    expectedTermType = "concept";
     expectedTerm = "term";
-    expectedFormphrases = "term{ss}, word{ss}, phrase{ss}";
+    expectedFormPhrases = "term{ss}, word{ss}, phrase{ss}";
     expectedGrouptags = "";
     expectedStatus = "proposed";
-    expectedGlossarytext = "foo bar";
+    expectedGlossaryText = "foo bar";
     expectedCreated = "2022-06-06";
     expectedUpdated = "2022-06-06";
-    expectedVsntag = "v0.1";
+    expectedVsnTag = "v0.1";
     // note commit is expected to be null
     expectedContributors = "RieksJ";
     expectedFilename = "basic-term.yaml";
@@ -84,15 +84,15 @@ class MRGEntryTest {
     SoftAssertions softly = new SoftAssertions();
     softly.assertThat(t.getId()).as("Check id").isEqualTo(expectedId);
     softly.assertThat(t.getScope()).as("Check scope").isEqualTo(expectedScope);
-    softly.assertThat(t.getTermtype()).as("Check termtype").isEqualTo(expectedTermtype);
+    softly.assertThat(t.getTermType()).as("Check termType").isEqualTo(expectedTermType);
     softly.assertThat(t.getTerm()).as("Check term").isEqualTo(expectedTerm);
-    softly.assertThat(t.getFormphrases()).as("Check formphrases").isEqualTo(expectedFormphrases);
+    softly.assertThat(t.getFormPhrases()).as("Check formPhrases").isEqualTo(expectedFormPhrases);
     softly.assertThat(t.getGrouptags()).as("Check grouptags").isNull();
     softly.assertThat(t.getCommit()).as("Check commit").isNull();
     softly.assertThat(t.getStatus()).as("Check status").isEqualTo(expectedStatus);
     softly.assertThat(t.getCreated()).as("Check created").isEqualTo(expectedCreated);
     softly.assertThat(t.getUpdated()).as("Check updated").isEqualTo(expectedUpdated);
-    softly.assertThat(t.getVsntag()).as("Check version tag").isEqualTo(expectedVsntag);
+    softly.assertThat(t.getVsnTag()).as("Check version tag").isEqualTo(expectedVsnTag);
     softly.assertThat(t.getContributors()).as("Check contributors").isEqualTo(expectedContributors);
     softly.assertAll();
   }
