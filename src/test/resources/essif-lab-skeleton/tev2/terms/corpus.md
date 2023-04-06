@@ -7,7 +7,7 @@ id: corpus
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termType: concept
+termtype: concept
 termid: corpus
 formphrases: corpus, corpus-of-terminology
 grouptags:

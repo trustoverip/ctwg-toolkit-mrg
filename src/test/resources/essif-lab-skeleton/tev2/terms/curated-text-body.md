@@ -7,7 +7,7 @@ id: curated-text-body
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termType: concept
+termtype: concept
 termid: curated-text-body
 formphrases: curated-text-bod{yies}, ctext-bod{yies}, bod{yies}
 grouptags: ctext

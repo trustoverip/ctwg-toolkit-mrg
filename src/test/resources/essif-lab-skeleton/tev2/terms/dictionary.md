@@ -7,7 +7,7 @@ id: dictionary
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termType: concept
+termtype: concept
 termid: dictionary
 formphrases: dictionar{yies}
 grouptags:

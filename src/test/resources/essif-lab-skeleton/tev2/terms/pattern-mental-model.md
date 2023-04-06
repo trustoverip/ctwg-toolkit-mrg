@@ -7,7 +7,7 @@ id: pattern-mental-model
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termType: pattern
+termtype: pattern
 termid: mental-model
 formphrases: mental-model
 grouptags:

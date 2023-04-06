@@ -7,7 +7,7 @@ id: grouptag
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termType: concept
+termtype: concept
 termid: grouptag
 formphrases: grouptag{ss}, group-tag{ss}
 grouptags:

@@ -7,7 +7,7 @@ id: curated-text-header
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termType: concept
+termtype: concept
 termid: curated-text-header
 formphrases: curated-text-header{ss}, ctext-header{ss}, header{ss}
 grouptags: ctext
@@ -102,7 +102,7 @@ the [concept](@) '[curate](@)':
 id: curated-text-header
 # TEv2: generic front-matter for curated texts
 scope: tev2
-termType: concept
+termtype: concept
 termid: curated-text-header
 formphrases: curated-text-header{ss}, ctext-header{ss}, header{ss}
 grouptags: ctext

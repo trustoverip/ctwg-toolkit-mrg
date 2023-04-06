@@ -3,7 +3,7 @@
 # TEv2 Curated Text Header
 
 term: scope
-termType: concept
+termtype: concept
 isa:
 glossaryText: "the extent of the [terms](@), [definitions](@) and other documentation that
 a [community](@) (which we call the [owner](@) of the [scope](@)) needs to express, communicate and

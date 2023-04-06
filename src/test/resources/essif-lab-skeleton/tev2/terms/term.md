@@ -7,7 +7,7 @@ id: term
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termType: concept
+termtype: concept
 termid: term
 formphrases: term{ss}, word{ss}, phrase{ss}
 grouptags:

@@ -3,7 +3,7 @@
 # TEv2 Curated Text Header
 
 term: term
-termType: concept
+termtype: concept
 isa: identifier
 glossaryText: "a word or phrase (i.e.: text) that is used to represent
 specific [knowledge artifacts](@)."
