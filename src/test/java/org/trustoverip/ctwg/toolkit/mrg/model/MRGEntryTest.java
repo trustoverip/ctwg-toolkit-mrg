@@ -32,7 +32,7 @@ class MRGEntryTest {
   private String expectedStatus;
   private String expectedCreated;
   private String expectedUpdated;
-  private String expectedVsnTag;
+  private String expectedVsntag;
   // private String expectedCommit; // this is expected as null
   private String expectedContributors;
   // mrgentry specific
@@ -74,7 +74,7 @@ class MRGEntryTest {
     expectedGlossaryText = "foo bar";
     expectedCreated = "2022-06-06";
     expectedUpdated = "2022-06-06";
-    expectedVsnTag = "v0.1";
+    expectedVsntag = "v0.1";
     // note commit is expected to be null
     expectedContributors = "RieksJ";
     expectedFilename = "basic-term.yaml";
@@ -92,7 +92,7 @@ class MRGEntryTest {
     softly.assertThat(t.getStatus()).as("Check status").isEqualTo(expectedStatus);
     softly.assertThat(t.getCreated()).as("Check created").isEqualTo(expectedCreated);
     softly.assertThat(t.getUpdated()).as("Check updated").isEqualTo(expectedUpdated);
-    softly.assertThat(t.getVsnTag()).as("Check version tag").isEqualTo(expectedVsnTag);
+    softly.assertThat(t.getVsntag()).as("Check version tag").isEqualTo(expectedVsntag);
     softly.assertThat(t.getContributors()).as("Check contributors").isEqualTo(expectedContributors);
     softly.assertAll();
   }

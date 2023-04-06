@@ -28,7 +28,7 @@ public class Term implements Comparable<Term> {
   private String glossaryText;
   private String created;
   private String updated;
-  private String vsnTag;
+  private String vsntag;
   private String commit;
   private String contributors;
   private String attribution;

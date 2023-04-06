@@ -14,7 +14,7 @@ grouptags: ctext
 status: proposed
 created: 2022-06-02
 updated: 2022-06-02
-vsnTag: v0.1
+vsntag: v0.1
 contributors: RieksJ
 
 # TEv2: type-specific front-matter for type `concept`
@@ -109,7 +109,7 @@ grouptags: ctext
 status: proposed
 created: 2022-06-02
 updated: 2022-06-02
-vsnTag: v0.1
+vsntag: v0.1
 contributors: RieksJ
 # TEv2: type-specific front-matter for type `concept`
 isa:

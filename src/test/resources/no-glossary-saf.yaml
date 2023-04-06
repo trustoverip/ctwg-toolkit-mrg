@@ -41,10 +41,10 @@ scopes: #
 # See the Glossary Generation Tool (GGT) for details about the syntax and semantics.
 #
 versions:
-  - vsnTag: mrgtest # this version MUST only be used for testing the MRG generator
+  - vsntag: mrgtest # this version MUST only be used for testing the MRG generator
     termselcrit:
       - "*@tev2" # import all tev2 terms.
-  - vsnTag: 0x921456 # a versiontag that identifies this version from all other versions in the SAF
+  - vsntag: 0x921456 # a versiontag that identifies this version from all other versions in the SAF
     altvsntags: # alternative verstiontags
       - latest
       - v0.9.4
@@ -56,7 +56,7 @@ versions:
     status: proposed
     from: 20220312
     to:
-  - vsnTag: 0x654129 # a versiontag that identifies this version from all other versions in the SAF
+  - vsntag: 0x654129 # a versiontag that identifies this version from all other versions in the SAF
     altvsntags: # alternative verstiontags
       - v0.9.0
     termselcrit:

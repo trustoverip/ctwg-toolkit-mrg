@@ -28,7 +28,7 @@ public class MRGEntry extends Term {
     this.setStatus(t.getStatus());
     this.setCreated(t.getCreated());
     this.setUpdated(t.getUpdated());
-    this.setVsnTag(t.getVsnTag());
+    this.setVsntag(t.getVsntag());
     this.setCommit(t.getCommit());
     this.setContributors(t.getContributors());
     this.setLocator(t.getFilename());
