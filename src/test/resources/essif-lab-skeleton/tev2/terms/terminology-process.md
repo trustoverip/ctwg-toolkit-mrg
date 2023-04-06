@@ -9,7 +9,7 @@ id: terminology-process
 scope: tev2
 termType: concept
 termid: terminology-process
-formPhrases: terminology-process, terminology-processes
+formphrases: terminology-process, terminology-processes
 grouptags:
 status: proposed
 created: 2022-06-06

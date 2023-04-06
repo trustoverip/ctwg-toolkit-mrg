@@ -9,7 +9,7 @@ glossaryText: "a word or phrase (i.e.: text) that is used to represent
 specific [knowledge artifacts](@)."
 synonyms:
 grouptags:
-formPhrases: term{ss}, word{ss}, phrase{ss}
+formphrases: term{ss}, word{ss}, phrase{ss}
 
 # Curation status
 

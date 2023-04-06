@@ -9,7 +9,7 @@ id: versiontag
 scope: tev2
 termType: concept
 termid: versiontag
-formPhrases: versiontag{ss}, version-tag{ss}
+formphrases: versiontag{ss}, version-tag{ss}
 grouptags:
 status: proposed
 created: 2022-06-06

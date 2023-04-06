@@ -27,7 +27,7 @@ class MRGEntryTest {
   private String expectedGlossaryText;
   private String expectedTermType;
   private String expectedTerm;
-  private String expectedFormPhrases;
+  private String expectedFormphrases;
   private String expectedGrouptags;
   private String expectedStatus;
   private String expectedCreated;
@@ -68,7 +68,7 @@ class MRGEntryTest {
     expectedScope = "tev2";
     expectedTermType = "concept";
     expectedTerm = "term";
-    expectedFormPhrases = "term{ss}, word{ss}, phrase{ss}";
+    expectedFormphrases = "term{ss}, word{ss}, phrase{ss}";
     expectedGrouptags = "";
     expectedStatus = "proposed";
     expectedGlossaryText = "foo bar";
@@ -86,7 +86,7 @@ class MRGEntryTest {
     softly.assertThat(t.getScope()).as("Check scope").isEqualTo(expectedScope);
     softly.assertThat(t.getTermType()).as("Check termType").isEqualTo(expectedTermType);
     softly.assertThat(t.getTerm()).as("Check term").isEqualTo(expectedTerm);
-    softly.assertThat(t.getFormPhrases()).as("Check formPhrases").isEqualTo(expectedFormPhrases);
+    softly.assertThat(t.getFormphrases()).as("Check formphrases").isEqualTo(expectedFormphrases);
     softly.assertThat(t.getGrouptags()).as("Check grouptags").isNull();
     softly.assertThat(t.getCommit()).as("Check commit").isNull();
     softly.assertThat(t.getStatus()).as("Check status").isEqualTo(expectedStatus);

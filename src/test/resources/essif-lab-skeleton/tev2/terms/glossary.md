@@ -9,7 +9,7 @@ id: glossary
 scope: tev2
 termType: concept
 termid: glossary
-formPhrases: glossar{yies}
+formphrases: glossar{yies}
 grouptags:
 status: proposed
 created: 2022-06-06

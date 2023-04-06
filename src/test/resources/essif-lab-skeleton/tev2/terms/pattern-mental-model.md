@@ -9,7 +9,7 @@ id: pattern-mental-model
 scope: tev2
 termType: pattern
 termid: mental-model
-formPhrases: mental-model
+formphrases: mental-model
 grouptags:
 status: proposed
 created: 2022-06-06

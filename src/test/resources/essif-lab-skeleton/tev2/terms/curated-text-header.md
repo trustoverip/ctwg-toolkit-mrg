@@ -9,7 +9,7 @@ id: curated-text-header
 scope: tev2
 termType: concept
 termid: curated-text-header
-formPhrases: curated-text-header{ss}, ctext-header{ss}, header{ss}
+formphrases: curated-text-header{ss}, ctext-header{ss}, header{ss}
 grouptags: ctext
 status: proposed
 created: 2022-06-02
@@ -104,7 +104,7 @@ id: curated-text-header
 scope: tev2
 termType: concept
 termid: curated-text-header
-formPhrases: curated-text-header{ss}, ctext-header{ss}, header{ss}
+formphrases: curated-text-header{ss}, ctext-header{ss}, header{ss}
 grouptags: ctext
 status: proposed
 created: 2022-06-02

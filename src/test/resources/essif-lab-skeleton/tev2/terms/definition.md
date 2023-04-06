@@ -9,7 +9,7 @@ id: definition
 scope: tev2
 termType: concept
 termid: definition
-formPhrases: definition{ss}
+formphrases: definition{ss}
 grouptags:
 status: proposed
 created: 2022-06-06

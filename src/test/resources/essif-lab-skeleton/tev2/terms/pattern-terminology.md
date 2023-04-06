@@ -9,7 +9,7 @@ id: pattern-terminology
 scope: tev2
 termType: pattern
 termid: terminology
-formPhrases: terminology
+formphrases: terminology
 grouptags:
 status: proposed
 created: 2022-06-06

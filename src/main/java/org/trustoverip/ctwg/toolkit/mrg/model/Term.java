@@ -21,7 +21,7 @@ public class Term implements Comparable<Term> {
   private String locator;
   private String isa;
   private String termType;
-  private String formPhrases;
+  private String formphrases;
   private String status;
   private String synonyms;
   private String grouptags;
