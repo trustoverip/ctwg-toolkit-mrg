@@ -24,14 +24,12 @@ term: vocabulary # Text that is the name of the concept in (human readable) text
 fullterm:
 shorterm:
 synonyms:
-glossaryText: "the sum or stock of words employed by a language, group, individual, or work or in a
-field of knowledge."
+glossaryText: "the sum or stock of words employed by a language, group, individual, or work or in a field of knowledge."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: "Vocabulary"
-hoverText: "Vocabulary: the sum or stock of words employed by a language, group, individual, or work
-or in a field of knowledge."
+hoverText: "Vocabulary: the sum or stock of words employed by a language, group, individual, or work or in a field of knowledge."
 
 # sidebar_label:
 

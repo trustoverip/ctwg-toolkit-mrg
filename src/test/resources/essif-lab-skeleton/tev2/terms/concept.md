@@ -24,14 +24,12 @@ term: concept # Text that is the name of the concept in (human readable) texts.
 fullterm:
 shorterm:
 synonyms:
-glossaryText: "the ideas/thoughts behind a classification of [entities](@) (what makes [entities](@)
-in that class 'the same')."
+glossaryText: "the ideas/thoughts behind a classification of [entities](@) (what makes [entities](@) in that class 'the same')."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: "Concept"
-hoverText: "Concept: the ideas/thoughts behind a classification of Entities (what makes Entities in
-that class 'the same')."
+hoverText: "Concept: the ideas/thoughts behind a classification of Entities (what makes Entities in that class 'the same')."
 
 # sidebar_label:
 

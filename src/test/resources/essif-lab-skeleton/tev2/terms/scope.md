@@ -24,14 +24,12 @@ term: scope # Text that is the name of the concept in (human readable) texts.
 fullterm:
 shorterm:
 synonyms:
-glossaryText: "the extent of the area or subject matter (which we use, e.g., to define [patterns](@)
-, [concepts](@), [terms](@) and [glossaries](@) in, but it serves other purposes as well)."
+glossaryText: "the extent of the area or subject matter (which we use, e.g., to define [patterns](@), [concepts](@), [terms](@) and [glossaries](@) in, but it serves other purposes as well)."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: "Scope"
-hoverText: "Scope: the extent of the area or subject matter (which we use, e.g., to define Patterns,
-Concepts, Terms and Glossaries in, but it serves other purposes as well)."
+hoverText: "Scope: the extent of the area or subject matter (which we use, e.g., to define Patterns, Concepts, Terms and Glossaries in, but it serves other purposes as well)."
 
 # sidebar_label:
 

@@ -24,8 +24,7 @@ term: Curated Text Header
 fullterm: header (of a [curated text](@))
 shorterm: header
 synonyms:
-glossaryText: the (YAML) text at the beginning of a [curated text](@) (also called the '
-front-matter').
+glossaryText: the (YAML) text at the beginning of a [curated text](@) (also called the 'front-matter').
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 

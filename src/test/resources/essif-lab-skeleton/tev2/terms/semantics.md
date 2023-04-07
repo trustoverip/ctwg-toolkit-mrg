@@ -24,14 +24,12 @@ term: semantics # Text that is the name of the concept in (human readable) texts
 fullterm:
 shorterm:
 synonyms:
-glossaryText: "a mapping between the (tangible/textual) [terms](@) and (intangible)
-ideas/[concepts](@) - their meaning."
+glossaryText: "a mapping between the (tangible/textual) [terms](@) and (intangible) ideas/[concepts](@) - their meaning."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: "Semantics"
-hoverText: "Semantics: a mapping between the (tangible/textual) Terms and (intangible)
-ideas/Concepts - their meaning."
+hoverText: "Semantics: a mapping between the (tangible/textual) Terms and (intangible) ideas/Concepts - their meaning."
 
 # sidebar_label:
 

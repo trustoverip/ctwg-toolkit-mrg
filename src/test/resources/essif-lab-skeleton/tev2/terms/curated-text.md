@@ -24,14 +24,12 @@ term: Curated Text
 fullterm: curated text (in a [scope](@))
 shorterm: ctext
 synonyms:
-glossaryText: a text that describes a [terminological artifact](@) of a specific [scope](@) in a
-format that is defined by the [curators](@) of that [scope](@)
+glossaryText: a text that describes a [terminological artifact](@) of a specific [scope](@) in a format that is defined by the [curators](@) of that [scope](@)
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: Curated Text
-hoverText: a text that describes a Terminological Artifact a specific Scope in a format that is
-defined by the Curators of that Scope.
+hoverText: a text that describes a Terminological Artifact a specific Scope in a format that is defined by the Curators of that Scope.
 sidebar_label: Curated Texts (CTexts)
 hide_table_of_contents: true
 ---

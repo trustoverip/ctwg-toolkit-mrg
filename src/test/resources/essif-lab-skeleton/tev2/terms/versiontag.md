@@ -24,14 +24,12 @@ term: versiontag # Text that is the name of the concept in (human readable) text
 fullterm: Versiontag (of/within a Scope)
 shorterm:
 synonyms:
-glossaryText: "a [tag](@) that is used to [identify](@) a specific version of a [terminology](@)
-from within a specific [scope](@)."
+glossaryText: "a [tag](@) that is used to [identify](@) a specific version of a [terminology](@) from within a specific [scope](@)."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: "Versiontag"
-hoverText: "Versiontag: a Tag (alphanumeric string) that is used to identify a specific version of a
-Terminology from within a specific Scope."
+hoverText: "Versiontag: a Tag (alphanumeric string) that is used to identify a specific version of a Terminology from within a specific Scope."
 
 # sidebar_label:
 
