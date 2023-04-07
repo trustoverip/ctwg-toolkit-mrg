@@ -24,16 +24,12 @@ term: tag # Text that is the name of the concept in (human readable) texts.
 fullterm: Tag (of/within a Scope)
 shorterm:
 synonyms:
-glossaryText: "an alphanumeric string that is used to identify [scopes](@) (so called 'scopetags'),
-group [terms](@) (so called 'grouptags'), or identify a specific version of a [terminology](@) (so
-called 'versiontags') from within a specific [scope](@)."
+glossaryText: "an alphanumeric string that is used to identify [scopes](@) (so called 'scopetags'), group [terms](@) (so called 'grouptags'), or identify a specific version of a [terminology](@) (so called 'versiontags') from within a specific [scope](@)."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: "Tag"
-hoverText: "Tag: an alphanumeric string that is used to identify Scopes (so called 'scopetags'),
-group Terms (so called 'grouptags'), or identify a specific version of a Terminology (so called '
-versiontags') from within a specific Scope."
+hoverText: "Tag: an alphanumeric string that is used to identify Scopes (so called 'scopetags'), group Terms (so called 'grouptags'), or identify a specific version of a Terminology (so called 'versiontags') from within a specific Scope."
 
 # sidebar_label:
 

@@ -24,14 +24,12 @@ term: terminology process # Text that is the name of the concept in (human reada
 fullterm: "Terminology Process"
 shorterm:
 synonyms:
-glossaryText: "a method for recognizing misunderstandings as such, and creating or
-maintaining [definitions](@) that resolve them."
+glossaryText: "a method for recognizing misunderstandings as such, and creating or maintaining [definitions](@) that resolve them."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: "Terminology Process"
-hoverText: "Terminology Process: a method for recognizing misunderstandings as such, and creating or
-maintaining Definitions that resolve them."
+hoverText: "Terminology Process: a method for recognizing misunderstandings as such, and creating or maintaining Definitions that resolve them."
 
 # sidebar_label:
 

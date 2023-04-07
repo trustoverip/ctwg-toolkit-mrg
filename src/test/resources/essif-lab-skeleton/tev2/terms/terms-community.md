@@ -24,14 +24,12 @@ term: terms-community # Text that is the name of the concept in (human readable)
 fullterm: "Terms Community"
 shorterm:
 synonyms:
-glossaryText: "a [community](@) that maintains a [terminology](@) for the purpose of avoiding
-misunderstandings between its members as they collaborate."
+glossaryText: "a [community](@) that maintains a [terminology](@) for the purpose of avoiding misunderstandings between its members as they collaborate."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: "Terms Community"
-hoverText: "Terms Community: a Community that maintains a Terminology for the purpose of avoiding
-misunderstandings between its members as they collaborate."
+hoverText: "Terms Community: a Community that maintains a Terminology for the purpose of avoiding misunderstandings between its members as they collaborate."
 
 # sidebar_label:
 
