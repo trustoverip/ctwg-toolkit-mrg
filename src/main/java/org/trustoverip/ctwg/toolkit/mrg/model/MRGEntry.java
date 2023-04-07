@@ -17,12 +17,14 @@ public class MRGEntry extends Term {
   public MRGEntry() {}
 
   public MRGEntry(Term t) {
-    this.setTermType(t.getTermType());
+    this.setId(t.getId());
+    this.setScope(t.getScope());
+    this.setTermtype(t.getTermtype());
     this.setTerm(t.getTerm());
-    this.setScopetag(t.getScopetag());
-    this.setFormPhrases(t.getFormPhrases());
-    this.setGroupTags(t.getGroupTags());
+    this.setFormphrases(t.getFormphrases());
+    this.setGrouptags(t.getGrouptags());
     this.setGlossaryText(t.getGlossaryText());
+    this.setScopetag(t.getScopetag());
     this.setStatus(t.getStatus());
     this.setCreated(t.getCreated());
     this.setUpdated(t.getUpdated());

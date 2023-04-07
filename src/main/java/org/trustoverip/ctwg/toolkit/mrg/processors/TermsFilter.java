@@ -57,7 +57,7 @@ public class TermsFilter implements Predicate<Term> {
         yield normalisedValues.contains(normalisedTermid);
       }
       case tags -> {
-        List<String> normalisedGrouptags = splitAndNormalise(term.getGroupTags());
+        List<String> normalisedGrouptags = splitAndNormalise(term.getGrouptags());
         if (normalisedGrouptags.isEmpty()) { yield false;}
         else {yield normalisedGrouptags.stream().anyMatch(normalisedValues::contains);}
       }
