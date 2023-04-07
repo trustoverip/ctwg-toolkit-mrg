@@ -14,7 +14,7 @@ grouptags:
 status: proposed
 created: 2022-06-06
 updated: 2022-06-06
-vsnTtag: v0.1
+vsntag: v0.1
 contributors: RieksJ
 
 # TEv2: type-specific front-matter for type `concept`
