@@ -25,8 +25,7 @@ tag:  # Tag by which this pattern can be identified within the scope in which it
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: "Terminology Pattern"
-hoverText: "The eSSIF-Lab Terminology Pattern describes the relations between Terminology Terms such
-as 'Concept', 'Term', 'Pattern', 'Mental Model', 'Glossary' etc."
+hoverText: "The eSSIF-Lab Terminology Pattern describes the relations between Terminology Terms such as 'Concept', 'Term', 'Pattern', 'Mental Model', 'Glossary' etc."
 
 # sidebar_label:
 

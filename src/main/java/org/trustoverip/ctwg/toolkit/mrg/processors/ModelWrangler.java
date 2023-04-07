@@ -118,6 +118,7 @@ class ModelWrangler {
     String localScope = saf.getScope().getScopetag();
     GeneratorContext localContext =
         createSkeletonContext(scopedir, saf.getScope().getCuratedir(), versionTag);
+    localContext.setScopetag(localScope);
     contextMap.put(localScope, localContext);
     // get local version we are building MRG for
     Optional<Version> optionalVersion =
@@ -197,7 +198,7 @@ class ModelWrangler {
     generatorContext.setAddFilters(addFiltersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
     generatorContext.setRemoveFilters(
         removeFiltersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
-
+    generatorContext.setScopetag(scopetag);
     return generatorContext;
   }
 
@@ -264,6 +265,12 @@ class ModelWrangler {
               .map(this::cleanTermFile)
               .map(this::toYaml)
               .filter(Objects::nonNull)
+              .map(
+                  t -> {
+                    t.setScopetag(currentContext.getScopetag());
+                    t.setVsntag(currentContext.getVersionTag());
+                    return t;
+                  })
               .filter(consolidatedAddFilter)
               .filter(consolidateRemoveFilter)
               .collect(Collectors.toList());
@@ -297,16 +304,29 @@ class ModelWrangler {
     StringBuilder cleanYaml = new StringBuilder();
     String[] parts = dirtyContent.content().split("---");
     String partWithYaml = parts[1];
+    String[] restOfFile = parts[2].split("\n");
     String[] lines = partWithYaml.split("\n");
+    List<String> headings = new ArrayList<>();
     for (String line : lines) {
       if (isClean(line)) {
         log.debug(
             "Found something of interest in file: {}\nline: {}", dirtyContent.filename(), line);
         cleanYaml.append(line);
         cleanYaml.append("\n");
+      } else {
+        if (line.startsWith(MARKDOWN_HEADING)) {
+          headings.add(line);
+        }
       }
     }
-    return new FileContent(dirtyContent.filename(), cleanYaml.toString(), dirtyContent.headings());
+    // extract headings from rest of file
+    for (String line : restOfFile) {
+      if (line.startsWith(MARKDOWN_HEADING)) {
+        headings.add(line);
+      }
+    }
+    return new FileContent(
+        dirtyContent.filename(), cleanYaml.toString(), dirtyContent.htmlLink(), headings);
   }
 
   private Term toYaml(FileContent fileContent) {
@@ -315,6 +335,7 @@ class ModelWrangler {
       term = yamlWrangler.parseTerm(fileContent.content());
       term.setFilename(fileContent.filename());
       term.setHeadings(fileContent.headings());
+      term.setNavurl(fileContent.htmlLink());
       log.info("... Creating entry from term with id = {} ...", term.getTerm());
     } catch (Exception e) {
       throw new MRGGenerationException(

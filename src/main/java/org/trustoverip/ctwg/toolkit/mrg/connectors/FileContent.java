@@ -5,6 +5,6 @@ import java.util.List;
 /**
  * @author sih
  */
-public record FileContent(String filename, String content, List<String> headings) {
+public record FileContent(String filename, String content, String htmlLink, List<String> headings) {
 
 }

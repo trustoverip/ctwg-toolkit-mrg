@@ -3,13 +3,13 @@
 # TEv2 Curated Text Header
 
 term: term
-termType: concept
+termtype: concept
 isa: identifier
 glossaryText: "a word or phrase (i.e.: text) that is used to represent
 specific [knowledge artifacts](@)."
 synonyms:
-groupTags:
-formPhrases: term{ss}, word{ss}, phrase{ss}
+grouptags:
+formphrases: term{ss}, word{ss}, phrase{ss}
 
 # Curation status
 
