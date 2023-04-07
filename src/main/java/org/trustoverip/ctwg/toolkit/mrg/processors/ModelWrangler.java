@@ -95,9 +95,11 @@ class ModelWrangler {
     String safFilepath = String.join("/", getRootPath(scopedir), saf);
     try {
       return connector.getContent(ownerRepo, safFilepath);
-    } catch (Throwable t) {
+    } catch (Exception e) {
       throw new MRGGenerationException(
-          String.format(MRGGenerationException.NOT_FOUND, String.join("/", scopedir, safFilename)));
+        String.format(MRGGenerationException.NOT_FOUND, String.join("/", scopedir, safFilename)),
+        e
+      );
     }
   }
 
@@ -219,7 +221,7 @@ class ModelWrangler {
       GeneratorContext context, String glossaryDir, List<String> alternativeVersionTags) {
     String mrgPath = constructMrgFilepath(glossaryDir, context.getVersionTag());
     String mrgAsYaml = connector.getContent(context.getOwnerRepo(), mrgPath);
-    int indexToAlts = 0;
+    int indexToAlts = 0; // TODO is this needed?
     // if no match and alternative version tags exist then try them
     if (null == mrgAsYaml && alternativeVersionTags != null) {
       for (String nextAlternative : alternativeVersionTags) {
@@ -233,7 +235,7 @@ class ModelWrangler {
   String writeMrgToFile(MRGModel mrg, String glossaryDir, String versionTag)
       throws MRGGenerationException {
     String pathStr = constructMrgFilepath(GLOSSARY_VIRTUAL_PATH, versionTag);
-    log.debug(String.format("MRG filename to be generated is: %s", pathStr));
+    log.debug(String.format("MRG filename to be generated is: %s", pathStr)); // TODO The expression inside debug will be computed even if the log level is not high enough for the message to be logged. This will slow the application down in vain. Consider checking the log level before evaluating the expression.
     Path glossaryPath = Paths.get(glossaryDir);
     try {
       Files.createDirectories(glossaryPath);
@@ -281,6 +283,9 @@ class ModelWrangler {
       return TermsFilter.all();
     } else {
       return addFilters.stream().reduce(Predicate::or).get();
+      // TODO check if this is a better return statement.
+      // Optional<Predicate<Term>> optionalPredicate = addFilters.stream().reduce(Predicate::or);
+      // return optionalPredicate.isPresent() ? optionalPredicate.get() : TermsFilter.all();
     }
   }
 
@@ -289,6 +294,9 @@ class ModelWrangler {
       return TermsFilter.all();
     } else {
       return removeFilters.stream().reduce(Predicate::and).get().negate();
+      // TODO check if this is a better statement.
+      // Optional<Predicate<Term>> optionalPredicate = removeFilters.stream().reduce(Predicate::and);
+      // return optionalPredicate.isPresent() ? optionalPredicate.get().negate() : TermsFilter.all();
     }
   }
 
@@ -329,8 +337,11 @@ class ModelWrangler {
       term.setHeadings(fileContent.headings());
       term.setNavurl(fileContent.htmlLink());
       log.info("... Creating entry from term with id = {} ...", term.getTerm());
-    } catch (Throwable t) {
-      log.error("Couldn't read or parse the following term file: {}", fileContent.filename());
+    } catch (Exception e) {
+      throw new MRGGenerationException(
+        String.format("Couldn't read or parse the following term file: ", fileContent.filename()),
+        e
+      );
     }
     return term;
   }
