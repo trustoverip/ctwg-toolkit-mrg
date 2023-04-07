@@ -9,13 +9,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-import org.springframework.stereotype.Service;
 import org.trustoverip.ctwg.toolkit.mrg.processors.MRGGenerationException;
 
 /**
  * @author sih
  */
-@Service
+// @Service
+@Deprecated
 public class LocalFSConnector implements MRGConnector {
 
   @Override
@@ -53,7 +53,10 @@ public class LocalFSConnector implements MRGConnector {
               .map(
                   path ->
                       new FileContent(
-                          path.getFileName().toString(), this.getContent(path), new ArrayList<>()))
+                          path.getFileName().toString(),
+                          this.getContent(path),
+                          this.getContent(path),
+                          new ArrayList<>()))
               .toList();
     } catch (Exception e) {
       throw new MRGGenerationException(

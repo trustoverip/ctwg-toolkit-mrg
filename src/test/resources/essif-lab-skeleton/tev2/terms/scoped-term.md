@@ -23,14 +23,12 @@ term: scoped term # Text that is the name of the concept in (human readable) tex
 fullterm: "Term (Scoped)"
 shorterm:
 synonyms:
-glossaryText: "a [term](@), the meaning of which is determined by the [definition](@) to which it
-refers in a specific [scope](@)/context."
+glossaryText: "a [term](@), the meaning of which is determined by the [definition](@) to which it refers in a specific [scope](@)/context."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: "Term (Scoped)"
-hoverText: "Scoped Term: a Term, the meaning of which is determined by the Definition to which it
-refers in a specific Scope/context."
+hoverText: "Scoped Term: a Term, the meaning of which is determined by the Definition to which it refers in a specific Scope/context."
 
 # sidebar_label:
 

@@ -24,14 +24,12 @@ term: dictionary # Text that is the name of the concept in (human readable) text
 fullterm:
 shorterm:
 synonyms:
-glossaryText: "an alphabetically sorted list of [terms](@) with various meanings that they may have
-in different contexts."
+glossaryText: "an alphabetically sorted list of [terms](@) with various meanings that they may have in different contexts."
 
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: "Dictionary"
-hoverText: "Dictionary: an alphabetically sorted list of Terms with various meanings that they may
-have in different contexts."
+hoverText: "Dictionary: an alphabetically sorted list of Terms with various meanings that they may have in different contexts."
 
 # sidebar_label:
 

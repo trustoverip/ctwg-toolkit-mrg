@@ -22,11 +22,13 @@ class MRGEntryTest {
   private static ObjectMapper yamlMapper;
   private Term termTerm;
   // common attributes
+  private String expectedId;
+  private String expectedScope;
   private String expectedGlossaryText;
-  private String expectedTermType;
+  private String expectedTermtype;
   private String expectedTerm;
-  private String expectedFormPhrases;
-  private String expectedGroupTags;
+  private String expectedFormphrases;
+  private String expectedGrouptags;
   private String expectedStatus;
   private String expectedCreated;
   private String expectedUpdated;
@@ -62,10 +64,12 @@ class MRGEntryTest {
   }
 
   private void setUpExpectations() {
-    expectedTermType = "concept";
+    expectedId = "curated-text";
+    expectedScope = "tev2";
+    expectedTermtype = "concept";
     expectedTerm = "term";
-    expectedFormPhrases = "term{ss}, word{ss}, phrase{ss}";
-    expectedGroupTags = "";
+    expectedFormphrases = "term{ss}, word{ss}, phrase{ss}";
+    expectedGrouptags = "";
     expectedStatus = "proposed";
     expectedGlossaryText = "foo bar";
     expectedCreated = "2022-06-06";
@@ -78,10 +82,12 @@ class MRGEntryTest {
 
   void assertCommonTermAttributes(Term t) {
     SoftAssertions softly = new SoftAssertions();
-    softly.assertThat(t.getTermType()).as("Check termtype").isEqualTo(expectedTermType);
+    softly.assertThat(t.getId()).as("Check id").isEqualTo(expectedId);
+    softly.assertThat(t.getScope()).as("Check scope").isEqualTo(expectedScope);
+    softly.assertThat(t.getTermtype()).as("Check termtype").isEqualTo(expectedTermtype);
     softly.assertThat(t.getTerm()).as("Check term").isEqualTo(expectedTerm);
-    softly.assertThat(t.getFormPhrases()).as("Check formphrases").isEqualTo(expectedFormPhrases);
-    softly.assertThat(t.getGroupTags()).as("Check grouptags").isNull();
+    softly.assertThat(t.getFormphrases()).as("Check formphrases").isEqualTo(expectedFormphrases);
+    softly.assertThat(t.getGrouptags()).as("Check grouptags").isNull();
     softly.assertThat(t.getCommit()).as("Check commit").isNull();
     softly.assertThat(t.getStatus()).as("Check status").isEqualTo(expectedStatus);
     softly.assertThat(t.getCreated()).as("Check created").isEqualTo(expectedCreated);

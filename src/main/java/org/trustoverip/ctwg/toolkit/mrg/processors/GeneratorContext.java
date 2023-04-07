@@ -19,6 +19,7 @@ public final class GeneratorContext {
 
   private final String curatedDir;
 
+  @Setter private String scopetag;
   @Setter private String versionTag;
 
   @Setter private List<Predicate<Term>> addFilters;

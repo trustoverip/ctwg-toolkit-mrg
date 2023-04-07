@@ -117,6 +117,7 @@ class ModelWrangler {
     // create context for local scope
     String localScope = saf.getScope().getScopetag();
     GeneratorContext localContext = createSkeletonContext(scopedir, saf.getScope().getCuratedir(), versionTag);
+    localContext.setScopetag(localScope);
     contextMap.put(localScope, localContext);
     // get local version we are building MRG for
     Optional<Version> optionalVersion = saf.getVersions().stream().filter(v -> v.getVsntag().equals(versionTag)).findFirst();
@@ -190,7 +191,7 @@ class ModelWrangler {
     generatorContext.setVersionTag(versionsByScopetag.getOrDefault(scopetag, StringUtils.EMPTY));
     generatorContext.setAddFilters(addFiltersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
     generatorContext.setRemoveFilters(removeFiltersByScopetag.getOrDefault(scopetag, new ArrayList<>()));
-
+    generatorContext.setScopetag(scopetag);
     return generatorContext;
   }
 
@@ -250,13 +251,20 @@ class ModelWrangler {
     String curatedPath = String.join("/", currentContext.getSafDirectory(), currentContext.getCuratedDir());
     List<FileContent> directoryContent = connector.getDirectoryContent(currentContext.getOwnerRepo(), curatedPath);
     if (!directoryContent.isEmpty()) {
-      terms = directoryContent.stream()
-        .map(this::cleanTermFile)
-        .map(this::toYaml)
-        .filter(Objects::nonNull)
-        .filter(consolidatedAddFilter)
-        .filter(consolidateRemoveFilter)
-        .collect(Collectors.toList());
+      terms =
+          directoryContent.stream()
+              .map(this::cleanTermFile)
+              .map(this::toYaml)
+              .filter(Objects::nonNull)
+              .map(
+                  t -> {
+                    t.setScopetag(currentContext.getScopetag());
+                    t.setVsntag(currentContext.getVersionTag());
+                    return t;
+                  })
+              .filter(consolidatedAddFilter)
+              .filter(consolidateRemoveFilter)
+              .collect(Collectors.toList());
     }
     return terms;
   }
@@ -266,6 +274,9 @@ class ModelWrangler {
       return TermsFilter.all();
     } else {
       return addFilters.stream().reduce(Predicate::or).get();
+      // TODO check if this is a better return statement.
+      // Optional<Predicate<Term>> optionalPredicate = addFilters.stream().reduce(Predicate::or);
+      // return optionalPredicate.isPresent() ? optionalPredicate.get() : TermsFilter.all();
     }
   }
 
@@ -274,6 +285,9 @@ class ModelWrangler {
       return TermsFilter.all();
     } else {
       return removeFilters.stream().reduce(Predicate::and).get().negate();
+      // TODO check if this is a better statement.
+      // Optional<Predicate<Term>> optionalPredicate = removeFilters.stream().reduce(Predicate::and);
+      // return optionalPredicate.isPresent() ? optionalPredicate.get().negate() : TermsFilter.all();
     }
   }
 
@@ -281,15 +295,28 @@ class ModelWrangler {
     StringBuilder cleanYaml = new StringBuilder();
     String[] parts = dirtyContent.content().split("---");
     String partWithYaml = parts[1];
+    String[] restOfFile = parts[2].split("\n");
     String[] lines = partWithYaml.split("\n");
+    List<String> headings = new ArrayList<>();
     for (String line : lines) {
       if (isClean(line)) {
         log.debug("Found something of interest in file: {}\nline: {}", dirtyContent.filename(), line);
         cleanYaml.append(line);
         cleanYaml.append("\n");
+      } else {
+        if (line.startsWith(MARKDOWN_HEADING)) {
+          headings.add(line);
+        }
       }
     }
-    return new FileContent(dirtyContent.filename(), cleanYaml.toString(), dirtyContent.headings());
+    // extract headings from rest of file
+    for (String line : restOfFile) {
+      if (line.startsWith(MARKDOWN_HEADING)) {
+        headings.add(line);
+      }
+    }
+    return new FileContent(
+        dirtyContent.filename(), cleanYaml.toString(), dirtyContent.htmlLink(), headings);
   }
 
   private Term toYaml(FileContent fileContent) {
@@ -298,9 +325,13 @@ class ModelWrangler {
       term = yamlWrangler.parseTerm(fileContent.content());
       term.setFilename(fileContent.filename());
       term.setHeadings(fileContent.headings());
+      term.setNavurl(fileContent.htmlLink());
       log.info("... Creating entry from term with id = {} ...", term.getTerm());
     } catch (Exception e) {
-      log.error("Couldn't read or parse the following term file: {}", fileContent.filename(), e);
+      throw new MRGGenerationException(
+        String.format("Couldn't read or parse the following term file: ", fileContent.filename()),
+        e
+      );
     }
     return term;
   }

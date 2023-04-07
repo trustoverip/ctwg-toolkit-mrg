@@ -30,17 +30,17 @@ class TermsFilterTest {
   void setUp() {
     foo = new Term();
     foo.setTerm("foo");
-    foo.setGroupTags("foo");
+    foo.setGrouptags("foo");
     foo.setGlossaryText("foo");
     bar = new Term();
     bar.setTerm("bar");
-    bar.setGroupTags("bar");
+    bar.setGrouptags("bar");
     foobar = new Term();
     foobar.setTerm("foobar");
-    foobar.setGroupTags("foo, bar");
+    foobar.setGrouptags("foo, bar");
     noo = new Term();
     noo.setTerm("noo");
-    noo.setGroupTags(null);
+    noo.setGrouptags(null);
     mrgFoo = new MRGEntry(foo);
     mrgBar = new MRGEntry(bar);
     mrgFoobar = new MRGEntry(foobar);

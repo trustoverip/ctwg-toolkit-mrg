@@ -25,9 +25,7 @@ tag:  # Tag by which this pattern can be identified within the scope in which it
 # Docusaurus \(see https://docusaurus\.io/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter\):
 
 title: "Mental Models"
-hoverText: "The Mental Models pattern captures the foundational Concepts and relations that we need
-for creating, maintaining and using  (decentralized) Vocabularies (Terminologies) that groups of
-people can use for the specific purposes they pursue."
+hoverText: "The Mental Models pattern captures the foundational Concepts and relations that we need for creating, maintaining and using  (decentralized) Vocabularies (Terminologies) that groups of people can use for the specific purposes they pursue."
 
 # sidebar_label:
 
