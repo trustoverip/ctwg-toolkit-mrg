@@ -37,9 +37,11 @@ hoverText: "Scope: the extent of the area or subject matter (which we use, e.g.,
 ---
 
 :::caution
-The entire section on Terminology Engine v 2 (TEv2) is still under construction.\
+The entire section on Terminology Engine v 2 (TEv2) is still under construction.
+
 As TEv2 is not (yet) available, the texts that specify the tool are still 'raw', i.e. not yet
-processed.\
+processed.
+
 [readers](@) will need to see through some (currently unprocessed) notational
 conventions.
 :::
