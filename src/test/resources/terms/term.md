@@ -27,13 +27,16 @@ originalLicense: "[CC BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/?
 # Term
 
 :::caution
-The entire section on Terminology Engine v 2 (TEv2) is still under construction.<br/>
+The entire section on Terminology Engine v 2 (TEv2) is still under construction.
+
 As TEv2 is not (yet) available, the texts that specify the tool are still 'raw', i.e. not yet
-processed.<br/>[readers](@) will need to see through some (currently unprocessed) notational
+processed.
+
+[readers](@) will need to see through some (currently unprocessed) notational
 conventions.
 :::
 
-### Summary
+## Summary
 
 A **Term** is a word or phrase (i.e.: text) that is used to represent
 specific [knowledge artifacts](@), e.g. [concepts](@), [relations](@) or [mental models](@).
@@ -56,7 +59,7 @@ fits in with related concepts.
 The [term-ref](@) [syntax specification](/docs/tev2/spec-syntax/term-ref-syntax) specifies the
 syntax that [authors](@) should use as they want to use a specific [term](@) in their text.
 
-### Purpose
+## Purpose
 
 Understanding words or phrases uttered by others requires that we are able to 'translate' them into
 terms that we habitually use, i.e. with the meaning of which we are familiar. While this is mostly
@@ -79,15 +82,16 @@ There is an important [distinction](https://simple.wikipedia.org/wiki/Concept)
 between [concepts](@) (and other [knowledge artifacts](@)) and the (multitude of) terms (names,
 labels) that we need to be able to talk and reason (argue) about them. Please consider that
 
-* different [terms](@) are used in different contexts for representing a single [concept](@);
-* in different contexts, a single [term](@) may represent different [concepts](@);
-* [to resolve terminological disputes](http://resolver.tudelft.nl/uuid:964a90da-da81-4d38-9f45-84f3f5fa96b3)
+- different [terms](@) are used in different contexts for representing a single [concept](@);
+- in different contexts, a single [term](@) may represent different [concepts](@);
+- [to resolve terminological disputes](http://resolver.tudelft.nl/uuid:964a90da-da81-4d38-9f45-84f3f5fa96b3)
   , which usually are about the 'correct' meaning of a [term](@), try to establish the criteria that
   the different participants use for the concept behind the term. That helps participants understand
   each others (different) positions, and provides a better basis for resolving the conflict.
 
 ---
-### Footnotes
+
+## Footnotes
 
 [^1]: WikiPedia has a concise [explanation of concepts](https://en.wikipedia.org/wiki/Concept). We
 use the term 'concept' as

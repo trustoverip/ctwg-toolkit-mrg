@@ -37,9 +37,12 @@ hoverText: "Terminology Process: a method for recognizing misunderstandings as s
 ---
 
 :::caution
-The entire section on Terminology Engine v 2 (TEv2) is still under construction.<br/>
+The entire section on Terminology Engine v 2 (TEv2) is still under construction.
+
 As TEv2 is not (yet) available, the texts that specify the tool are still 'raw', i.e. not yet
-processed.<br/>[readers](@) will need to see through some (currently unprocessed) notational
+processed.
+
+[readers](@) will need to see through some (currently unprocessed) notational
 conventions.
 :::
 
@@ -231,7 +234,7 @@ not stakeholders as we see them.
 that in the IAU, about (dwarf) planets. While it is a good example of how definitions should be
 used, it also shows that it is not the holy grail. See:
 
-- see: https://en.wikipedia.org/wiki/Dwarf_planet for an account of what happened and for the
+- see: <https://en.wikipedia.org/wiki/Dwarf_planet> for an account of what happened and for the
   resolution;
 - IAU (August 24, 2006)
   . "[Definition of a Planet in the Solar System: Resolutions 5 and 6](https://www.iau.org/static/resolutions/Resolution_GA26-5-6.pdf)"
@@ -240,7 +243,7 @@ used, it also shows that it is not the holy grail. See:
 
 [^NASA]: NASA has designed so-called 'space cups' for drinking liquids such a s coffee in the
 International Space Station ISS.
-See https://www.nasa.gov/mission_pages/station/research/experiments/2029.html.
+See <https://www.nasa.gov/mission_pages/station/research/experiments/2029.html>.
 
 [^test]: If you test a criterion by simply asking stakeholders to assert that the criteria is
 relevant, you run the [risk](@) that they have their own interpretation of the term 'relevant'. In
