@@ -10,6 +10,8 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
 import lombok.AccessLevel;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -123,7 +125,7 @@ public class MRGlossaryGenerator {
   */
   private List<MRGEntry> currentTerms(GeneratorContext generatorContext, Version currentVersion) {
     List<Term> currentTerms = wrangler.fetchTerms(generatorContext, generatorContext.getAddFilters(), generatorContext.getRemoveFilters());
-    return currentTerms.stream().map(MRGEntry::new).toList();
+    return currentTerms.stream().map(MRGEntry::new).collect(Collectors.toList());
   }
 
   /*
@@ -157,7 +159,7 @@ public class MRGlossaryGenerator {
           List<MRGEntry> mrgEntries = remoteMrg.entries();
           List<Predicate<Term>> filters = remoteContext.getAddFilters();
           Predicate<Term> consolidatedFilter = filters.stream().reduce(Predicate::or).orElse(TermsFilter.all());
-          remoteEntries = mrgEntries.stream().filter(consolidatedFilter).toList();
+          remoteEntries = mrgEntries.stream().filter(consolidatedFilter).collect(Collectors.toList());
           for (MRGEntry e: remoteEntries) {
             e.setScopetag(scopetag);
             log.info("... Copying remote term {} ...", e.getTerm());
