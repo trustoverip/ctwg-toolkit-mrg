@@ -52,7 +52,7 @@ public class MRGApi {
     } else if (e instanceof HttpMessageNotReadableException) {
       return ResponseEntity.badRequest().build();
     } else {
-      errorMessage = "Unexpected error generating MRG.";
+      errorMessage = String.format("Unexpected error generating MRG. Error was %s", e.getMessage());
     }
     return ResponseEntity.internalServerError().body(errorMessage);
   }
