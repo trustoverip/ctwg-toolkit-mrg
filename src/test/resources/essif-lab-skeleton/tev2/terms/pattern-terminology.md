@@ -7,7 +7,7 @@ id: pattern-terminology
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termtype: pattern
+termType: pattern
 termid: terminology
 formphrases: terminology
 grouptags:

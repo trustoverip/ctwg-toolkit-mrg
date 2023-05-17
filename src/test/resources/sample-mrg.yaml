@@ -1,6 +1,6 @@
 id: term
 scope: tev2
-termtype: concept
+termType: concept
 termid: term
 formphrases: term{ss}, word{ss}, phrase{ss}
 grouptags:

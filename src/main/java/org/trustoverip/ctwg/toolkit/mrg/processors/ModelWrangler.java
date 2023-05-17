@@ -338,6 +338,7 @@ class ModelWrangler {
       term.setNavurl(fileContent.htmlLink());
       log.info("... Creating entry from term with id = {} ...", term.getTerm());
     } catch (Exception e) {
+      log.info("exception:", e);
       throw new MRGGenerationException(
         String.format("Couldn't read or parse the following term file: ", fileContent.filename()),
         e

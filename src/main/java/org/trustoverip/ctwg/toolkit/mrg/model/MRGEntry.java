@@ -19,9 +19,9 @@ public class MRGEntry extends Term {
   public MRGEntry(Term t) {
     this.setId(t.getId());
     this.setScope(t.getScope());
-    this.setTermtype(t.getTermtype());
+    this.setTermType(t.getTermType());
     this.setTerm(t.getTerm());
-    this.setFormphrases(t.getFormphrases());
+    this.setFormPhrases(t.getFormPhrases());
     this.setGrouptags(t.getGrouptags());
     this.setGlossaryText(t.getGlossaryText());
     this.setScopetag(t.getScopetag());

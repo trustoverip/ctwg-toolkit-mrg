@@ -2,7 +2,7 @@ id: curated-text
 scope: tev2
 term: term
 isa: knowledge-artifact
-termtype: concept
+termType: concept
 glossaryText: "a [knowledge artifact](@) that captures the ideas/thoughts behind a classification of [entities](@) (what makes [entities](@) in that class 'the same')."
 formphrases: term{ss}, word{ss}, phrase{ss}
 grouptags:
