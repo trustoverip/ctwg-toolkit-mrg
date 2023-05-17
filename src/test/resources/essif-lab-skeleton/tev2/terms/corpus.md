@@ -9,7 +9,7 @@ id: corpus
 scope: tev2
 termType: concept
 termid: corpus
-formphrases: corpus, corpus-of-terminology
+formPhrases: corpus, corpus-of-terminology
 grouptags:
 status: proposed
 created: 2022-06-06

@@ -9,7 +9,7 @@ id: terminology
 scope: tev2
 termType: concept
 termid: terminology
-formphrases: terminolog{yies}
+formPhrases: terminolog{yies}
 grouptags:
 status: proposed
 created: 2022-06-06

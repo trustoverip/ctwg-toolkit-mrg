@@ -9,7 +9,7 @@ id: terms-community
 scope: tev2
 termType: concept
 termid: terms-community
-formphrases: terms-communit{yies}
+formPhrases: terms-communit{yies}
 grouptags:
 status: proposed
 created: 2022-06-06

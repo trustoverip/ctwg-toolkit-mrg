@@ -9,7 +9,7 @@ id: curated-text-body
 scope: tev2
 termType: concept
 termid: curated-text-body
-formphrases: curated-text-bod{yies}, ctext-bod{yies}, bod{yies}
+formPhrases: curated-text-bod{yies}, ctext-bod{yies}, bod{yies}
 grouptags: ctext
 status: proposed
 created: 2022-06-02

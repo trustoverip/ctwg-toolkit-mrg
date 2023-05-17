@@ -9,7 +9,7 @@ id: vocabulary
 scope: tev2
 termType: concept
 termid: vocabulary
-formphrases: vocabular{yies}
+formPhrases: vocabular{yies}
 grouptags:
 status: proposed
 created: 2022-06-06

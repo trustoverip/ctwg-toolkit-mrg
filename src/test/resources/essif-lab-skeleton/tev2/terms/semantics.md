@@ -9,7 +9,7 @@ id: semantics
 scope: tev2
 termType: concept
 termid: semantics
-formphrases: semantics
+formPhrases: semantics
 grouptags:
 status: proposed
 created: 2022-06-06

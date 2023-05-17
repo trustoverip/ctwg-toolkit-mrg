@@ -9,7 +9,7 @@ id: mental-model
 scope: tev2
 termType: concept
 termid: mental-model
-formphrases: mental-model{ss}, pattern{ss}, conceptual-model{ss}
+formPhrases: mental-model{ss}, pattern{ss}, conceptual-model{ss}
 grouptags:
 status: proposed
 created: 2022-06-06

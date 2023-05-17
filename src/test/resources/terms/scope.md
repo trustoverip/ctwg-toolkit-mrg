@@ -10,7 +10,7 @@ a [community](@) (which we call the [owner](@) of the [scope](@)) needs to expre
 validate its [knowledge](@) as relevant to achieving a specific subset of its [objectives](@)."
 synonyms:
 grouptags:
-formphrases: scope{ss}
+formPhrases: scope{ss}
 
 # Curation status
 
