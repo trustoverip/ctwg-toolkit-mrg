@@ -60,6 +60,7 @@ public class GithubConnector implements MRGConnector {
     }
   }
 
+
   @Override
   public List<FileContent> getDirectoryContent(
       final String repository, final String directoryName) {

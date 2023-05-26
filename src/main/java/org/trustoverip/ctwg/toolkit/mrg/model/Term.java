@@ -20,17 +20,21 @@ public class Term implements Comparable<Term> {
   private String scopetag;
   private String locator;
   private String isa;
-  private String termtype;
-  private String formphrases;
+  private String termType;
   private String status;
   private String synonyms;
+  private String synonymOf;
   private String grouptags;
   private String glossaryText;
+  private String hoverText;
+  private String formPhrases;
   private String created;
   private String updated;
   private String vsntag;
   private String commit;
   private String contributors;
+  private String sidebar_label;
+  private String displayed_sidebar;
   private String attribution;
   private String originalLicense;
 

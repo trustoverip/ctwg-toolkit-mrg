@@ -112,11 +112,12 @@ class YamlWranglerTest {
     assertThat(versions).hasSize(expectedNumberOfVersions);
     Version expectedFirstVersion =
         new Version(
-            "mrgtest", null, List.of("*@tev2", "-terms[@, curated-text-body]"), null, null, null);
+            "mrgtest", null, "mrg-tev2-test.yaml", List.of("*@tev2", "-terms[@, curated-text-body]"), null, null, null);
     Version expectedSecondVersion =
         new Version(
             "0x921456",
             List.of("latest", "v0.9.4"),
+            "mrg-tev2-test.yaml",
             List.of(
                 "tags[management]@essif-lab",
                 "terms[party]@essif-lab:0.9.4",

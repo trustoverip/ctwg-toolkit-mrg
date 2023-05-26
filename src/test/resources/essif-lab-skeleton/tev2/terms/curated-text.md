@@ -7,9 +7,9 @@ id: curated-text
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termtype: concept
+termType: concept
 termid: ctext
-formphrases: curated-text{ss}
+formPhrases: curated-text{ss}
 grouptags: ctext
 status: proposed
 created: 2022-06-02

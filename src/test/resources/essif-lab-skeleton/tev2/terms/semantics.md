@@ -7,9 +7,9 @@ id: semantics
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termtype: concept
+termType: concept
 termid: semantics
-formphrases: semantics
+formPhrases: semantics
 grouptags:
 status: proposed
 created: 2022-06-06

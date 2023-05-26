@@ -7,9 +7,9 @@ id: versiontag
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termtype: concept
+termType: concept
 termid: versiontag
-formphrases: versiontag{ss}, version-tag{ss}
+formPhrases: versiontag{ss}, version-tag{ss}
 grouptags:
 status: proposed
 created: 2022-06-06

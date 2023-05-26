@@ -7,9 +7,9 @@ id: dictionary
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termtype: concept
+termType: concept
 termid: dictionary
-formphrases: dictionar{yies}
+formPhrases: dictionar{yies}
 grouptags:
 status: proposed
 created: 2022-06-06

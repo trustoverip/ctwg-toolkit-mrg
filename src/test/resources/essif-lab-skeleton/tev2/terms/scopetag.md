@@ -7,9 +7,9 @@ id: scopetag
 # TEv2: generic front-matter for curated texts
 
 scope: tev2
-termtype: concept
+termType: concept
 termid: scopetag
-formphrases: scopetag{ss}, scope-tag{ss}
+formPhrases: scopetag{ss}, scope-tag{ss}
 grouptags:
 status: proposed
 created: 2022-06-06
