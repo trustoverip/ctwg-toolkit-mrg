@@ -5,6 +5,7 @@ COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 RUN ./mvnw dependency:resolve
 COPY src ./src
+RUN mkdir -p /glossaries
 CMD ["./mvnw", "spring-boot:run"]
 EXPOSE 8083
 
